@@ -1,2 +1,2 @@
 # DiscordAuth
-A Minecraft Plugin for authentification from Discord (or not if you don't want)
+A Minecraft plugin to authenticate from discord
