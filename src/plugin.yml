@@ -1,0 +1,41 @@
+author: Xen0Xys
+name: DiscordAuth
+version: 1.0
+api-version: 1.16
+main: fr.xen0xys.discordauth.DiscordAuth
+depend:
+  - JDASpigot
+database: true
+
+commands:
+  login:
+    aliases: [l]
+    permission: discordauth.login
+  logout:
+    permission: discordauth.logout
+  forcelogin:
+    permission: discordauth.forcelogin
+  changepassword:
+    permission: discordauth.changepassword
+  createaccount:
+    permission: discordauth.createaccount
+
+permissions:
+  minedventure.*:
+    description: Gives access to all MineDventure commands
+    children:
+      discordauth.login: true
+      discordauth.logout: true
+      discordauth.forcelogin: true
+      discordauth.changepassword: true
+      discordauth.createaccount: true
+  discordauth.login:
+    default: true
+  discordauth.logout:
+    default: true
+  discordauth.forcelogin:
+    default: op
+  discordauth.changepassword:
+    default: true
+  discordauth.createaccount:
+    default: op
