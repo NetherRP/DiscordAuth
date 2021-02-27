@@ -3,7 +3,8 @@ A Minecraft plugin to authenticate from discord
 
 **This plugin need JDASpigot plugin to work: https://www.spigotmc.org/resources/jdaspigot.41074/**
 
-###Configuration:
+##Configuration:
+
 ```yaml
 mysql:
   host: 0.0.0.0
