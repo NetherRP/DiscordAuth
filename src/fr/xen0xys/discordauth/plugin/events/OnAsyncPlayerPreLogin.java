@@ -9,8 +9,8 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 public class OnAsyncPlayerPreLogin implements Listener {
     @EventHandler
     public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent e){
-        AccountsDatabase account_database = new AccountsDatabase();
-        if(!account_database.isMinecraftNameExist(e.getName())){
+        AccountsDatabase accountDatabase = new AccountsDatabase();
+        if(!accountDatabase.isMinecraftNameExist(e.getName())){
             e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, ChatColor.RED + "You do not have an account on the server, check your MP Discord and / or that you have reacted to the required message.");
         }
     }

@@ -14,12 +14,12 @@ public class LoginBotCommand {
     public LoginBotCommand(User user, Message message){
         String[] args = BotUtils.getCommandArgs(message.getContentRaw());
         if(args.length >= 1){
-            String minecraft_name = new AccountsDatabase().getMinecraftNameFromDiscordId(user.getIdLong());
-            if(minecraft_name != null){
-                Player player = Bukkit.getPlayer(minecraft_name);
+            String minecraftName = new AccountsDatabase().getMinecraftNameFromDiscordId(user.getIdLong());
+            if(minecraftName != null){
+                Player player = Bukkit.getPlayer(minecraftName);
                 if(player != null){
-                    if(new SecurityDatabase().checkPassword(minecraft_name, args[0])){
-                        DiscordAuth.getUsers().get(minecraft_name).setIsLogged(true);
+                    if(new SecurityDatabase().checkPassword(minecraftName, args[0])){
+                        DiscordAuth.getUsers().get(minecraftName).setIsLogged(true);
                         player.sendMessage(ChatColor.GREEN + "You has been connected (Discord)");
                         BotUtils.sendDM(user, "Connected successful");
                         return;

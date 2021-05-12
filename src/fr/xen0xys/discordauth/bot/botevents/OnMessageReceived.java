@@ -18,9 +18,9 @@ public class OnMessageReceived extends ListenerAdapter {
             if(event.getChannelType() == ChannelType.TEXT){
                 TextChannel channel = (TextChannel) event.getChannel();
                 if(Long.parseLong(channel.getId()) == DiscordAuth.getChannelId()){
-                    String minecraft_name = new AccountsDatabase().getMinecraftNameFromDiscordId(event.getAuthor().getIdLong());
-                    if(minecraft_name != null && DiscordAuth.getConfigurationManager().getEnableSharedChat()){
-                        Bukkit.broadcastMessage(ChatColor.BLUE + "<" + minecraft_name + "> " + ChatColor.RESET + event.getMessage().getContentRaw());
+                    String minecraftName = new AccountsDatabase().getMinecraftNameFromDiscordId(event.getAuthor().getIdLong());
+                    if(minecraftName != null && DiscordAuth.getConfigurationManager().getEnableSharedChat()){
+                        Bukkit.broadcastMessage(ChatColor.BLUE + "<" + minecraftName + "> " + ChatColor.RESET + event.getMessage().getContentRaw());
                     }
                 }
             }

@@ -29,11 +29,11 @@ public class ChangePasswordCommand implements CommandExecutor {
         return false;
     }
 
-    public static void executeChangePassword(Player player, String new_password){
-        String minecraft_name = player.getName();
-        User user = DiscordAuth.getUsers().get(minecraft_name);
+    public static void executeChangePassword(Player player, String newPassword){
+        String minecraftName = player.getName();
+        User user = DiscordAuth.getUsers().get(minecraftName);
         if(user.isLogged()){
-            if(new SecurityDatabase().setPassword(minecraft_name, new_password)){
+            if(new SecurityDatabase().setPassword(minecraftName, newPassword)){
                 player.sendMessage(ChatColor.GREEN + "Your password has been successfully changed");
             }else{
                 player.sendMessage(ChatColor.RED + "An error occurred while changing your password");

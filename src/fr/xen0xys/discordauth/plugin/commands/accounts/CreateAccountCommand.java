@@ -29,7 +29,7 @@ public class CreateAccountCommand implements CommandExecutor {
         return false;
     }
 
-    public static boolean executeCreateAccount(long discord_id, String minecraft_name, String password){
-        return new AccountsDatabase().createPlayerAccount(discord_id, minecraft_name, password);
+    public static boolean executeCreateAccount(long discordId, String minecraftName, String password){
+        return new AccountsDatabase().createPlayerAccount(discordId, minecraftName, password);
     }
 }

@@ -6,13 +6,13 @@ import org.bukkit.entity.Player;
 public class CustomAdvancement {
 
     private final Player player;
-    private String advancement_name;
+    private String advancementName;
 
-    public CustomAdvancement(String advancement_line){
-        String[] bracket_split_array = advancement_line.split("\\[");
-        advancement_name = bracket_split_array[bracket_split_array.length - 1].replace("]", "");
-        advancement_name = "[" + advancement_name + "]";
-        String[] array = bracket_split_array[bracket_split_array.length - 2].split(" ");
+    public CustomAdvancement(String advancementLine){
+        String[] bracketSplitArray = advancementLine.split("\\[");
+        advancementName = bracketSplitArray[bracketSplitArray.length - 1].replace("]", "");
+        advancementName = "[" + advancementName + "]";
+        String[] array = bracketSplitArray[bracketSplitArray.length - 2].split(" ");
         player = Bukkit.getPlayer(array[array.length - 5]);
     }
 
@@ -21,6 +21,6 @@ public class CustomAdvancement {
     }
 
     public String getAdvancementName(){
-        return this.advancement_name;
+        return this.advancementName;
     }
 }

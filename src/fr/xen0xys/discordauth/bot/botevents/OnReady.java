@@ -12,10 +12,7 @@ public class OnReady extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         super.onReady(event);
-        // Send server start message
         BotUtils.sendMessage(BotUtils.getServerStartMessage());
-        // Send MP to players to register their accounts
-        // sendRegisterAccountMessages();
     }
 
     private void sendRegisterAccountMessages(){

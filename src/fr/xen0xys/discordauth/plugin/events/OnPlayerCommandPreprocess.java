@@ -10,13 +10,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class OnPlayerCommandPreprocess implements Listener {
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
-        String command_name = e.getMessage();
+        String commandName = e.getMessage();
         Player player = e.getPlayer();
-        if(!command_name.startsWith("/login") && !command_name.startsWith("/l")){
+        if(!commandName.startsWith("/login") && !commandName.startsWith("/l")){
             if(!DiscordAuth.getUsers().get(player.getName()).isLogged()){
                 player.sendMessage(ChatColor.RED + "You need to login to do that!");
                 e.setCancelled(true);
-                // return;
             }
         }
     }

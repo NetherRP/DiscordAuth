@@ -3,7 +3,6 @@ package fr.xen0xys.discordauth.bot;
 import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.bot.embeds.CustomEmbed;
 import fr.xen0xys.discordauth.databases.AccountsDatabase;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
@@ -40,9 +39,9 @@ public abstract class BotUtils {
         Message message = retrieveMessageFromId(DiscordAuth.getGuildId(), DiscordAuth.getMessageId());
         if(message != null){
             reactToMessage(message);
-            for(MessageReaction mr: message.getReactions()){
-                if(mr.getReactionEmote().toString().split(":")[1].equals(DiscordAuth.getConfigurationManager().getReactionName())){
-                    List<User> users = mr.retrieveUsers().complete();
+            for(MessageReaction messageReaction: message.getReactions()){
+                if(messageReaction.getReactionEmote().toString().split(":")[1].equals(DiscordAuth.getConfigurationManager().getReactionName())){
+                    List<User> users = messageReaction.retrieveUsers().complete();
                     users.remove(DiscordAuth.getBot().getSelfUser());
                     return users;
                 }
@@ -51,11 +50,11 @@ public abstract class BotUtils {
         return null;
     }
 
-    public static boolean isUserHasReact(User target_user){
-        List<User> react_user_list = getUserWhoReact();
-        if (react_user_list != null) {
-            for(User user: react_user_list){
-                if(user == target_user){
+    public static boolean isUserHasReact(User targetUser){
+        List<User> reactUserList = getUserWhoReact();
+        if (reactUserList != null) {
+            for(User user: reactUserList){
+                if(user == targetUser){
                     return true;
                 }
             }
@@ -63,13 +62,13 @@ public abstract class BotUtils {
         return false;
     }
 
-    public static Message retrieveMessageFromId(long guild_id, long message_id){
+    public static Message retrieveMessageFromId(long guildId, long messageId){
         Guild guild = DiscordAuth.getBot().getGuildById(DiscordAuth.getGuildId());
         if(guild != null){
             for(Category category: guild.getCategories()) {
                 for(TextChannel channel: category.getTextChannels()){
                     try{
-                        return channel.retrieveMessageById(message_id).complete();
+                        return channel.retrieveMessageById(messageId).complete();
                     } catch(ErrorResponseException ignored){
 
                     }

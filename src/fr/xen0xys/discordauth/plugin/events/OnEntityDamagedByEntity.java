@@ -25,17 +25,5 @@ public class OnEntityDamagedByEntity implements Listener {
                 e.setCancelled(true);
             }
         }
-
-        // Check if ban needed
-        /*
-        if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
-            Player damager = (Player) e.getDamager();
-            Player victim = (Player) e.getEntity();
-            if(victim.getHealth() - e.getFinalDamage() <= 0){
-                new TempBanDatabase().banPlayer(damager.getName(), victim.getName());
-                damager.kickPlayer(ChatColor.DARK_AQUA + "Vous avez tué un joueur, vous etes banni 3min sauf si le joueur vous pardonne ou vous rallonge votre peine de 2min");
-            }
-        }
-        */
     }
 }

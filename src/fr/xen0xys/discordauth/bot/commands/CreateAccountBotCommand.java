@@ -14,8 +14,8 @@ public class CreateAccountBotCommand {
             if(args.length >= 4) {
                 args = Arrays.copyOfRange(args, 1, args.length);
                 if(args[1].equals(args[2])) {
-                    AccountsDatabase bot_database = new AccountsDatabase();
-                    if(bot_database.createPlayerAccount(user.getIdLong(), args[0], args[1])){
+                    AccountsDatabase botDatabase = new AccountsDatabase();
+                    if(botDatabase.createPlayerAccount(user.getIdLong(), args[0], args[1])){
                         BotUtils.sendDM(user, "Your account has been created");
                     }else{
                         BotUtils.sendDM(user, "Your account hasn't been created");

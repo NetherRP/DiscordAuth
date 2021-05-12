@@ -28,13 +28,13 @@ public class LoginCommand implements CommandExecutor {
     }
 
     public static void executeLogin(Player player, String password){
-        String minecraft_name = player.getName();
-        User user = DiscordAuth.getUsers().get(minecraft_name);
+        String minecraftName = player.getName();
+        User user = DiscordAuth.getUsers().get(minecraftName);
         String ip = PluginUtils.getPlayerIP(player);
-        SecurityDatabase s_database = new SecurityDatabase();
+        SecurityDatabase securityDatabase = new SecurityDatabase();
         if(!user.isLogged()){
-            if(s_database.checkPassword(minecraft_name, password)){
-                if(s_database.loginUser(minecraft_name, ip)){
+            if(securityDatabase.checkPassword(minecraftName, password)){
+                if(securityDatabase.loginUser(minecraftName, ip)){
                     player.sendMessage(ChatColor.GREEN + "You are login successful");
                 }else{
                     player.sendMessage(ChatColor.GOLD + "You are login, but an error occurred");
