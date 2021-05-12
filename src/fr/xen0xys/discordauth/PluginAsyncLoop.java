@@ -50,10 +50,7 @@ public class PluginAsyncLoop extends BukkitRunnable {
                     advancements.add(new CustomAdvancement(line));
                 }
             }
-        }else{
-            System.out.println("Error in lines");
         }
-
     }
 
     private void sendAdvancements() {
@@ -77,8 +74,10 @@ public class PluginAsyncLoop extends BukkitRunnable {
             // Actually not send embed if there is too many advancements
             if (player_advancements_string.size() == 1) {
                 BotUtils.sendEmbed(new AdvancementEmbed(player, player_advancements_string.get(0)));
-            } else if (player_advancements_string.size() <= 20) {
+            } else if (player_advancements_string.size() <= 15) {
                 BotUtils.sendEmbed(new AdvancementEmbed(player, player_advancements_string));
+            }else{
+                BotUtils.sendEmbed(new AdvancementEmbed(player, "{Too many advancements to display}"));
             }
         }
     }
