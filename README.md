@@ -1,6 +1,10 @@
 # DiscordAuth
-A Minecraft plugin to authenticate from discord
-Spigot page: https://www.spigotmc.org/resources/discordauth.92286/
+DiscordAuth plugin permit Discord server's owners to manage access to their Minecraft server:
+
+First create a channel and post a message, and a reaction.
+People who react to this message can create an account from their DM (stored in MySQL).
+Player can connect to Minecraft server and do "/login <password>"
+You can also setup a channel for sending informations like player's connections, disconnections and advancements! (configurable)
 
 **This plugin need JDASpigot plugin to work: https://www.spigotmc.org/resources/jdaspigot.41074/**
 
@@ -50,3 +54,5 @@ spawnpoint:
     pitch: 0
     yaw: 0
 ```
+
+Spigot page: https://www.spigotmc.org/resources/discordauth.92286/
