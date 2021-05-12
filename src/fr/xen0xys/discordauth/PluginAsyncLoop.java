@@ -21,7 +21,7 @@ public class PluginAsyncLoop extends BukkitRunnable {
             for(User user: new_discord_users){
                 if(!this.discord_users.contains(user)){
                     if(!accounts_database.isDiscordUserExist(user.getIdLong())){
-                        BotUtils.sendDM(user, "Vous avez accepté le règlement, vous pouvez maintenant créer votre compte en envoyant la commande **/createaccount** comme indiqué ci-dessous.");
+                        BotUtils.sendDM(user, "You has accepted rules, now you can create your account by using: **/createaccount <minecraft username> <password> <password confirmation>**.");
                         BotUtils.sendDM(user, new HelpEmbed());
                     }
                     this.discord_users.add(user);

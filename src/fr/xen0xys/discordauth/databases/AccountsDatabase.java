@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class AccountsDatabase {
 
-    private final String account_table_name = "netherrpv2_accounts";
+    private final String account_table_name = "discordauth_accounts";
     private final DatabaseProvider database_provider;
 
     public AccountsDatabase() {
