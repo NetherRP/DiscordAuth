@@ -38,6 +38,9 @@ public class ConfigurationManager {
     public String getReactionName(){
         return this.config.getString("discord.reaction_name");
     }
+    public boolean getSendAdvancements(){
+        return this.config.getBoolean("discord.send_advancements");
+    }
 
     public boolean useMysql(){
         return this.config.getBoolean("mysql.enable");
