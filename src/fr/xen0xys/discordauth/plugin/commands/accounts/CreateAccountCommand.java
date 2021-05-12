@@ -23,7 +23,7 @@ public class CreateAccountCommand implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.RED + "The 2 passwords must be identical");
                 }
             }else{
-                commandSender.sendMessage(ChatColor.RED + "Usage: /createaccount <discord_id> <minecraft_name> <password> <password>");
+                commandSender.sendMessage(ChatColor.RED + "Usage: /createaccount <discord_id> <minecraft username> <password> <password confirmation>");
             }
         }
         return false;

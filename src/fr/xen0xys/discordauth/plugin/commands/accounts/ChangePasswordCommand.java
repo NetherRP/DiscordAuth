@@ -21,7 +21,7 @@ public class ChangePasswordCommand implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.RED + "The 2 passwords must be identical");
                 }
             }else{
-                commandSender.sendMessage(ChatColor.RED + "Usage: /changepassword <password> <password>");
+                commandSender.sendMessage(ChatColor.RED + "Usage: /changepassword <password> <password confirmation>");
             }
         }else{
             System.out.println(ChatColor.RED + "You need to execute this command as player");

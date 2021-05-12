@@ -20,15 +20,15 @@ public class LoginBotCommand {
                 if(player != null){
                     if(new SecurityDatabase().checkPassword(minecraft_name, args[0])){
                         DiscordAuth.getUsers().get(minecraft_name).setIsLogged(true);
-                        player.sendMessage(ChatColor.GREEN + "Vous avez été connecté (discord)");
-                        BotUtils.sendDM(user, "Connection réussie");
+                        player.sendMessage(ChatColor.GREEN + "You has been connected (Discord)");
+                        BotUtils.sendDM(user, "Connected successful");
                         return;
                     }
                 }
             }
-            BotUtils.sendDM(user, "Une erreur est survenue");
+            BotUtils.sendDM(user, "An error occurred");
         }else{
-            BotUtils.sendDM(user, "Pas assez d'arguments");
+            BotUtils.sendDM(user, "Not enough arguments");
         }
     }
 }

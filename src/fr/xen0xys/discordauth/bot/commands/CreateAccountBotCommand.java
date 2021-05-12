@@ -16,18 +16,18 @@ public class CreateAccountBotCommand {
                 if(args[1].equals(args[2])) {
                     AccountsDatabase bot_database = new AccountsDatabase();
                     if(bot_database.createPlayerAccount(user.getIdLong(), args[0], args[1])){
-                        BotUtils.sendDM(user, "Votre compte à été crée");
+                        BotUtils.sendDM(user, "Your account has been created");
                     }else{
-                        BotUtils.sendDM(user, "Votre compte n'a pas pu être crée");
+                        BotUtils.sendDM(user, "Your account hasn't been created");
                     }
                 }else{
-                    BotUtils.sendDM(user, "La confirmation du mot de passe n'est pas identique au mot de passe");
+                    BotUtils.sendDM(user, "Password confirmation and password has not identical");
                 }
             }else{
-                BotUtils.sendDM(user, "Pas assez d'arguments");
+                BotUtils.sendDM(user, "Not enough arguments");
             }
         }else{
-            BotUtils.sendDM(user, "Vous n'avez pas réagi au message requis");
+            BotUtils.sendDM(user, "You don't have react to requested message");
         }
 
     }

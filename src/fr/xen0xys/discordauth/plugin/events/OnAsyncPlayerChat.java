@@ -14,7 +14,7 @@ public class OnAsyncPlayerChat implements Listener {
         String author = e.getPlayer().getName();
         User user = DiscordAuth.getUsers().get(author);
         if(user != null && !user.isLogged()){
-            e.getPlayer().sendMessage(ChatColor.RED + "Vous devez vous identifier pour faire cela!");
+            e.getPlayer().sendMessage(ChatColor.RED + "You need to login to do that!");
             e.setCancelled(true);
             return;
         }

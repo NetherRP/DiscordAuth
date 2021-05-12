@@ -25,9 +25,9 @@ public class OnPlayerJoin implements Listener {
         if(user != null){
             if(new SecurityDatabase().hasSession(player.getName(), PluginUtils.getPlayerIP(player))){
                 user.setIsLogged(true);
-                player.sendMessage(ChatColor.GREEN + "Vous avez été connecté automatiquement (session)");
+                player.sendMessage(ChatColor.GREEN + "You has been auto-disconnected (session)");
             }else{
-                player.sendMessage(String.format("%s%sVeuillez vous connecter en effectuant la commande /login <mot de passe>", ChatColor.UNDERLINE, ChatColor.DARK_AQUA));
+                player.sendMessage(String.format("%s%sPlease login yourself using: /login <password>", ChatColor.UNDERLINE, ChatColor.DARK_AQUA));
             }
             if(!player.hasPlayedBefore()){
                 initializePlayer(user);

@@ -21,8 +21,8 @@ commands:
     permission: discordauth.createaccount
 
 permissions:
-  minedventure.*:
-    description: Gives access to all MineDventure commands
+  discordauth.*:
+    description: Gives access to all DiscordAuth commands
     children:
       discordauth.login: true
       discordauth.logout: true
