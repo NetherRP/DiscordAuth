@@ -20,64 +20,64 @@ import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 
 public class DiscordAuth extends JavaPlugin {
-    private static long message_id = 0L;
-    private static long guild_id = 0L;
-    private static long channel_id = 0L;
+    private static long messageId = 0L;
+    private static long guildId = 0L;
+    private static long channelId = 0L;
     private static JDA bot;
-    private static SkinManager skin_manager;
-    private static final String log_prefix = "[DiscordAuth]: ";
-    private static DatabaseProvider database_provider;
+    private static SkinManager skinManager;
+    private static final String LOG_PREFIX = "[DiscordAuth]: ";
+    private static DatabaseProvider databaseProvider;
     private static final HashMap<String, User> USERS = new HashMap<>();
-    private static PluginAsyncLoop plugin_async_loop;
-    private static ConfigurationManager configuration_manager;
-    private static Location spawn_location;
+    private static PluginAsyncLoop pluginAsyncLoop;
+    private static ConfigurationManager configurationManager;
+    private static Location spawnLocation;
 
     @Override
     public void onLoad() {
-        System.out.println(ChatColor.GREEN + log_prefix + "Loading plugin");
-        configuration_manager = new ConfigurationManager(this);
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Loading plugin");
+        configurationManager = new ConfigurationManager(this);
         try {
             buildBot();
         } catch (LoginException e) {
             e.printStackTrace();
         }
-        database_provider = new DatabaseProvider();
+        databaseProvider = new DatabaseProvider();
         super.onLoad();
-        System.out.println(ChatColor.GREEN + log_prefix + "Plugin loaded");
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin loaded");
     }
 
     @Override
     public void onDisable() {
-        System.out.println(ChatColor.GREEN + log_prefix + "Disabling plugin");
-        plugin_async_loop.stop();
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Disabling plugin");
+        pluginAsyncLoop.stop();
         stopBot();
         super.onDisable();
-        System.out.println(ChatColor.GREEN + log_prefix + "Plugin disabled");
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin disabled");
     }
 
     @Override
     public void onEnable() {
-        System.out.println(ChatColor.GREEN + log_prefix + "Enabling plugin");
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Enabling plugin");
         registerEvents();
         registerCommands();
         registerFilters();
-        skin_manager = new SkinManager();
-        plugin_async_loop = new PluginAsyncLoop();
-        plugin_async_loop.runTaskAsynchronously(this);
-        spawn_location = configuration_manager.getSpawnPoint();
+        skinManager = new SkinManager();
+        pluginAsyncLoop = new PluginAsyncLoop();
+        pluginAsyncLoop.runTaskAsynchronously(this);
+        spawnLocation = configurationManager.getSpawnPoint();
         this.initializeWorlds();
         super.onEnable();
         // Enable bstats
         int pluginId = 10497;
         new Metrics(this, pluginId);
-        System.out.println(ChatColor.GREEN + log_prefix + "Plugin enabled");
+        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin enabled");
     }
 
     private void buildBot() throws LoginException {
-        message_id = configuration_manager.getMessageId();
-        guild_id = configuration_manager.getGuildId();
-        channel_id = configuration_manager.getChannelId();
-        bot = JDABuilder.createDefault(configuration_manager.getBotToken()).build();
+        messageId = configurationManager.getMessageId();
+        guildId = configurationManager.getGuildId();
+        channelId = configurationManager.getChannelId();
+        bot = JDABuilder.createDefault(configurationManager.getBotToken()).build();
         registerBotEvents();
     }
     private void stopBot(){
@@ -128,7 +128,7 @@ public class DiscordAuth extends JavaPlugin {
     private void initializeWorlds(){
         World world = Bukkit.getWorld("world");
         if(world.getName().equals("world")){
-            world.setSpawnLocation(spawn_location);
+            world.setSpawnLocation(spawnLocation);
         }
     }
 
@@ -138,13 +138,13 @@ public class DiscordAuth extends JavaPlugin {
     }
 
     public static long getMessageId(){
-        return message_id;
+        return messageId;
     }
     public static long getGuildId(){
-        return guild_id;
+        return guildId;
     }
     public static long getChannelId(){
-        return channel_id;
+        return channelId;
     }
     public static HashMap<String, User> getUsers(){
         return USERS;
@@ -154,18 +154,18 @@ public class DiscordAuth extends JavaPlugin {
         return bot;
     }
     public static SkinManager getSkinManager(){
-        return skin_manager;
+        return skinManager;
     }
     public static DatabaseProvider getDatabaseProvider(){
-        return database_provider;
+        return databaseProvider;
     }
     public static PluginAsyncLoop getPluginAsyncLoop(){
-        return plugin_async_loop;
+        return pluginAsyncLoop;
     }
     public static ConfigurationManager getConfigurationManager(){
-        return configuration_manager;
+        return configurationManager;
     }
     public static Location getSpawnLocation(){
-        return spawn_location;
+        return spawnLocation;
     }
 }

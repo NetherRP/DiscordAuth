@@ -23,9 +23,9 @@ public class LogoutCommand implements CommandExecutor{
     }
 
     public static void executeLogout(Player player){
-        String minecraft_name = player.getName();
-        if(new SecurityDatabase().logoutUser(minecraft_name)){
-            User user = DiscordAuth.getUsers().get(minecraft_name);
+        String minecraftName = player.getName();
+        if(new SecurityDatabase().logoutUser(minecraftName)){
+            User user = DiscordAuth.getUsers().get(minecraftName);
             user.setIsLogged(false);
             user.setLoginLocation(player.getLocation());
             player.sendMessage(ChatColor.GREEN + "You are logout successful");

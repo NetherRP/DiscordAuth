@@ -32,10 +32,10 @@ public class DatabaseProvider {
         initializeConnection();
     }
 
-    public boolean isTableInitialised(String table_name) {
+    public boolean isTableInitialised(String tableName) {
         try{
             DatabaseMetaData dbm = this.connection.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, table_name, null);
+            ResultSet tables = dbm.getTables(null, null, tableName, null);
             return tables.next();
         } catch(SQLException e){
             e.printStackTrace();
@@ -44,8 +44,8 @@ public class DatabaseProvider {
         return false;
     }
 
-    public boolean initializeTable(String table_name, String table_values){
-        String query = String.format("CREATE TABLE %s (%s);", table_name, table_values);
+    public boolean initializeTable(String tableName, String tableValues){
+        String query = String.format("CREATE TABLE %s (%s);", tableName, tableValues);
         return executeUpdateQuery(query);
     }
 
@@ -105,11 +105,11 @@ public class DatabaseProvider {
         return null;
     }
 
-    public int getId(String table_name, String column_name, String target_value){
-        if(!isTableInitialised(table_name)){
+    public int getId(String tableName, String columnName, String targetValue){
+        if(!isTableInitialised(tableName)){
             return -1;
         }
-        String query = String.format("SELECT id FROM %s WHERE %s='%s';", table_name, column_name, target_value);
+        String query = String.format("SELECT id FROM %s WHERE %s='%s';", tableName, columnName, targetValue);
         ResultSet rs = this.executeQuery(query);
         try{
             if(rs != null){

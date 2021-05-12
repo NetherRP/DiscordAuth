@@ -37,12 +37,12 @@ public class ForceLoginCommand implements CommandExecutor {
         return false;
     }
 
-    public static boolean executeForceLogin(String minecraft_name){
-        Player player = Bukkit.getPlayer(minecraft_name);
+    public static boolean executeForceLogin(String minecraftName){
+        Player player = Bukkit.getPlayer(minecraftName);
         if(player != null){
-            User user = DiscordAuth.getUsers().get(minecraft_name);
+            User user = DiscordAuth.getUsers().get(minecraftName);
             user.setIsLogged(true);
-            player.sendMessage(ChatColor.DARK_AQUA + "Vous avez été connecté de force");
+            player.sendMessage(ChatColor.DARK_AQUA + "You has been force disconnected");
             return true;
         }
         return false;

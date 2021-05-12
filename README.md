@@ -35,6 +35,8 @@ discord:
   enable_shared_chat: true
   # Send DM to unregister user who has react
   send_message_to_unregister_users: true
+  # Send advancements in main channel
+  send_advancements: true
 
 encryption:
   # If you want to encrypt ip too (ip encryption use same encryption string)

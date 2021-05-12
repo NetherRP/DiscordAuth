@@ -38,6 +38,9 @@ public class ConfigurationManager {
     public String getReactionName(){
         return this.config.getString("discord.reaction_name");
     }
+    public boolean getSendAdvancements(){
+        return this.config.getBoolean("discord.send_advancements");
+    }
 
     public boolean useMysql(){
         return this.config.getBoolean("mysql.enable");
@@ -69,7 +72,7 @@ public class ConfigurationManager {
     }
 
     public Location getSpawnPoint(){
-        String world_name = this.config.getString("spawnpoint.world_name");
+        String worldName = this.config.getString("spawnpoint.world_name");
         double x, y, z;
         float yaw, pitch;
         x = this.config.getDouble("spawnpoint.x");
@@ -77,7 +80,10 @@ public class ConfigurationManager {
         z = this.config.getDouble("spawnpoint.z");
         yaw = (float) this.config.getDouble("spawnpoint.facing.yaw");
         pitch = (float) this.config.getDouble("spawnpoint.facing.pitch");
-        return new Location(Bukkit.getWorld(world_name), x, y, z, yaw, pitch);
+        if(worldName != null){
+            return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
+        }
+        return null;
     }
 
 

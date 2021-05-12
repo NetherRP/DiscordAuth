@@ -23,13 +23,13 @@ public class CreateAccountCommand implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.RED + "The 2 passwords must be identical");
                 }
             }else{
-                commandSender.sendMessage(ChatColor.RED + "Usage: /createaccount <discord_id> <minecraft_name> <password> <password>");
+                commandSender.sendMessage(ChatColor.RED + "Usage: /createaccount <discord_id> <minecraft username> <password> <password confirmation>");
             }
         }
         return false;
     }
 
-    public static boolean executeCreateAccount(long discord_id, String minecraft_name, String password){
-        return new AccountsDatabase().createPlayerAccount(discord_id, minecraft_name, password);
+    public static boolean executeCreateAccount(long discordId, String minecraftName, String password){
+        return new AccountsDatabase().createPlayerAccount(discordId, minecraftName, password);
     }
 }

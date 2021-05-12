@@ -6,29 +6,29 @@ import org.bukkit.entity.Player;
 public class User {
 
     private final Player player;
-    private boolean is_logged = false;
-    private Location login_location;
+    private boolean isLogged = false;
+    private Location loginLocation;
 
-    public User(Player player, Location login_location){
+    public User(Player player, Location loginLocation){
         this.player = player;
-        this.login_location = login_location;
+        this.loginLocation = loginLocation;
     }
 
     public Player getPlayer(){
         return this.player;
     }
     public boolean isLogged(){
-        return this.is_logged;
+        return this.isLogged;
     }
     public Location getLoginLocation(){
-        return this.login_location;
+        return this.loginLocation;
     }
 
     public void setIsLogged(boolean value){
-        is_logged = value;
+        isLogged = value;
     }
     public void setLoginLocation(Location location){
-        login_location = location;
+        loginLocation = location;
     }
 
 }
