@@ -1,7 +1,7 @@
 package fr.xen0xys.discordauth.plugin.events;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth.bot.BotUtils;
+import fr.xen0xys.discordauth.discord.BotUtils;
 import fr.xen0xys.discordauth.models.User;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -14,11 +14,11 @@ public class OnAsyncPlayerChat implements Listener {
         String author = e.getPlayer().getName();
         User user = DiscordAuth.getUsers().get(author);
         if(user != null && !user.isLogged()){
-            e.getPlayer().sendMessage(ChatColor.RED + "You need to login to do that!");
+            e.getPlayer().sendMessage(ChatColor.RED + DiscordAuth.getLanguage().needLogin);
             e.setCancelled(true);
             return;
         }
-        if(DiscordAuth.getConfigurationManager().getEnableSharedChat()){
+        if(DiscordAuth.getConfiguration().getEnableSharedChat()){
             String message = String.format("<%s> %s", author, e.getMessage());
             BotUtils.sendMessage(message);
         }

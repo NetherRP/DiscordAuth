@@ -14,7 +14,7 @@ public class OnPlayerCommandPreprocess implements Listener {
         Player player = e.getPlayer();
         if(!commandName.startsWith("/login") && !commandName.startsWith("/l")){
             if(!DiscordAuth.getUsers().get(player.getName()).isLogged()){
-                player.sendMessage(ChatColor.RED + "You need to login to do that!");
+                player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().needLogin);
                 e.setCancelled(true);
             }
         }

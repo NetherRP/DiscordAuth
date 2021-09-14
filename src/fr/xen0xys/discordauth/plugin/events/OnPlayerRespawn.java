@@ -10,10 +10,17 @@ public class OnPlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e){
         Player player = e.getPlayer();
-        if(player.getBedSpawnLocation() == null){
-            e.setRespawnLocation(DiscordAuth.getSpawnLocation());
-        }else{
-            System.out.println(player.getBedSpawnLocation());
+        // If respawn function is enable
+        if(DiscordAuth.getConfiguration().isRespawnEnable()){
+            // Override bed respawn if it is enabled in configuration
+            if(DiscordAuth.getConfiguration().isRespawnEvenWithBed()){
+                e.setRespawnLocation(DiscordAuth.getConfiguration().getSpawnPoint());
+            // Only change respawn point if player don't have bed location!
+            }else{
+                if(player.getBedSpawnLocation() == null){
+                    e.setRespawnLocation(DiscordAuth.getConfiguration().getSpawnPoint());
+                }
+            }
         }
     }
 }
