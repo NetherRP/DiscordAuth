@@ -1,0 +1,55 @@
+# Login:
+login_success: "Vous êtes connecté avec succès"
+login_request: "Veuillez vous connecter (/login)"
+reload_login_request: "DiscordAuth à été reload, veuillez vous reconnecter (/login)!"
+discord_login: "Vous êtes connecté avec succès (Discord)"
+forced_login: "Vous êtes connecté avec succès (Forcelogin)"
+session_login: "Vous êtes connecté avec succès (Session)"
+need_login: "Vous avez besoin d'être connecté pour faire cela!"
+player_force_logged: "Le joueur spécifié à été connecté de force!"
+
+# Account:
+account_created_successful: "Votre compte à été crée avec succès!"
+already_has_account: "Vous possédez déjà un compte!"
+account_not_exist: "Vous n'avez pas encore de compte, veuillez en créer un!"
+no_reaction: "Votre compte n'a pas pu être crée car vous n'avez pas réagi au message demandé!"
+
+# Password:
+updated_password: "Votre mot de passe à été mis à jour!"
+invalid_password: "Mot de passe invalide!"
+
+# Discord or Minecraft chat:
+player_connect: "%s vient de se connecter"
+player_disconnect: "%s vient de se déconnecter"
+register_chat: "&9<%s>&r %s"
+unregistered_chat: "&6[Non-enregistré] &9<%s>&r %s"
+server_start: ":white_check_mark: **Le serveur vient de démarer**"
+server_stop: ":octagonal_sign: **Le serveur vient de s'arréter**"
+
+# Errors:
+error_occurred: "Une erreur est survenue"
+already_connected: "Le joueur spécifié est déjà connecté!"
+session_end: "Votre session n'a pas pu être renouvelé"
+player_not_connected: "Vous n'êtes pas connecté sur le serveur!"
+cant_be_executed_from_cli: "Cette commande ne peut pas être exécuté depuis la console!"
+unknown_specified_player: "Le joueur spécifié est introuvable"
+kick_message: "Vous n'avez pas accès à ce serveur!\nEn cas d'erreur, contactez un technicien!"
+
+# Advancements:
+success_complete: "%s a complété le(s) succès suivant(s): %s"
+too_many_advancements: "Trop de succès à montrer"
+
+# IP
+invalid_ip_format: "Format d'IP invalide!"
+no_ip_allowed: "Aucune IP autorisé"
+no_ip_blocked: "Aucune IP bloqué"
+all_ip_allowed: "Toutes les IP sont autorisés"
+all_ip_blocked: "Toutes les IP sont bloqués"
+ip_allowed: "IP autorisés:"
+ip_blocked: "IP bloqués:"
+
+# Information
+accept_message: "Vous avez accepté le message, vous pouvez désormais créer votre compte avec la commande **/createaccount <nom d'utilisateur> <mot de passe>**"
+action_success: "L'action a bien été effectué!"
+allowed: "Autorisés:"
+blocked: "Bloqués:"

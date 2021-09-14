@@ -7,28 +7,47 @@ public class User {
 
     private final Player player;
     private boolean isLogged = false;
-    private Location loginLocation;
+    private Location loginLocation = null;
 
     public User(Player player, Location loginLocation){
         this.player = player;
         this.loginLocation = loginLocation;
     }
 
-    public Player getPlayer(){
-        return this.player;
-    }
-    public boolean isLogged(){
-        return this.isLogged;
-    }
-    public Location getLoginLocation(){
-        return this.loginLocation;
+    public User(Player player, boolean isLogged){
+        this.player = player;
+        this.isLogged = isLogged;
     }
 
+    // Getters
+    public Player getPlayer() {
+        return player;
+    }
+    public boolean isLogged() {
+        return isLogged;
+    }
+    public Location getLoginLocation() {
+        return loginLocation;
+    }
+
+    // Setters
     public void setIsLogged(boolean value){
-        isLogged = value;
+        this.isLogged = value;
     }
-    public void setLoginLocation(Location location){
-        loginLocation = location;
+    public void setLoginLocation(Location loginLocation) {
+        this.loginLocation = loginLocation;
     }
+
+    // Other
+    @Deprecated
+    public boolean checkPassword(){
+        return false;
+    }
+
+    @Deprecated
+    public void setPassword(){
+
+    }
+
 
 }

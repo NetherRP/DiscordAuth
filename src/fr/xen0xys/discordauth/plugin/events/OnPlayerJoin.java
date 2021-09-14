@@ -1,43 +1,63 @@
 package fr.xen0xys.discordauth.plugin.events;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth.bot.BotUtils;
-import fr.xen0xys.discordauth.bot.embeds.PlayerJoinEmbed;
-import fr.xen0xys.discordauth.databases.SecurityDatabase;
+import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.discord.embeds.PlayerJoinEmbed;
 import fr.xen0xys.discordauth.models.User;
-import fr.xen0xys.discordauth.utils.PluginUtils;
+import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth.plugin.utils.PluginUtils;
+import fr.xen0xys.xen0lib.utils.Status;
+import fr.xen0xys.xen0lib.utils.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class OnPlayerJoin implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
+
+        AccountTable accountTable = DiscordAuth.getAccountTable();
         Player player = e.getPlayer();
-        if(DiscordAuth.getConfigurationManager().getEnableConnectionMessage())
+        User user;
+
+        // If tp on login is enabled
+        if(DiscordAuth.getConfiguration().isTpOnLogin()){
+            player.teleport(DiscordAuth.getConfiguration().getSpawnPoint());
+        }
+
+        // Send message if login sending is enabled
+        if(DiscordAuth.getConfiguration().getEnableConnectionMessage())
             BotUtils.sendEmbed(new PlayerJoinEmbed(player));
-        DiscordAuth.getUsers().put(player.getName(), new User(player, e.getPlayer().getLocation()));
-        User user = DiscordAuth.getUsers().get(player.getName());
-        if(user != null){
-            if(new SecurityDatabase().hasSession(player.getName(), PluginUtils.getPlayerIP(player))){
-                user.setIsLogged(true);
-                player.sendMessage(ChatColor.GREEN + "You has been auto-disconnected (session)");
+
+        // First time login
+        if(!e.getPlayer().hasPlayedBefore()){
+            // If first time tp is enabled
+            if(DiscordAuth.getConfiguration().isFirstTimeTp()){
+                player.teleport(DiscordAuth.getConfiguration().getSpawnPoint());
+                user = new User(player, DiscordAuth.getConfiguration().getSpawnPoint());
             }else{
-                player.sendMessage(String.format("%s%sPlease login yourself using: /login <password>", ChatColor.UNDERLINE, ChatColor.DARK_AQUA));
+                user = new User(player, player.getLocation());
             }
-            if(!player.hasPlayedBefore()){
-                initializePlayer(user);
+        // Already played
+        }else{
+            user = new User(player, player.getLocation());
+            // Check if payer has session
+            if(accountTable.isPlayerHasSession(player) == Status.HasSession){
+                user.setIsLogged(true);
+                if(accountTable.setLastLogin(player, Utils.getPlayerIP(player)) != Status.Success){
+                    player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().sessionEnd);
+                }
+                player.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().sessionLogin);
+            }else{
+                user.setLoginLocation(player.getLocation());
+                player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().loginRequest);
+                PluginUtils.displayLoginScreen(player);
             }
         }
+
+        DiscordAuth.getUsers().put(player.getName(), user);
     }
 
-    private void initializePlayer(User user){
-        Location spawn = DiscordAuth.getSpawnLocation();
-        user.setLoginLocation(spawn);
-        user.getPlayer().teleport(spawn);
-    }
 }

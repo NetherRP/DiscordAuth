@@ -1,84 +1,231 @@
 package fr.xen0xys.discordauth;
 
-import fr.xen0xys.discordauth.bot.BotUtils;
-import fr.xen0xys.discordauth.bot.botevents.*;
-import fr.xen0xys.discordauth.bstats.Metrics;
-import fr.xen0xys.discordauth.databases.*;
-import fr.xen0xys.discordauth.models.*;
-import fr.xen0xys.discordauth.plugin.commands.accounts.*;
+import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.discord.events.OnMessageReceived;
+import fr.xen0xys.discordauth.discord.events.OnPrivateMessageReceived;
+import fr.xen0xys.discordauth.models.User;
+import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth.plugin.PluginAsyncLoop;
+import fr.xen0xys.discordauth.plugin.commands.*;
+import fr.xen0xys.discordauth.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
+import fr.xen0xys.discordauth.plugin.commands.tabcompleters.IpTabCompleter;
+import fr.xen0xys.discordauth.plugin.config.CustomConfiguration;
+import fr.xen0xys.discordauth.plugin.config.Language;
 import fr.xen0xys.discordauth.plugin.events.*;
-import fr.xen0xys.discordauth.utils.ConsoleFilter;
+import fr.xen0xys.discordauth.plugin.utils.ConsoleFilter;
+import fr.xen0xys.xen0lib.database.Database;
+import fr.xen0xys.xen0lib.utils.Status;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class DiscordAuth extends JavaPlugin {
-    private static long messageId = 0L;
-    private static long guildId = 0L;
-    private static long channelId = 0L;
-    private static JDA bot;
-    private static SkinManager skinManager;
-    private static final String LOG_PREFIX = "[DiscordAuth]: ";
-    private static DatabaseProvider databaseProvider;
-    private static final HashMap<String, User> USERS = new HashMap<>();
+
+    private static Plugin instance;
+    private static Logger logger;
+    private static CustomConfiguration configuration;
+    private static Language language;
+    private static Database database;
     private static PluginAsyncLoop pluginAsyncLoop;
-    private static ConfigurationManager configurationManager;
-    private static Location spawnLocation;
+    private static HashMap<String, User> users = new HashMap<>();
+
+    //BOT
+    private static JDA bot;
+
+    // DATABASE
+    private static AccountTable accountTable;
+
+    public static Language getLanguage() {
+        return language;
+    }
 
     @Override
     public void onLoad() {
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Loading plugin");
-        configurationManager = new ConfigurationManager(this);
-        try {
-            buildBot();
-        } catch (LoginException e) {
-            e.printStackTrace();
-        }
-        databaseProvider = new DatabaseProvider();
         super.onLoad();
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin loaded");
+
+        this.registerFilters();
     }
 
     @Override
     public void onDisable() {
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Disabling plugin");
-        pluginAsyncLoop.stop();
-        stopBot();
         super.onDisable();
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin disabled");
+
+        logger.info("Unregistering events...");
+        this.unregisterEvents();
+        logger.info("Events unregistered!");
+
+        if(pluginAsyncLoop != null){
+            logger.info("Stopping async loop...");
+            pluginAsyncLoop.stop();
+            logger.info("Async loop stopped!");
+        }else{
+            logger.info("Skip async loop stopping!");
+        }
+
+        database.disconnect();
+
+        if(bot != null){
+            logger.info("Disabling bot...");
+            this.stopBot();
+            logger.info("Bot stopped!");
+        }else{
+            logger.info("Skip bot stopping!");
+        }
     }
 
     @Override
     public void onEnable() {
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Enabling plugin");
-        registerEvents();
-        registerCommands();
-        registerFilters();
-        skinManager = new SkinManager();
-        pluginAsyncLoop = new PluginAsyncLoop();
-        pluginAsyncLoop.runTaskAsynchronously(this);
-        spawnLocation = configurationManager.getSpawnPoint();
-        this.initializeWorlds();
         super.onEnable();
-        // Enable bstats
-        int pluginId = 10497;
-        new Metrics(this, pluginId);
-        System.out.println(ChatColor.GREEN + LOG_PREFIX + "Plugin enabled");
+
+        instance = this;
+        logger = this.getLogger();
+
+        logger.info("Loading configuration...");
+        configuration = new CustomConfiguration(this, "config.yml");
+        language = new Language(this, String.format("resources/%s.yml", configuration.getLanguage()));
+        logger.info("Configuration loaded!");
+
+        // DATABASE INIT
+        logger.info("Initializing database...");
+        if(configuration.isMySQLEnabled()){
+            HashMap<String, Object> databaseInfos = configuration.getDatabaseInfos();
+            database = new Database(String.valueOf(databaseInfos.get("host")),
+                    Integer.parseInt(String.valueOf(databaseInfos.get("port"))),
+                    String.valueOf(databaseInfos.get("user")),
+                    String.valueOf(databaseInfos.get("password")),
+                    String.valueOf(databaseInfos.get("database")));
+        }else{
+            database = new Database(this.getDataFolder().getPath(), "DiscordAuth");
+        }
+
+        if(database.connect() != Status.Success){
+            logger.severe("Cannot connect to Database, stopping server...");
+            Bukkit.getServer().shutdown();
+        }
+        accountTable = new AccountTable("DiscordAuth_Accounts", database);
+        database.openTableAndCreateINE(accountTable, "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+                "UUID VARCHAR(50)," +
+                "minecraftName VARCHAR(30)," +
+                "discordId BIGINT," +
+                "password VARCHAR(100)," +
+                "ip VARCHAR(100)," +
+                "lastLogin BIGINT," +
+                "hasSession TINYINT," +
+                "deniedIps TEXT," +
+                "allowedIps TEXT");
+
+        logger.info("Database initialized!");
+
+        // PLUGIN INIT
+        logger.info("Registering events and commands...");
+        this.registerEvents();
+        this.registerCommands();
+        logger.info("Events and commands registered!");
+
+        logger.info("Building bot...");
+        if(!configuration.isOnlySafety()){
+            if(configuration.isBotActivityEnabled()) {
+                try {
+                    this.buildBot();
+                    logger.info("Bot built");
+                } catch (LoginException | InterruptedException e) {
+                    e.printStackTrace();
+                    logger.severe("Cannot build Bot, stopping server...");
+                    Bukkit.getServer().shutdown();
+                }
+            }
+        }
+
+        if(!configuration.isOnlySafety()){
+            logger.info("Starting async loop...");
+            pluginAsyncLoop = new PluginAsyncLoop();
+            pluginAsyncLoop.runTaskAsynchronously(this);
+            logger.info("Async loop started!");
+        }else{
+            logger.info("Skip async loop loading!");
+        }
     }
 
-    private void buildBot() throws LoginException {
-        messageId = configurationManager.getMessageId();
-        guildId = configurationManager.getGuildId();
-        channelId = configurationManager.getChannelId();
-        bot = JDABuilder.createDefault(configurationManager.getBotToken()).build();
-        registerBotEvents();
+    private void registerEvents(){
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new OnPlayerJoin(), this);
+        pm.registerEvents(new OnAsyncPlayerPreLogin(), this);
+        pm.registerEvents(new OnPlayerQuit(), this);
+        pm.registerEvents(new OnPlayerMove(), this);
+        pm.registerEvents(new OnPlayerKick(), this);
+        pm.registerEvents(new OnAsyncPlayerChat(), this);
+        pm.registerEvents(new OnBlockBreak(), this);
+        pm.registerEvents(new OnEntityDamaged(), this);
+        pm.registerEvents(new OnEntityDamagedByEntity(), this);
+        pm.registerEvents(new OnFoodLevelChange(), this);
+        pm.registerEvents(new OnPlayerCommandPreprocess(), this);
+        pm.registerEvents(new OnPlayerDropItem(), this);
+        pm.registerEvents(new OnPlayerInteract(), this);
+        pm.registerEvents(new OnPlayerRespawn(), this);
+        pm.registerEvents(new OnInventoryClick(), this);
+        pm.registerEvents(new OnPlayerDeath(), this);
+    }
+
+    private void unregisterEvents(){
+        HandlerList.unregisterAll(this);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void registerCommands(){
+        this.getCommand("createaccount").setExecutor(new CreateAccountCommand());
+        this.getCommand("login").setExecutor(new LoginCommand());
+        this.getCommand("logout").setExecutor(new LogoutCommand());
+        this.getCommand("changepassword").setExecutor(new ChangePasswordCommand());
+        this.getCommand("forcelogin").setExecutor(new ForceLoginCommand());
+        this.getCommand("ip").setExecutor(new IpCommand());
+        this.getCommand("ip").setTabCompleter(new IpTabCompleter());
+        this.getCommand("discordauth").setExecutor(new DiscordAuthCommand());
+        this.getCommand("discordauth").setTabCompleter(new DiscordAuthTabCompleter());
+    }
+
+    private void registerFilters(){
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new ConsoleFilter());
+    }
+
+    // BOT
+    private void buildBot() throws LoginException, InterruptedException {
+        bot = JDABuilder.createDefault(configuration.getBotToken()).build().awaitReady();
+
+        // Set bot status
+        Activity activity;
+        String text = configuration.getBotActivityText();
+        activity = switch (configuration.getBotActivityType()) {
+            case "STREAMING" -> Activity.streaming(text, configuration.getBotActivityUrl());
+            case "LISTENING" -> Activity.listening(text);
+            case "WATCHING" -> Activity.watching(text);
+            default -> Activity.playing(text);
+        };
+        bot.getPresence().setActivity(activity);
+
+        // Sending message for server started
+        BotUtils.sendMessage(BotUtils.getServerStartMessage());
+
+        // Add reaction to message
+        Message message = BotUtils.retrieveMessageFromId(configuration.getGuildId(), configuration.getMessageId());
+        if(message != null){
+            message.addReaction(configuration.getReactionName()).complete();
+        }
+        // Enable or not discord commands
+        if(!configuration.isOnlySafety()){
+            registerBotEvents();
+        }
     }
     private void stopBot(){
         bot.getRegisteredListeners().forEach(bot::removeEventListener);
@@ -92,80 +239,32 @@ public class DiscordAuth extends JavaPlugin {
     }
 
     private void registerBotEvents(){
-        bot.addEventListener(new OnReady());
         bot.addEventListener(new OnMessageReceived());
         bot.addEventListener(new OnPrivateMessageReceived());
     }
 
-    private void registerEvents(){
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new OnAsyncPlayerChat(), this);
-        pm.registerEvents(new OnPlayerQuit(), this);
-        pm.registerEvents(new OnPlayerJoin(), this);
-        pm.registerEvents(new OnPlayerMove(), this);
-        pm.registerEvents(new OnPlayerCommandPreprocess(), this);
-        pm.registerEvents(new OnFoodLevelChange(), this);
-        pm.registerEvents(new OnEntityDamaged(), this);
-        pm.registerEvents(new OnEntityDamagedByEntity(), this);
-        pm.registerEvents(new OnPlayerDropItem(), this);
-        pm.registerEvents(new OnPlayerInteract(), this);
-        pm.registerEvents(new OnBlockBreak(), this);
-        pm.registerEvents(new OnPlayerRespawn(), this);
-        pm.registerEvents(new OnAsyncPlayerPreLogin(), this);
-        pm.registerEvents(new OnPlayerKick(), this);
-    }
 
-    @SuppressWarnings("all")
-    private void registerCommands(){
-        this.getCommand("login").setExecutor(new LoginCommand());
-        this.getCommand("logout").setExecutor(new LogoutCommand());
-        this.getCommand("forcelogin").setExecutor(new ForceLoginCommand());
-        this.getCommand("changepassword").setExecutor(new ChangePasswordCommand());
-        this.getCommand("createaccount").setExecutor(new CreateAccountCommand());
+    // GETTERS
+    public static Plugin getInstance() {
+        return instance;
     }
-
-    @SuppressWarnings("all")
-    private void initializeWorlds(){
-        World world = Bukkit.getWorld("world");
-        if(world.getName().equals("world")){
-            world.setSpawnLocation(spawnLocation);
-        }
+    public static Logger getCustomLogger() {
+        return logger;
     }
-
-    private void registerFilters(){
-        Logger logger = (Logger) LogManager.getRootLogger();
-        logger.addFilter(new ConsoleFilter());
+    public static CustomConfiguration getConfiguration() {
+        return configuration;
     }
-
-    public static long getMessageId(){
-        return messageId;
+    public static Database getDatabase() {
+        return database;
     }
-    public static long getGuildId(){
-        return guildId;
+    public static HashMap<String, User> getUsers() {
+        return users;
     }
-    public static long getChannelId(){
-        return channelId;
-    }
-    public static HashMap<String, User> getUsers(){
-        return USERS;
-    }
-
-    public static JDA getBot(){
+    public static JDA getBot() {
         return bot;
     }
-    public static SkinManager getSkinManager(){
-        return skinManager;
-    }
-    public static DatabaseProvider getDatabaseProvider(){
-        return databaseProvider;
-    }
-    public static PluginAsyncLoop getPluginAsyncLoop(){
-        return pluginAsyncLoop;
-    }
-    public static ConfigurationManager getConfigurationManager(){
-        return configurationManager;
-    }
-    public static Location getSpawnLocation(){
-        return spawnLocation;
+
+    public static AccountTable getAccountTable() {
+        return accountTable;
     }
 }
