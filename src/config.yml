@@ -68,7 +68,7 @@ spawnpoint:
     # Tp player to spawn point if his die
     enable: false
     # If enabled, player will be tp at death even if his had a bed respawn
-    even_with_bed: true
+    even_with_bed: false
   # Spawn point location settings
   infos:
     world_name: world

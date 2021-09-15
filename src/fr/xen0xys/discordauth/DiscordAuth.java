@@ -104,9 +104,9 @@ public class DiscordAuth extends JavaPlugin {
                     Integer.parseInt(String.valueOf(databaseInfos.get("port"))),
                     String.valueOf(databaseInfos.get("user")),
                     String.valueOf(databaseInfos.get("password")),
-                    String.valueOf(databaseInfos.get("database")));
+                    String.valueOf(databaseInfos.get("database")), logger);
         }else{
-            database = new Database(this.getDataFolder().getPath(), "DiscordAuth");
+            database = new Database(this.getDataFolder().getPath(), "DiscordAuth", logger);
         }
 
         if(database.connect() != Status.Success){

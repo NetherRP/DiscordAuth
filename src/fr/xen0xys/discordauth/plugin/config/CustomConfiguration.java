@@ -117,11 +117,11 @@ public class CustomConfiguration extends ConfigurationReader {
     public Location getSpawnPoint(){
         String worldName = this.getConfiguration().getString("spawnpoint.infos.world_name");
         if(worldName != null){
-            int x = this.getConfiguration().getInt("spawnpoint.infos.x");
-            int y = this.getConfiguration().getInt("spawnpoint.infos.y");
-            int z = this.getConfiguration().getInt("spawnpoint.infos.z");
-            int pitch = this.getConfiguration().getInt("spawnpoint.infos.facing.pitch");
-            int yaw = this.getConfiguration().getInt("spawnpoint.infos.facing.yaw");
+            double x = this.getConfiguration().getDouble("spawnpoint.infos.x");
+            double y = this.getConfiguration().getDouble("spawnpoint.infos.y");
+            double z = this.getConfiguration().getDouble("spawnpoint.infos.z");
+            float pitch = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.pitch");
+            float yaw = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.yaw");
             return new Location(Bukkit.getWorld(worldName), x, y, z, pitch, yaw);
         }
         return null;
