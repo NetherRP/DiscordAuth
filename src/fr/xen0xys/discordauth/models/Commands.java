@@ -23,7 +23,7 @@ public abstract class Commands {
     public static Status createAccount(String minecraftName, long discordId, String password){
         // Check if account already exist
         AccountTable accountTable = DiscordAuth.getAccountTable();
-        if(accountTable.isDiscordUserExist(discordId) == Status.NotExist){
+        if(accountTable.isDiscordUserExist(discordId) == Status.NotExist ||discordId == 0){
             // Encrypt password
             String encryptedPassword = PluginUtils.encryptPassword(password);
             // UUID uuid = Utils.getUUIDFromUsername(minecraftName);
