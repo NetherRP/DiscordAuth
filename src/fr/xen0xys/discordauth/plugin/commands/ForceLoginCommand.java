@@ -27,9 +27,8 @@ public class ForceLoginCommand implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().unknownSpecifiedPlayer);
             }
         }else{
-            // commandSender.sendMessage(ChatColor.RED + "Utilisation: /forcelogin <minecraftName>");
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

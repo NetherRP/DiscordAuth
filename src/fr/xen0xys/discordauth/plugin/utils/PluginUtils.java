@@ -3,9 +3,9 @@ package fr.xen0xys.discordauth.plugin.utils;
 import com.google.common.primitives.Chars;
 import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.models.Commands;
-import fr.xen0xys.xen0lib.gui.anvilgui.AnvilGUI;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -133,6 +133,10 @@ public abstract class PluginUtils {
                 return false;
         }
         return true;
+    }
+
+    public static boolean checkDBRegex(String chain){
+        return chain.matches("^[\\w@$!%*#?&]{5,50}$");
     }
 
 }

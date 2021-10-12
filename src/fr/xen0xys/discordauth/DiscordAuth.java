@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 
 public class DiscordAuth extends JavaPlugin {
 
+    // createaccount Xen0Xys 266646920473214978 test
+
     private static Plugin instance;
     private static Logger logger;
     private static CustomConfiguration configuration;
@@ -263,7 +265,6 @@ public class DiscordAuth extends JavaPlugin {
     public static JDA getBot() {
         return bot;
     }
-
     public static AccountTable getAccountTable() {
         return accountTable;
     }

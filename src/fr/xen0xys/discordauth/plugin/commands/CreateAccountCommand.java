@@ -22,11 +22,12 @@ public class CreateAccountCommand implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().accountCreatedSuccessful);
             }else if(status == Status.Exist){
                 commandSender.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().alreadyHasAccount);
+            }else if(status == Status.Invalid){
+                commandSender.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().passwordDefineError);
             }else{
                 commandSender.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().errorOccurred);
             }
         }else{
-            // commandSender.sendMessage("/createaccount <minecraftName> <discordId> <password>");
             return false;
         }
         return true;

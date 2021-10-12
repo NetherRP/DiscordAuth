@@ -42,6 +42,7 @@ public class Language extends ConfigurationReader {
     public final String cannotBeExecutedFromCLI;
     public final String unknownSpecifiedPlayer;
     public final String kickMessage;
+    public final String passwordDefineError;
 
     // Advancements:
     public final String successComplete;
@@ -102,6 +103,7 @@ public class Language extends ConfigurationReader {
         cannotBeExecutedFromCLI = this.getValue("cant_be_executed_from_cli");
         unknownSpecifiedPlayer = this.getValue("unknown_specified_player");
         kickMessage = this.getValue("kick_message");
+        passwordDefineError = this.getValue("password_define_error");
 
         // Advancements:
         successComplete = this.getValue("success_complete");

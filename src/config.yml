@@ -83,8 +83,8 @@ other:
   # Language file that will be used (can be custom file name in DiscordAuth/resources folder)
   # Can be "en_EN" or "fr_FR"
   language: en_EN
-  # Determine if server use UUID or Username
-  premium: true
+  # Determine if server use UUID or Username, set default for server value
+  premium: default
   # Session duration in seconds, set 0 to disable
   session_duration: 3600
   # Set if login window is displayed when player connect or logout

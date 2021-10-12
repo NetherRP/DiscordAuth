@@ -36,6 +36,7 @@ public class OnPrivateMessageReceived extends ListenerAdapter {
                         case Success -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.OK, DiscordAuth.getLanguage().accountCreatedSuccessful), channel);
                         case Exist -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().alreadyHasAccount), channel);
                         case SQLError -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().errorOccurred), channel);
+                        case Invalid -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().passwordDefineError), channel);
                     }
                 }else{
                     BotUtils.sendEmbed(new HelpEmbed());

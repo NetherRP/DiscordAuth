@@ -132,7 +132,11 @@ public class CustomConfiguration extends ConfigurationReader {
     public Object getLanguage() {
         return this.getConfiguration().getString("other.language");
     }
+    @SuppressWarnings("ConstantConditions")
     public boolean getPremium(){
+        if(this.getConfiguration().getString("other.premium").equalsIgnoreCase("default")){
+            return Bukkit.getServer().getOnlineMode();
+        }
         return this.getConfiguration().getBoolean("other.premium");
     }
     public int getSessionDuration(){

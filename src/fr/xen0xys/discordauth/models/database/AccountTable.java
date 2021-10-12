@@ -44,20 +44,31 @@ public class AccountTable extends Table {
      * @return Xen0Lib Status: Exist, NotExist, SQLError
      */
     public Status isUserHasAccount(UUID uuid, String minecraftName){
+        boolean useUUID = DiscordAuth.getConfiguration().getPremium();
         String query;
-        if(DiscordAuth.getConfiguration().getPremium()){
+        if(useUUID){
             query = String.format("SELECT discordId FROM %s WHERE UUID='%s'", this.getTableName(), uuid);
         }else{
             query = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
         }
         Status status = this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
         if(status == Status.Exist){
-            return Status.Exist;
-        }else if(status == Status.NotExist){
-            if(DiscordAuth.getConfiguration().getPremium()){
+            // Set uuid if not exist and if crack
+            if(!useUUID){
                 String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
                 if(fetchedUUID != null && fetchedUUID.equals("")){
-                    if(this.setUUID(uuid, minecraftName) == Status.Success){
+                    this.setUUID(uuid, minecraftName);
+                }
+            }
+            // Account exist
+            return Status.Exist;
+        }else if(status == Status.NotExist){
+            if(useUUID){
+                String query2 = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
+                if(this.getDatabase().isDataExist(this.getDatabase().executeQuery(query2)) == Status.Exist){
+                    String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
+                    if(fetchedUUID != null && fetchedUUID.equals("")){
+                        this.setUUID(uuid, minecraftName);
                         return Status.Exist;
                     }
                 }
@@ -143,7 +154,6 @@ public class AccountTable extends Table {
                         }
                     }
                 }
-
             }
         } catch (SQLException e) {
             e.printStackTrace();

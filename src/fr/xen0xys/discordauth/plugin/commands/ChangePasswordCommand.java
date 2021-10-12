@@ -19,6 +19,8 @@ public class ChangePasswordCommand implements CommandExecutor {
                 Status status = Commands.changePassword(player, newPassword);
                 if(status == Status.Success){
                     player.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().updatedPassword);
+                }else if(status == Status.Invalid){
+                    player.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().passwordDefineError);
                 }else{
                     player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().errorOccurred);
                 }

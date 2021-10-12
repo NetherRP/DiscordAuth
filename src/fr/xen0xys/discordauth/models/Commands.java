@@ -24,6 +24,10 @@ public abstract class Commands {
         // Check if account already exist
         AccountTable accountTable = DiscordAuth.getAccountTable();
         if(accountTable.isDiscordUserExist(discordId) == Status.NotExist ||discordId == 0){
+            // Check password integrity
+            if(!PluginUtils.checkDBRegex(minecraftName) || !PluginUtils.checkDBRegex(password)){
+                return Status.Invalid;
+            }
             // Encrypt password
             String encryptedPassword = PluginUtils.encryptPassword(password);
             // UUID uuid = Utils.getUUIDFromUsername(minecraftName);
@@ -41,8 +45,11 @@ public abstract class Commands {
      * @return Xen0Lib Status: Valid, Invalid, NotExist, SQLError
      */
     public static Status login(Player player, String password){
+        if(!PluginUtils.checkDBRegex(password)){
+            return Status.Invalid;
+        }
         AccountTable accountTable = DiscordAuth.getAccountTable();
-        Status status = accountTable.checkPassword(player, PluginUtils.encryptPassword(password));;
+        Status status = accountTable.checkPassword(player, PluginUtils.encryptPassword(password));
         if(status == Status.Valid){
             accountTable.setLastLogin(player, Utils.getPlayerIP(player));
             accountTable.setSession(true, player);
@@ -108,6 +115,9 @@ public abstract class Commands {
      * @return Xen0Lib Status: Success, SQLError
      */
     public static Status changePassword(Player player, String newPassword){
+        if(!PluginUtils.checkDBRegex(newPassword)){
+            return Status.Invalid;
+        }
         String encryptPassword = PluginUtils.encryptPassword(newPassword);
 
         AccountTable accountTable = DiscordAuth.getAccountTable();

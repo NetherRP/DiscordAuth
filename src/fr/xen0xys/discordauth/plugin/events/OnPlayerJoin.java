@@ -9,6 +9,7 @@ import fr.xen0xys.discordauth.plugin.utils.PluginUtils;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,30 +32,26 @@ public class OnPlayerJoin implements Listener {
         if(DiscordAuth.getConfiguration().getEnableConnectionMessage())
             BotUtils.sendEmbed(new PlayerJoinEmbed(player));
 
-        // First time login
-        if(!e.getPlayer().hasPlayedBefore()){
-            // If first time tp is enabled
-            if(DiscordAuth.getConfiguration().isFirstTimeTp()){
-                player.teleport(DiscordAuth.getConfiguration().getSpawnPoint());
-                user = new User(player, DiscordAuth.getConfiguration().getSpawnPoint());
-            }else{
-                user = new User(player, player.getLocation());
+
+        Location playerLocation = player.getLocation();
+        // Only on first time login
+        if(!e.getPlayer().hasPlayedBefore() && DiscordAuth.getConfiguration().isFirstTimeTp()) {
+            player.teleport(DiscordAuth.getConfiguration().getSpawnPoint());
+            playerLocation = DiscordAuth.getConfiguration().getSpawnPoint();
+        }
+
+        user = new User(player, playerLocation);
+        // Check if payer has session
+        if(accountTable.isPlayerHasSession(player) == Status.HasSession){
+            user.setIsLogged(true);
+            if(accountTable.setLastLogin(player, Utils.getPlayerIP(player)) != Status.Success){
+                player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().sessionEnd);
             }
-        // Already played
+            player.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().sessionLogin);
         }else{
-            user = new User(player, player.getLocation());
-            // Check if payer has session
-            if(accountTable.isPlayerHasSession(player) == Status.HasSession){
-                user.setIsLogged(true);
-                if(accountTable.setLastLogin(player, Utils.getPlayerIP(player)) != Status.Success){
-                    player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().sessionEnd);
-                }
-                player.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().sessionLogin);
-            }else{
-                user.setLoginLocation(player.getLocation());
-                player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().loginRequest);
-                PluginUtils.displayLoginScreen(player);
-            }
+            user.setLoginLocation(player.getLocation());
+            player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().loginRequest);
+            PluginUtils.displayLoginScreen(player);
         }
 
         DiscordAuth.getUsers().put(player.getName(), user);

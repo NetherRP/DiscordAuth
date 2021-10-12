@@ -34,6 +34,7 @@ player_not_connected: "You are not connected on the server!"
 cant_be_executed_from_cli: "This command can't be executed from console!"
 unknown_specified_player: "&cUnknown specified player"
 kick_message: "You don't has access to this server!\nIn case of error, please contact engineer!"
+password_define_error: "The password length may be between 5 and 50 chars\nThey may contain only alphanumerical chars and following chars: @$!%*#?&"
 
 # Advancements:
 success_complete: "%s has completed followed(s) success: %s"
