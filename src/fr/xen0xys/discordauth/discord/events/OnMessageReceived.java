@@ -15,7 +15,7 @@ public class OnMessageReceived extends ListenerAdapter {
         super.onMessageReceived(event);
         if(!event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())){
             // Check if shared chat is enabled
-            if(DiscordAuth.getConfiguration().getEnableSharedChat()){
+            if(DiscordAuth.getConfiguration().getEnableSharedChat() && !event.getAuthor().isBot()){
                 if(event.getChannelType() == ChannelType.TEXT){
                     TextChannel channel = (TextChannel) event.getChannel();
                     if(channel.getIdLong() == DiscordAuth.getConfiguration().getChannelId()){
