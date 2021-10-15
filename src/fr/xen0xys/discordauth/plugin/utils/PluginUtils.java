@@ -136,7 +136,7 @@ public abstract class PluginUtils {
     }
 
     public static boolean checkDBRegex(String chain){
-        return chain.matches("^[\\w@$!%*#?&]{5,50}$");
+        return chain.matches("^[\\w@$!%*#?&.]{5,50}$");
     }
 
 }
