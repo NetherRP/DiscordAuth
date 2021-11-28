@@ -2,9 +2,13 @@ package fr.xen0xys.discordauth.plugin.utils;
 
 import com.google.common.primitives.Chars;
 import fr.xen0xys.discordauth.DiscordAuth;
+import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.discord.embeds.MessageEmbed;
 import fr.xen0xys.discordauth.models.Commands;
+import fr.xen0xys.discordauth.models.database.AccountTable;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -137,6 +141,17 @@ public abstract class PluginUtils {
 
     public static boolean checkDBRegex(String chain){
         return chain.matches("^[\\w@$!%*#?&.]{5,50}$");
+    }
+
+    public static void sendConnectionWarning(String minecraftName, String playerIp){
+        AccountTable accountTable = DiscordAuth.getAccountTable();
+        long userId = accountTable.getDiscordIdFromMinecraftName(minecraftName);
+        if(userId != -1){
+            PrivateChannel channel = BotUtils.getUserPrivateChannelFromId(userId);
+            if(channel != null){
+                BotUtils.sendEmbed(new MessageEmbed(StatusColor.Warning, String.format(DiscordAuth.getLanguage().unauthorizedConnection, playerIp, playerIp, playerIp)), BotUtils.getUserPrivateChannelFromId(userId));
+            }
+        }
     }
 
 }

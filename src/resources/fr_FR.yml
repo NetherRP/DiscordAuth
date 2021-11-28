@@ -7,12 +7,14 @@ forced_login: "Vous êtes connecté avec succès (Forcelogin)"
 session_login: "Vous êtes connecté avec succès (Session)"
 need_login: "Vous avez besoin d'être connecté pour faire cela!"
 player_force_logged: "Le joueur spécifié à été connecté de force!"
+connect_once: "Vous avez besoin de vous connecter une première fois au serveur pour faire cela!"
 
 # Account:
 account_created_successful: "Votre compte à été crée avec succès!"
 already_has_account: "Vous possédez déjà un compte!"
 account_not_exist: "Vous n'avez pas encore de compte, veuillez en créer un!"
 no_reaction: "Votre compte n'a pas pu être crée car vous n'avez pas réagi au message demandé!"
+unauthorized_connection: "Une connection non-autorisé a été détecté avec l'ip: %s\nEnvoyez /ip allow %s pour autoriser cette ip!\nEnvoyez /ip block %s pour bloquer cette ip!"
 
 # Password:
 updated_password: "Votre mot de passe à été mis à jour!"
@@ -48,6 +50,7 @@ all_ip_allowed: "Toutes les IP sont autorisés"
 all_ip_blocked: "Toutes les IP sont bloqués"
 ip_allowed: "IP autorisés:"
 ip_blocked: "IP bloqués:"
+unauthorized_ip: "Votre ip n'a pas été autorisé par le propriétaire du compte!"
 
 # Information
 accept_message: "Vous avez accepté le message, vous pouvez désormais créer votre compte avec la commande **/createaccount <nom d'utilisateur> <mot de passe>**"

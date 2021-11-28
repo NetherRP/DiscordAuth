@@ -39,7 +39,7 @@ public class OnPrivateMessageReceived extends ListenerAdapter {
                         case Invalid -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().passwordDefineError), channel);
                     }
                 }else{
-                    BotUtils.sendEmbed(new HelpEmbed());
+                    BotUtils.sendEmbed(new HelpEmbed(), channel);
                 }
             }else{
                 BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().noReaction), channel);
@@ -55,7 +55,17 @@ public class OnPrivateMessageReceived extends ListenerAdapter {
         }else if(message.getContentRaw().startsWith("/ip")){
             String[] args = PluginUtils.getCommandArgs(message.getContentRaw());
             if(args.length >= 1){
+                // If discord user not exist
+                if(DiscordAuth.getAccountTable().isDiscordUserExist(user.getIdLong()) != Status.Exist){
+                    BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().accountNotExist), channel);
+                    return;
+                }
                 String minecraftName = DiscordAuth.getAccountTable().getMinecraftNameFromDiscordId(user.getIdLong());
+                // If player has not connected once
+                if(DiscordAuth.getAccountTable().getUUIDFromMinecraftName(minecraftName).equals("")){
+                    BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().connectOnce), channel);
+                    return;
+                }
                 UUID uuid = UUID.fromString(DiscordAuth.getAccountTable().getUUIDFromMinecraftName(minecraftName));
                 if(args[0].equals("list")){
                     BotUtils.sendEmbed(new IpListEmbed(uuid, minecraftName, true), channel);
@@ -69,11 +79,11 @@ public class OnPrivateMessageReceived extends ListenerAdapter {
                         case Invalid -> BotUtils.sendEmbed(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().invalidIpFormat), channel);
                     }
                 }else{
-                    BotUtils.sendEmbed(new HelpEmbed());
+                    BotUtils.sendEmbed(new HelpEmbed(), channel);
                 }
             }
         }else if(message.getContentRaw().startsWith("/")){
-            BotUtils.sendEmbed(new HelpEmbed());
+            BotUtils.sendEmbed(new HelpEmbed(), channel);
         }
     }
 

@@ -158,4 +158,8 @@ public abstract class BotUtils {
         return new String[]{};
     }
 
+    public static PrivateChannel getUserPrivateChannelFromId(long id){
+        return DiscordAuth.getBot().getSelfUser().getJDA().openPrivateChannelById(id).complete();
+    }
+
 }

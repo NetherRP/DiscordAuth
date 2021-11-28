@@ -15,12 +15,14 @@ public class Language extends ConfigurationReader {
     public final String sessionLogin;
     public final String needLogin;
     public final String playerForceLogged;
+    public final String connectOnce;
 
     // Account:
     public final String accountCreatedSuccessful;
     public final String alreadyHasAccount;
     public final String accountNotExist;
     public final String noReaction;
+    public final String unauthorizedConnection;
 
     // Password:
     public final String updatedPassword;
@@ -56,6 +58,7 @@ public class Language extends ConfigurationReader {
     public final String allIpBlocked;
     public final String ipAllowed;
     public final String ipBlocked;
+    public final String unauthorizedIp;
 
     // Information
     public final String acceptMessage;
@@ -76,12 +79,14 @@ public class Language extends ConfigurationReader {
         sessionLogin = this.getValue("session_login");
         needLogin = this.getValue("need_login");
         playerForceLogged = this.getValue("player_force_logged");
+        connectOnce = this.getValue("connect_once");
 
         // Account:
         accountCreatedSuccessful = this.getValue("account_created_successful");
         alreadyHasAccount = this.getValue("already_has_account");
         accountNotExist = this.getValue("account_not_exist");
         noReaction = this.getValue("no_reaction");
+        unauthorizedConnection = this.getValue("unauthorized_connection");
 
         // Password:
         updatedPassword = this.getValue("updated_password");
@@ -117,6 +122,7 @@ public class Language extends ConfigurationReader {
         allIpBlocked = this.getValue("all_ip_blocked");
         ipAllowed = this.getValue("ip_allowed");
         ipBlocked = this.getValue("ip_blocked");
+        unauthorizedIp = this.getValue("unauthorized_ip");
 
         // Information
         acceptMessage = this.getValue("accept_message");

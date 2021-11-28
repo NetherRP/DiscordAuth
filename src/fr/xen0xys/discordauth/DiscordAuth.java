@@ -40,7 +40,7 @@ public class DiscordAuth extends JavaPlugin {
     private static Language language;
     private static Database database;
     private static PluginAsyncLoop pluginAsyncLoop;
-    private static HashMap<String, User> users = new HashMap<>();
+    private static final HashMap<String, User> users = new HashMap<>();
 
     //BOT
     private static JDA bot;

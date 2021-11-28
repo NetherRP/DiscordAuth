@@ -129,6 +129,19 @@ public class AccountTable extends Table {
         return null;
     }
 
+    public long getDiscordIdFromMinecraftName(String minecraftName) {
+        String query = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
+        ResultSet rs = this.getDatabase().executeQuery(query);
+        try {
+            if(rs.next()){
+                return rs.getLong("discordId");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     /**
      * Check if player has a session
      * @param player Player

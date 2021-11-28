@@ -7,12 +7,14 @@ forced_login: "You are login successful (Forcelogin)"
 session_login: "You are login successful (Session)"
 need_login: "You need to be logged in to do that"
 player_force_logged: "Player has been force logged!"
+connect_once: "You need to connect once to server to do that!"
 
 # Account:
 account_created_successful: "Your account has been created successful!"
 already_has_account: "You already has an account!"
 account_not_exist: "You don't has account, please create one!"
 no_reaction: "Your account cannot be created because you have not react to the require message!"
+unauthorized_connection: "An unauthorised connection has been detected with the ip: %s\nSend /ip allow %s to allow this ip!\nSend /ip block %s to block this ip!"
 
 # Password:
 updated_password: "Your password has been updated!"
@@ -48,6 +50,7 @@ all_ip_allowed: "All IP are allowed"
 all_ip_blocked: "All IP are blocked"
 ip_allowed: "Allowed IP:"
 ip_blocked: "Blocked IP:"
+unauthorized_ip: "Your ip has not been authorised by the account owner!"
 
 # Information
 accept_message: "You have accepted the message, now you can create your account by sending the command **/createaccount <username> <password>**"
