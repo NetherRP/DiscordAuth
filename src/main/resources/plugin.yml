@@ -1,7 +1,7 @@
 author: Xen0Xys
 name: DiscordAuth
-version: 2.0.1
-api-version: 1.17
+version: 2.1.0
+api-version: 1.18
 main: fr.xen0xys.discordauth.DiscordAuth
 database: true
 depend:
