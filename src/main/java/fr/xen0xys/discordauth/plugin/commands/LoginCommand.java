@@ -16,7 +16,11 @@ public class LoginCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player player){
             if(strings.length == 0){
-                PluginUtils.displayLoginScreen(player);
+                if(!DiscordAuth.getUsers().get(player.getName()).isLogged()){
+                    PluginUtils.displayLoginScreen(player);
+                }else{
+                    player.sendMessage(ChatColor.RED + DiscordAuth.getLanguage().alreadyConnected);
+                }
             }else{
                 Status status = Commands.login(player, strings[0]);
                 if(status == Status.Valid){
