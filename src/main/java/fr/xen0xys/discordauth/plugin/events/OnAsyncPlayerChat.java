@@ -12,7 +12,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class OnAsyncPlayerChat implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent e){
-        if(!e.isCancelled()){
+        if(!e.isCancelled() && !DiscordAuth.getConfiguration().isOnlySafety()){
             String author = e.getPlayer().getName();
             User user = DiscordAuth.getUsers().get(author);
             if(user != null && !user.isLogged()){
