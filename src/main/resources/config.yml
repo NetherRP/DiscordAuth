@@ -35,6 +35,8 @@ discord:
   send_advancements: true
   # Send message in main channel when a player die (with his dye reason)
   send_death_messages: true
+  # Send message in main channel when server start or stop
+  send_start_stop_messages: true
   # Add logo to private messages response
   logo:
     enable: false

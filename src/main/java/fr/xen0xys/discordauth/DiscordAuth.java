@@ -217,7 +217,9 @@ public class DiscordAuth extends JavaPlugin {
         bot.getPresence().setActivity(activity);
 
         // Sending message for server started
-        BotUtils.sendMessage(BotUtils.getServerStartMessage());
+        if(getConfiguration().getStartStopMessages()){
+            BotUtils.sendMessage(BotUtils.getServerStartMessage());
+        }
 
         // Add reaction to message
         Message message = BotUtils.retrieveMessageFromId(configuration.getGuildId(), configuration.getMessageId());
@@ -231,7 +233,9 @@ public class DiscordAuth extends JavaPlugin {
     }
     private void stopBot(){
         bot.getRegisteredListeners().forEach(bot::removeEventListener);
-        BotUtils.sendMessage(BotUtils.getServerStopMessage());
+        if(getConfiguration().getStartStopMessages()){
+            BotUtils.sendMessage(BotUtils.getServerStopMessage());
+        }
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

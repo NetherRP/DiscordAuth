@@ -65,6 +65,9 @@ public class CustomConfiguration extends ConfigurationReader {
     public boolean getDeathMessages(){
         return this.getConfiguration().getBoolean("discord.send_death_messages");
     }
+    public boolean getStartStopMessages(){
+        return this.getConfiguration().getBoolean("discord.send_start_stop_messages");
+    }
     // Logo
     public boolean isLogoEnabled() {
         return this.getConfiguration().getBoolean("discord.logo.enable");
