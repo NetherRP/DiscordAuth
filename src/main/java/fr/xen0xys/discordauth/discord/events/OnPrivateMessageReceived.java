@@ -28,7 +28,8 @@ public class OnPrivateMessageReceived extends ListenerAdapter {
         PrivateChannel channel = event.getChannel();
         if(message.getContentRaw().startsWith("/createaccount")) {
             // Create account command
-            if(BotUtils.isUserHasReact(user)){
+            //if(BotUtils.isUserHasReact(user)){
+            if(true){
                 String[] args = PluginUtils.getCommandArgs(message.getContentRaw());
                 if(args.length == 2){
                     Status status = Commands.createAccount(args[0], user.getIdLong(), args[1]);

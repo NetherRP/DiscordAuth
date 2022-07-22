@@ -125,7 +125,7 @@ public class CustomConfiguration extends ConfigurationReader {
             double z = this.getConfiguration().getDouble("spawnpoint.infos.z");
             float pitch = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.pitch");
             float yaw = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.yaw");
-            return new Location(Bukkit.getWorld(worldName), x, y, z, pitch, yaw);
+            return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
         }
         return null;
     }
