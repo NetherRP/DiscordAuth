@@ -36,7 +36,7 @@ player_not_connected: "Vous n'êtes pas connecté sur le serveur!"
 cant_be_executed_from_cli: "Cette commande ne peut pas être exécuté depuis la console!"
 unknown_specified_player: "Le joueur spécifié est introuvable"
 kick_message: "Vous n'avez pas accès à ce serveur!\nEn cas d'erreur, contactez un technicien!"
-password_define_error: "Le mot de passe doit faire entre 5 et 50 caractères\nIl doit aussi n'y avoir que des caractères alphanumériques et les symboles @$!%*#?&"
+password_define_error: "Le mot de passe doit faire entre 6 et 50 caractères\nIl doit aussi contenir une majuscule et une minuscule, ainsi qu'un caractère spécial!"
 
 # Advancements:
 success_complete: "%s a complété le(s) succès suivant(s): %s"

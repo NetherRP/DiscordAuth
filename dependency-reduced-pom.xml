@@ -4,7 +4,7 @@
   <groupId>fr.xen0xys</groupId>
   <artifactId>DiscordAuth</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
-  <version>2.1.0</version>
+  <version>3.0.0</version>
   <build>
     <plugins>
       <plugin>
@@ -30,15 +30,15 @@
   </build>
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      <id>papermc</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
-      <version>1.18-R0.1-SNAPSHOT</version>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.19-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -47,13 +47,6 @@
       <version>1.1.5</version>
       <scope>system</scope>
       <systemPath>${basedir}/Libs/Xen0Lib-1.1.5.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>me.Porama6400</groupId>
-      <artifactId>JDASpigot</artifactId>
-      <version>4.3.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/Libs/JDASpigot.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

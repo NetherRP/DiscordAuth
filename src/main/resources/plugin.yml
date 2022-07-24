@@ -1,11 +1,10 @@
 author: Xen0Xys
 name: DiscordAuth
-version: 2.1.0
-api-version: 1.18
+version: 3.0.0
+api-version: 1.19
 main: fr.xen0xys.discordauth.DiscordAuth
 database: true
 depend:
-  - JDASpigot
   - Xen0Lib
 
 commands:
