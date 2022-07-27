@@ -10,7 +10,7 @@ public class AccountSlashCommand {
 
     private final CommandData commandData;
 
-    public AccountSlashCommand(JDA api){
+    public AccountSlashCommand(){
         // Create
         SubcommandData createCommandData = new SubcommandData("create", "Create your account");
         createCommandData.addOption(OptionType.STRING, "username", "Your Minecraft username", true);

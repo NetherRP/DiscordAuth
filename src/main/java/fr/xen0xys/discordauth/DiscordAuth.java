@@ -4,6 +4,7 @@ import fr.xen0xys.discordauth.config.CustomConfiguration;
 import fr.xen0xys.discordauth.config.Language;
 import fr.xen0xys.discordauth.discord.commands.AccountSlashCommand;
 import fr.xen0xys.discordauth.discord.commands.AdminAccountSlashCommand;
+import fr.xen0xys.discordauth.discord.commands.GetIdSlashCommand;
 import fr.xen0xys.discordauth.discord.events.ButtonClickListener;
 import fr.xen0xys.discordauth.discord.events.SlashCommandListener;
 import fr.xen0xys.discordauth.discord.BotUtils;
@@ -75,7 +76,7 @@ public class DiscordAuth extends JavaPlugin {
         database.openTableAndCreateINE(accountTable, "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                 "UUID VARCHAR(50)," +
                 "minecraftName VARCHAR(30)," +
-                "discordId BIGINT," +
+                "discordId BIGINT UNIQUE," +
                 "password VARCHAR(100)," +
                 "ip VARCHAR(100)," +
                 "lastLogin BIGINT," +
@@ -109,8 +110,9 @@ public class DiscordAuth extends JavaPlugin {
 
         // Slash commands creation
         Guild eventGuild = bot.getGuildById(getConfiguration().getGuildId());
-        eventGuild.upsertCommand(new AccountSlashCommand(bot).getCommandData()).queue();
-        eventGuild.upsertCommand(new AdminAccountSlashCommand(bot).getCommandData()).queue();
+        eventGuild.upsertCommand(new AccountSlashCommand().getCommandData()).queue();
+        eventGuild.upsertCommand(new AdminAccountSlashCommand().getCommandData()).queue();
+        eventGuild.upsertCommand(new GetIdSlashCommand().getCommandData()).queue();
 
         // Add listeners
         bot.addEventListener(new SlashCommandListener());

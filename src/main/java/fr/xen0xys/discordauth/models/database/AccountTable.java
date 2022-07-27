@@ -282,17 +282,13 @@ public class AccountTable extends Table {
 
     /**
      * Set player session
-     * @param player Player
+     * @param discordId Account's discord ID
      * @param newPassword New Player password
      * @return Xen0Lib Status: Success, SQLError
      */
-    public Status setPassword(Player player, String newPassword){
+    public Status setPassword(long discordId, String newPassword){
         String query;
-        if(DiscordAuthOld.getConfiguration().getPremium()){
-            query = String.format("UPDATE %s SET password='%s' WHERE uuid='%s'", this.getTableName(), newPassword, player.getUniqueId());
-        }else{
-            query = String.format("UPDATE %s SET password='%s' WHERE minecraftName='%s'", this.getTableName(), newPassword, player.getName());
-        }
+        query = String.format("UPDATE %s SET password='%s' WHERE discordId='%s'", this.getTableName(), newPassword, discordId);
         return this.getDatabase().executeUpdateQuery(query);
     }
 

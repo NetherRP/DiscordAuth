@@ -161,4 +161,8 @@ public abstract class PluginUtils {
         }
     }
 
+    public static long getRandomLong(long min, long max){
+        return max + (int)(Math.random() * ((max - min) + 1));
+    }
+
 }

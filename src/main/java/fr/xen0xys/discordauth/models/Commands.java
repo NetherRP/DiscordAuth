@@ -22,7 +22,12 @@ public abstract class Commands {
     public static Status createAccount(String minecraftName, long discordId, String password){
         // Check if account already exist
         AccountTable accountTable = DiscordAuth.getAccountTable();
-        if(accountTable.isDiscordUserExist(discordId) == Status.NotExist ||discordId == 0){
+        if (discordId == 0) {
+            do{
+                discordId = PluginUtils.getRandomLong(0L, Long.MAX_VALUE);
+            }while (accountTable.isDiscordUserExist(discordId) == Status.Exist);
+        }
+        if(accountTable.isDiscordUserExist(discordId) == Status.NotExist || discordId == 0){
             // Check password integrity
             if(!PluginUtils.checkPasswordRegex(minecraftName) || !PluginUtils.checkPasswordRegex(password)){
                 return Status.Invalid;
@@ -109,18 +114,22 @@ public abstract class Commands {
 
     /**
      * Change player password
-     * @param player Player
+     * @param discordId Account's discord ID
      * @param newPassword New Player password
-     * @return Xen0Lib Status: Success, SQLError
+     * @return Xen0Lib Status: Invalid, Success, SQLError
      */
-    public static Status changePassword(Player player, String newPassword){
+    public static Status changePassword(long discordId, String newPassword){
         if(!PluginUtils.checkPasswordRegex(newPassword)){
             return Status.Invalid;
         }
         String encryptPassword = PluginUtils.encryptPassword(newPassword);
 
         AccountTable accountTable = DiscordAuth.getAccountTable();
-        return accountTable.setPassword(player, encryptPassword);
+        return accountTable.setPassword(discordId, encryptPassword);
+    }
+
+    public static Status changePassword(String minecraftName, String newPassword){
+        return changePassword(DiscordAuth.getAccountTable().getDiscordIdFromMinecraftName(minecraftName), newPassword);
     }
 
     /**
