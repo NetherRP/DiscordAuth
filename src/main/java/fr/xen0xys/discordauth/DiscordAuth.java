@@ -2,22 +2,33 @@ package fr.xen0xys.discordauth;
 
 import fr.xen0xys.discordauth.config.CustomConfiguration;
 import fr.xen0xys.discordauth.config.Language;
+import fr.xen0xys.discordauth.discord.BotUtils;
 import fr.xen0xys.discordauth.discord.commands.AccountSlashCommand;
 import fr.xen0xys.discordauth.discord.commands.AdminAccountSlashCommand;
 import fr.xen0xys.discordauth.discord.commands.GetIdSlashCommand;
+import fr.xen0xys.discordauth.discord.commands.LoginSlashCommand;
 import fr.xen0xys.discordauth.discord.events.ButtonClickListener;
 import fr.xen0xys.discordauth.discord.events.SlashCommandListener;
-import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.models.User;
 import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth_old.models.User;
+import fr.xen0xys.discordauth.plugin.commands.AccountCommand;
+import fr.xen0xys.discordauth.plugin.commands.ForceLoginCommand;
+import fr.xen0xys.discordauth.plugin.commands.LoginCommand;
+import fr.xen0xys.discordauth.plugin.commands.LogoutCommand;
+import fr.xen0xys.discordauth.plugin.commands.tabcompleters.AccountTabCompleter;
+import fr.xen0xys.discordauth.plugin.events.*;
+import fr.xen0xys.discordauth.utils.ConsoleFilter;
 import fr.xen0xys.xen0lib.database.Database;
 import fr.xen0xys.xen0lib.utils.Status;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.IGuildChannelContainer;
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
@@ -43,13 +54,16 @@ public class DiscordAuth extends JavaPlugin {
     private static final HashMap<String, User> users = new HashMap<>();
 
 
+
+
     @Override
     public void onLoad() {
         super.onLoad();
         instance = this;
         logger = this.getLogger();
+        this.registerFilters();
         config = new CustomConfiguration(this, "config.yml");
-        language = new Language(this, "resources/fr_FR.yml");
+        language = new Language(this, String.format("resources/%s.yml", getConfiguration().getLanguage()));
         try {
             this.setupBot();
         } catch (LoginException | InterruptedException e) {
@@ -94,6 +108,8 @@ public class DiscordAuth extends JavaPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        this.registerEvents();
+        this.registerCommands();
     }
 
     private void setupBot() throws LoginException, InterruptedException {
@@ -113,6 +129,7 @@ public class DiscordAuth extends JavaPlugin {
         eventGuild.upsertCommand(new AccountSlashCommand().getCommandData()).queue();
         eventGuild.upsertCommand(new AdminAccountSlashCommand().getCommandData()).queue();
         eventGuild.upsertCommand(new GetIdSlashCommand().getCommandData()).queue();
+        eventGuild.upsertCommand(new LoginSlashCommand().getCommandData()).queue();
 
         // Add listeners
         bot.addEventListener(new SlashCommandListener());
@@ -132,12 +149,42 @@ public class DiscordAuth extends JavaPlugin {
         bot.shutdown();
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private void registerCommands(){
+        this.getCommand("forcelogin").setExecutor(new ForceLoginCommand());
+        this.getCommand("login").setExecutor(new LoginCommand());
+        this.getCommand("logout").setExecutor(new LogoutCommand());
+        this.getCommand("account").setExecutor(new AccountCommand());
+        this.getCommand("account").setTabCompleter(new AccountTabCompleter());
+    }
+
+    private void registerEvents(){
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new OnAsyncChat(), this);
+        pm.registerEvents(new OnAsyncPlayerPreLogin(), this);
+        pm.registerEvents(new OnBlockBreak(), this);
+        pm.registerEvents(new OnEntityDamaged(), this);
+        pm.registerEvents(new OnEntityDamagedByEntity(), this);
+        pm.registerEvents(new OnFoodLevelChange(), this);
+        pm.registerEvents(new OnInventoryClick(), this);
+        pm.registerEvents(new OnPlayerCommandPreprocess(), this);
+        pm.registerEvents(new OnPlayerDropItem(), this);
+        pm.registerEvents(new OnPlayerInteract(), this);
+        pm.registerEvents(new OnPlayerJoin(), this);
+        pm.registerEvents(new OnPlayerKick(), this);
+        pm.registerEvents(new OnPlayerMove(), this);
+        pm.registerEvents(new OnPlayerQuit(), this);
+        pm.registerEvents(new OnPlayerRespawn(), this);
+    }
+
     private void unregisterEvents(){
         HandlerList.unregisterAll(this);
     }
 
-
-
+    private void registerFilters(){
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new ConsoleFilter());
+    }
 
     public static DiscordAuth getInstance() {
         return instance;
@@ -147,6 +194,9 @@ public class DiscordAuth extends JavaPlugin {
     }
     public static CustomConfiguration getConfiguration() {
         return config;
+    }
+    public static JDA getBot() {
+        return bot;
     }
 
     // Database

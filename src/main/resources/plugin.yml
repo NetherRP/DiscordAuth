@@ -12,9 +12,9 @@ commands:
     permission: discordauth.discordauth
     aliases: [da]
     usage: /discordauth <reload>
-  createaccount:
-    permission: discordauth.createaccount
-    usage: /createaccount <minecraftName> <discordId> <password>
+  account:
+    permission: discordauth.account
+    usage: /account
   login:
     aliases: [l]
     permission: discordauth.login
@@ -34,15 +34,15 @@ permissions:
     description: Gives access to all DiscordAuth commands
     children:
       discordauth.discordauth: true
-      discordauth.createaccount: true
+      discordauth.account: true
       discordauth.login: true
       discordauth.logout: true
       discordauth.changepassword: true
       discordauth.forcelogin: true
   discordauth.discordauth:
     default: op
-  discordauth.createaccount:
-    default: op
+  discordauth.account:
+    default: true
   discordauth.login:
     default: true
   discordauth.logout:

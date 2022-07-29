@@ -1,9 +1,9 @@
 package fr.xen0xys.discordauth.discord;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth_old.DiscordAuthOld;
-import fr.xen0xys.discordauth_old.discord.embeds.CustomEmbed;
+import fr.xen0xys.discordauth.discord.embeds.CustomEmbed;
 import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import fr.xen0xys.xen0lib.utils.Status;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public abstract class BotUtils {
     public static void sendMessage(String message){
-        TextChannel channel = DiscordAuthOld.getBot().getTextChannelById(DiscordAuthOld.getConfiguration().getChannelId());
+        TextChannel channel = DiscordAuth.getBot().getTextChannelById(DiscordAuth.getConfiguration().getChannelId());
         if(channel != null){
             channel.sendTyping().complete();
             channel.sendMessage(message).complete();
@@ -24,8 +24,8 @@ public abstract class BotUtils {
     }
 
     public static void sendEmbed(CustomEmbed embed){
-        if(!DiscordAuthOld.getConfiguration().isOnlySafety()){
-            TextChannel channel = DiscordAuthOld.getBot().getTextChannelById(DiscordAuthOld.getConfiguration().getChannelId());
+        if(!DiscordAuth.getConfiguration().isOnlySafety()){
+            TextChannel channel = DiscordAuth.getBot().getTextChannelById(DiscordAuth.getConfiguration().getChannelId());
             if(channel != null){
                 channel.sendTyping().complete();
                 channel.sendMessageEmbeds(embed.build()).complete();
@@ -48,13 +48,13 @@ public abstract class BotUtils {
     }
 
     public static List<User> getUserWhoReact(){
-        Message message = retrieveMessageFromId(DiscordAuthOld.getConfiguration().getGuildId(), DiscordAuthOld.getConfiguration().getMessageId());
+        Message message = retrieveMessageFromId(DiscordAuth.getConfiguration().getGuildId(), DiscordAuth.getConfiguration().getMessageId());
         if(message != null){
             reactToMessage(message);
             for(MessageReaction messageReaction: message.getReactions()){
-                if(messageReaction.getEmoji().asUnicode().equals(Emoji.fromUnicode(DiscordAuthOld.getConfiguration().getReactionName()))){
+                if(messageReaction.getEmoji().asUnicode().equals(Emoji.fromUnicode(DiscordAuth.getConfiguration().getReactionName()))){
                     List<User> users = messageReaction.retrieveUsers().complete();
-                    users.remove(DiscordAuthOld.getBot().getSelfUser());
+                    users.remove(DiscordAuth.getBot().getSelfUser());
                     return users;
                 }
             }
@@ -75,7 +75,7 @@ public abstract class BotUtils {
     }
 
     public static Message retrieveMessageFromId(long guildId, long messageId){
-        Guild guild = DiscordAuthOld.getBot().getGuildById(guildId);
+        Guild guild = DiscordAuth.getBot().getGuildById(guildId);
         if(guild != null){
             for(Category category: guild.getCategories()) {
                 for(TextChannel channel: category.getTextChannels()){
@@ -91,11 +91,11 @@ public abstract class BotUtils {
     }
 
     public static void reactToMessage(Message message){
-        message.addReaction(Emoji.fromUnicode(DiscordAuthOld.getConfiguration().getReactionName())).complete();
+        message.addReaction(Emoji.fromUnicode(DiscordAuth.getConfiguration().getReactionName())).complete();
     }
 
     public static Member getMemberFromUser(User user){
-        Guild guild = DiscordAuthOld.getBot().getGuildById(DiscordAuthOld.getConfiguration().getGuildId());
+        Guild guild = DiscordAuth.getBot().getGuildById(DiscordAuth.getConfiguration().getGuildId());
         if(guild != null){
             return guild.getMemberById(user.getIdLong());
         }
@@ -103,7 +103,7 @@ public abstract class BotUtils {
     }
 
     public static void sendDM(User user, String message){
-        if(user.getIdLong() != DiscordAuthOld.getBot().getSelfUser().getIdLong()){
+        if(user.getIdLong() != DiscordAuth.getBot().getSelfUser().getIdLong()){
             PrivateChannel channel = user.openPrivateChannel().complete();
             if(channel != null){
                 channel.sendMessage(message).queue();
@@ -111,7 +111,7 @@ public abstract class BotUtils {
         }
     }
     public static void sendDM(User user, CustomEmbed embed){
-        if(user.getIdLong() != DiscordAuthOld.getBot().getSelfUser().getIdLong()){
+        if(user.getIdLong() != DiscordAuth.getBot().getSelfUser().getIdLong()){
             PrivateChannel channel = user.openPrivateChannel().complete();
             if(channel != null){
                 channel.sendMessageEmbeds(embed.build()).complete();
@@ -124,7 +124,7 @@ public abstract class BotUtils {
      * @param users User list
      */
     public static void initializeNoInitializedUsers(List<User> users){
-        AccountTable accountTable = DiscordAuthOld.getAccountTable();
+        AccountTable accountTable = DiscordAuth.getAccountTable();
         for(User user: new ArrayList<>(users)){
             if(accountTable.isDiscordUserExist(user.getIdLong()) == Status.NotExist){
                 sendDM(user, "You has accepted rules, now you can create your account by using: **/createaccount <minecraft username> <password>**.");
@@ -133,7 +133,7 @@ public abstract class BotUtils {
     }
 
     public static TextChannel getDiscordServerChannel(){
-        return DiscordAuthOld.getBot().getTextChannelById(DiscordAuthOld.getConfiguration().getChannelId());
+        return DiscordAuth.getBot().getTextChannelById(DiscordAuth.getConfiguration().getChannelId());
     }
 
     public static void setDiscordServerChannelTopic(String topic){

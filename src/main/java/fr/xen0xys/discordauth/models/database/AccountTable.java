@@ -1,6 +1,6 @@
 package fr.xen0xys.discordauth.models.database;
 
-import fr.xen0xys.discordauth_old.DiscordAuthOld;
+import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.utils.PluginUtils;
 import fr.xen0xys.xen0lib.database.Database;
 import fr.xen0xys.xen0lib.database.Table;
@@ -42,39 +42,14 @@ public class AccountTable extends Table {
      * @return Xen0Lib Status: Exist, NotExist, SQLError
      */
     public Status isUserHasAccount(UUID uuid, String minecraftName){
-        boolean useUUID = DiscordAuthOld.getConfiguration().getPremium();
+        boolean useUUID = DiscordAuth.getConfiguration().getPremium();
         String query;
         if(useUUID){
             query = String.format("SELECT discordId FROM %s WHERE UUID='%s'", this.getTableName(), uuid);
         }else{
             query = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
         }
-        Status status = this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
-        if(status == Status.Exist){
-            // Set uuid if not exist and if crack
-            if(!useUUID){
-                String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
-                if(fetchedUUID != null && fetchedUUID.equals("")){
-                    this.setUUID(uuid, minecraftName);
-                }
-            }
-            // Account exist
-            return Status.Exist;
-        }else if(status == Status.NotExist){
-            if(useUUID){
-                String query2 = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
-                if(this.getDatabase().isDataExist(this.getDatabase().executeQuery(query2)) == Status.Exist){
-                    String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
-                    if(fetchedUUID != null && fetchedUUID.equals("")){
-                        this.setUUID(uuid, minecraftName);
-                        return Status.Exist;
-                    }
-                }
-            }
-            return Status.NotExist;
-        }else{
-            return Status.SQLError;
-        }
+        return this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
     }
 
 
@@ -147,7 +122,7 @@ public class AccountTable extends Table {
      */
     public Status isPlayerHasSession(Player player){
         String query;
-        if(DiscordAuthOld.getConfiguration().getPremium()){
+        if(DiscordAuth.getConfiguration().getPremium()){
             query = String.format("SELECT ip, lastLogin, hasSession FROM %s WHERE UUID='%s'", this.getTableName(), player.getUniqueId());
         }else{
             query = String.format("SELECT ip, lastLogin, hasSession FROM %s WHERE minecraftName='%s'", this.getTableName(), player.getName());
@@ -160,7 +135,7 @@ public class AccountTable extends Table {
                     String ip = PluginUtils.encryptIpIfNeeded(rs.getString("ip"));
                     if(ip.equals(PluginUtils.encryptIpIfNeeded(Utils.getPlayerIP(player)))){
                         long lastLogin = rs.getLong("lastLogin");
-                        if(lastLogin + DiscordAuthOld.getConfiguration().getSessionDuration() >= Utils.getCurrentTimestamp()){
+                        if(lastLogin + DiscordAuth.getConfiguration().getSessionDuration() >= Utils.getCurrentTimestamp()){
                             return Status.HasSession;
                         }
                     }
@@ -181,7 +156,7 @@ public class AccountTable extends Table {
      */
     public Status setLastLogin(Player player, String ip){
         String query;
-        if(DiscordAuthOld.getConfiguration().getPremium()){
+        if(DiscordAuth.getConfiguration().getPremium()){
             query = String.format("UPDATE %s SET lastLogin='%s', ip='%s' WHERE UUID='%s'", this.getTableName(), Utils.getCurrentTimestamp(), PluginUtils.encryptIpIfNeeded(ip), player.getUniqueId());
         }else{
             query = String.format("UPDATE %s SET lastLogin='%s', ip='%s' WHERE minecraftName='%s'", this.getTableName(), Utils.getCurrentTimestamp(), PluginUtils.encryptIpIfNeeded(ip), player.getName());
@@ -197,7 +172,7 @@ public class AccountTable extends Table {
      */
     public Status setSession(boolean sessionState, Player player){
         String query;
-        if(DiscordAuthOld.getConfiguration().getPremium()){
+        if(DiscordAuth.getConfiguration().getPremium()){
             query = String.format("UPDATE %s SET hasSession='%d' WHERE UUID='%s'", this.getTableName(), sessionState ? 1 : 0, player.getUniqueId());
         }else{
             query = String.format("UPDATE %s SET hasSession='%d' WHERE minecraftName='%s'", this.getTableName(), sessionState ? 1 : 0, player.getName());
@@ -213,7 +188,7 @@ public class AccountTable extends Table {
      */
     public Status checkPassword(Player player, String encryptedPassword){
         String query;
-        if(DiscordAuthOld.getConfiguration().getPremium()){
+        if(DiscordAuth.getConfiguration().getPremium()){
             query = String.format("SELECT password FROM %s WHERE UUID='%s'", this.getTableName(), player.getUniqueId());
         }else{
             query = String.format("SELECT password FROM %s WHERE minecraftName='%s'", this.getTableName(), player.getName());

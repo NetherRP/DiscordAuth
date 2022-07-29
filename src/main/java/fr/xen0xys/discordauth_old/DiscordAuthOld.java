@@ -1,16 +1,21 @@
 package fr.xen0xys.discordauth_old;
 
-import fr.xen0xys.discordauth.discord.BotUtils;
-import fr.xen0xys.discordauth_old.discord.events.OnMessageReceived;
-import fr.xen0xys.discordauth_old.models.User;
-import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth_old.plugin.PluginAsyncLoop;
-import fr.xen0xys.discordauth_old.plugin.commands.*;
-import fr.xen0xys.discordauth_old.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
 import fr.xen0xys.discordauth.config.CustomConfiguration;
 import fr.xen0xys.discordauth.config.Language;
-import fr.xen0xys.discordauth_old.plugin.events.*;
-import fr.xen0xys.discordauth_old.plugin.utils.ConsoleFilter;
+import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.models.User;
+import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth.plugin.commands.LoginCommand;
+import fr.xen0xys.discordauth.plugin.commands.LogoutCommand;
+import fr.xen0xys.discordauth.plugin.events.*;
+import fr.xen0xys.discordauth_old.discord.events.OnMessageReceived;
+import fr.xen0xys.discordauth_old.plugin.PluginAsyncLoop;
+import fr.xen0xys.discordauth_old.plugin.commands.ChangePasswordCommand;
+import fr.xen0xys.discordauth.plugin.commands.CreateAccountCommand;
+import fr.xen0xys.discordauth_old.plugin.commands.DiscordAuthCommand;
+import fr.xen0xys.discordauth.plugin.commands.ForceLoginCommand;
+import fr.xen0xys.discordauth_old.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
+import fr.xen0xys.discordauth.utils.ConsoleFilter;
 import fr.xen0xys.xen0lib.database.Database;
 import fr.xen0xys.xen0lib.utils.Status;
 import net.dv8tion.jda.api.JDA;
@@ -165,7 +170,7 @@ public class DiscordAuthOld extends JavaPlugin {
         pm.registerEvents(new OnPlayerQuit(), this);
         pm.registerEvents(new OnPlayerMove(), this);
         pm.registerEvents(new OnPlayerKick(), this);
-        pm.registerEvents(new OnAsyncPlayerChat(), this);
+        pm.registerEvents(new OnAsyncChat(), this);
         pm.registerEvents(new OnBlockBreak(), this);
         pm.registerEvents(new OnEntityDamaged(), this);
         pm.registerEvents(new OnEntityDamagedByEntity(), this);
@@ -175,7 +180,6 @@ public class DiscordAuthOld extends JavaPlugin {
         pm.registerEvents(new OnPlayerInteract(), this);
         pm.registerEvents(new OnPlayerRespawn(), this);
         pm.registerEvents(new OnInventoryClick(), this);
-        pm.registerEvents(new OnPlayerDeath(), this);
     }
 
     private void unregisterEvents(){

@@ -1,18 +1,14 @@
 package fr.xen0xys.discordauth_old.plugin;
 
-import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import fr.xen0xys.discordauth.discord.BotUtils;
-import fr.xen0xys.discordauth_old.discord.embeds.AdvancementEmbed;
-import fr.xen0xys.discordauth_old.models.CustomAdvancement;
 import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth_old.DiscordAuthOld;
+import fr.xen0xys.discordauth_old.models.CustomAdvancement;
 import fr.xen0xys.xen0lib.utils.Status;
-import fr.xen0xys.xen0lib.utils.Utils;
 import net.dv8tion.jda.api.entities.User;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PluginAsyncLoop extends BukkitRunnable {
@@ -37,51 +33,6 @@ public class PluginAsyncLoop extends BukkitRunnable {
         }
     }
 
-    private void getAdvancements(){
-        // Get String list with lines to check
-        String content = Utils.getLatestLogContent();
-        String[] lines = content.split("\n");
-        if(lastLineNumber <= lines.length){
-            List<String> linesToTry = new ArrayList<>(Arrays.asList(lines).subList(lastLineNumber, lines.length));
-            lastLineNumber = lines.length;
-            // Fill CustomAdvancement list
-            for(String line: linesToTry){
-                if(line.contains("has made the advancement") || line.contains("has reached the goal") || line.contains("has completed the challenge")){
-                    advancements.add(new CustomAdvancement(line));
-                }
-            }
-        }
-    }
-
-    private void sendAdvancements() {
-        // Anti-lag advancement sending
-        List<CustomAdvancement> localAdvancements = new ArrayList<>(advancements); // Read only list
-        List<Player> players = new ArrayList<>();
-        for (CustomAdvancement advancement : localAdvancements) {
-            if (!players.contains(advancement.getPlayer())) {
-                players.add(advancement.getPlayer());
-            }
-        }
-        for (Player player : players) {
-            List<String> playerAdvancementsString = new ArrayList<>();
-            // Get player advancements
-            for (CustomAdvancement advancement : localAdvancements) {
-                if (advancement.getPlayer() == player) {
-                    playerAdvancementsString.add(advancement.getAdvancementName());
-                    advancements.remove(advancement);
-                }
-            }
-            // Actually not send embed if there is too many advancements
-            if (playerAdvancementsString.size() == 1) {
-                BotUtils.sendEmbed(new AdvancementEmbed(player, playerAdvancementsString.get(0)));
-            } else if (playerAdvancementsString.size() <= 15) {
-                BotUtils.sendEmbed(new AdvancementEmbed(player, playerAdvancementsString));
-            }else{
-                BotUtils.sendEmbed(new AdvancementEmbed(player, String.format("{%s}", DiscordAuthOld.getLanguage().tooManyAdvancements)));
-            }
-        }
-    }
-
     @Override
     public void run() {
         int round = 0;
@@ -90,8 +41,7 @@ public class PluginAsyncLoop extends BukkitRunnable {
                 sendAccountMessageToUnsendUsers();
             if(DiscordAuthOld.getConfiguration().getSendAdvancements()){
                 if(round % 2 == 0){
-                    getAdvancements();
-                    sendAdvancements();
+
                 }
             }
             this.custom_wait();

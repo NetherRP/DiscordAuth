@@ -2,15 +2,12 @@ package fr.xen0xys.discordauth.utils;
 
 import com.google.common.primitives.Chars;
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import fr.xen0xys.discordauth.discord.BotUtils;
-import fr.xen0xys.discordauth_old.discord.embeds.MessageEmbed;
 import fr.xen0xys.discordauth.models.Commands;
-import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth_old.plugin.utils.StatusColor;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
-import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -150,19 +147,21 @@ public abstract class PluginUtils {
         return chain.matches("^\\w{2,16}$");
     }
 
-    public static void sendConnectionWarning(String minecraftName, String playerIp){
-        AccountTable accountTable = DiscordAuth.getAccountTable();
-        long userId = accountTable.getDiscordIdFromMinecraftName(minecraftName);
-        if(userId != -1){
-            PrivateChannel channel = BotUtils.getUserPrivateChannelFromId(userId);
-            if(channel != null){
-                BotUtils.sendEmbed(new MessageEmbed(StatusColor.Warning, String.format(DiscordAuth.getLanguage().unauthorizedConnection, playerIp, playerIp, playerIp)), BotUtils.getUserPrivateChannelFromId(userId));
-            }
-        }
-    }
-
     public static long getRandomLong(long min, long max){
         return max + (int)(Math.random() * ((max - min) + 1));
+    }
+
+    public static boolean isUserCanCreateAccount(long discordId){
+        List<User> users = BotUtils.getUserWhoReact();
+        System.out.println(users);
+        if(users != null){
+            for(User user: users){
+                if(user.getIdLong() == discordId){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

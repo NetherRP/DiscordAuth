@@ -22,7 +22,6 @@ public class Language extends ConfigurationReader {
     public final String alreadyHasAccount;
     public final String accountNotExist;
     public final String noReaction;
-    public final String unauthorizedConnection;
 
     // Password:
     public final String updatedPassword;
@@ -31,8 +30,6 @@ public class Language extends ConfigurationReader {
     // Discord or Minecraft chat:
     public final String playerConnect;
     public final String playerDisconnect;
-    public final String registeredChat;
-    public final String unregisteredChat;
     public final String serverStart;
     public final String serverStop;
 
@@ -46,25 +43,20 @@ public class Language extends ConfigurationReader {
     public final String kickMessage;
     public final String passwordDefineError;
 
-    // Advancements:
-    public final String successComplete;
-    public final String tooManyAdvancements;
-
-    // IP
-    public final String invalidIpFormat;
-    public final String noIpAllowed;
-    public final String noIpBlocked;
-    public final String allIpAllowed;
-    public final String allIpBlocked;
-    public final String ipAllowed;
-    public final String ipBlocked;
-    public final String unauthorizedIp;
-
     // Information
     public final String acceptMessage;
     public final String actionSuccess;
-    public final String allowed;
-    public final String blocked;
+
+    // Adds
+    public final String accountDeleted;
+    public final String noAccountForUsername;
+    public final String idForUsername;
+    public final String invalidUsernamePassword;
+    public final String noIdenticalPasswords;
+    public final String accountDeletionConfirm;
+    public final String keepAccount;
+    public final String deleteAccount;
+    public final String noPermission;
 
 
     public Language(Plugin plugin, String configName) {
@@ -86,7 +78,6 @@ public class Language extends ConfigurationReader {
         alreadyHasAccount = this.getValue("already_has_account");
         accountNotExist = this.getValue("account_not_exist");
         noReaction = this.getValue("no_reaction");
-        unauthorizedConnection = this.getValue("unauthorized_connection");
 
         // Password:
         updatedPassword = this.getValue("updated_password");
@@ -95,8 +86,6 @@ public class Language extends ConfigurationReader {
         // Discord or Minecraft chat
         playerConnect = this.getValue("player_connect");
         playerDisconnect = this.getValue("player_disconnect");
-        registeredChat = this.getValue("register_chat");
-        unregisteredChat = this.getValue("unregistered_chat");
         serverStart = this.getValue("server_start");
         serverStop = this.getValue("server_stop");
 
@@ -110,25 +99,20 @@ public class Language extends ConfigurationReader {
         kickMessage = this.getValue("kick_message");
         passwordDefineError = this.getValue("password_define_error");
 
-        // Advancements:
-        successComplete = this.getValue("success_complete");
-        tooManyAdvancements = this.getValue("too_many_advancements");
-
-        // IP
-        invalidIpFormat = this.getValue("invalid_ip_format");
-        noIpAllowed = this.getValue("no_ip_allowed");
-        noIpBlocked = this.getValue("no_ip_blocked");
-        allIpAllowed = this.getValue("all_ip_allowed");
-        allIpBlocked = this.getValue("all_ip_blocked");
-        ipAllowed = this.getValue("ip_allowed");
-        ipBlocked = this.getValue("ip_blocked");
-        unauthorizedIp = this.getValue("unauthorized_ip");
-
         // Information
         acceptMessage = this.getValue("accept_message");
         actionSuccess = this.getValue("action_success");
-        allowed = this.getValue("allowed");
-        blocked = this.getValue("blocked");
+
+        // Adds
+        accountDeleted = this.getValue("account_deleted");
+        noAccountForUsername = this.getValue("no_account_for_username");
+        idForUsername = this.getValue("id_for_username");
+        invalidUsernamePassword = this.getValue("invalid_username_password");
+        noIdenticalPasswords = this.getValue("no_identical_passwords");
+        accountDeletionConfirm = this.getValue("account_deletion_confirm");
+        keepAccount = this.getValue("keep_account");
+        deleteAccount = this.getValue("delete_account");
+        noPermission = this.getValue("no_permission");
     }
 
     private String getValue(String path){

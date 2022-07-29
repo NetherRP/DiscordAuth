@@ -14,7 +14,6 @@ account_created_successful: "Your account has been created successful!"
 already_has_account: "You already has an account!"
 account_not_exist: "You don't has account, please create one!"
 no_reaction: "Your account cannot be created because you have not react to the require message!"
-unauthorized_connection: "An unauthorised connection has been detected with the ip: %s\nSend /ip allow %s to allow this ip!\nSend /ip block %s to block this ip!"
 
 # Password:
 updated_password: "Your password has been updated!"
@@ -23,8 +22,6 @@ invalid_password: "Invalid password!"
 # Discord or Minecraft chat:
 player_connect: "%s has just been connected"
 player_disconnect: "%s has just been disconnected"
-register_chat: "&9<%s>&r %s"
-unregistered_chat: "&6[Unregister] &9<%s>&r %s"
 server_start: ":white_check_mark: **Server has just started**"
 server_stop: ":octagonal_sign: **Server has just stopped**"
 
@@ -38,22 +35,17 @@ unknown_specified_player: "&cUnknown specified player"
 kick_message: "You don't has access to this server!\nIn case of error, please contact engineer!"
 password_define_error: "The password length may be between 5 and 50 chars\nThey may contain only alphanumerical chars and following chars: @$!%*#?&"
 
-# Advancements:
-success_complete: "%s has completed followed(s) success: %s"
-too_many_advancements: "To many success to display"
-
-# IP
-invalid_ip_format: "Invalid IP format!"
-no_ip_allowed: "No IP allowed"
-no_ip_blocked: "No IP blocked"
-all_ip_allowed: "All IP are allowed"
-all_ip_blocked: "All IP are blocked"
-ip_allowed: "Allowed IP:"
-ip_blocked: "Blocked IP:"
-unauthorized_ip: "Your ip has not been authorised by the account owner!"
-
 # Information
 accept_message: "You have accepted the message, now you can create your account by sending the command **/createaccount <username> <password>**"
 action_success: "Action executed with success!"
-allowed: "Allowed:"
-blocked: "Blocked:"
+
+# Adds
+account_deleted: "Account deleted successful"
+no_account_for_username: "No account found for this username"
+id_for_username: "Account found for this username : %s"
+invalid_username_password: "Username or password is invalid"
+no_identical_passwords: "Passwords are not identical"
+account_deletion_confirm: "Are you sure you want to delete this account?"
+keep_account: "Keep account"
+delete_account: "Delete anyways"
+no_permission: "Vous n'avez pas la permission d'utiliser cette commande"

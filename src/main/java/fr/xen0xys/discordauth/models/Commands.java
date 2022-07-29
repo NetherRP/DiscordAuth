@@ -2,7 +2,6 @@ package fr.xen0xys.discordauth.models;
 
 import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth_old.models.User;
 import fr.xen0xys.discordauth.utils.PluginUtils;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
@@ -20,26 +19,31 @@ public abstract class Commands {
      * @return Xen0Lib Status: Success, SQLError, Exist, Invalid
      */
     public static Status createAccount(String minecraftName, long discordId, String password){
-        // Check if account already exist
-        AccountTable accountTable = DiscordAuth.getAccountTable();
-        if (discordId == 0) {
-            do{
-                discordId = PluginUtils.getRandomLong(0L, Long.MAX_VALUE);
-            }while (accountTable.isDiscordUserExist(discordId) == Status.Exist);
-        }
-        if(accountTable.isDiscordUserExist(discordId) == Status.NotExist || discordId == 0){
-            // Check password integrity
-            if(!PluginUtils.checkPasswordRegex(minecraftName) || !PluginUtils.checkPasswordRegex(password)){
-                return Status.Invalid;
+        if(PluginUtils.isUserCanCreateAccount(discordId)){
+            // Check if account already exist
+            AccountTable accountTable = DiscordAuth.getAccountTable();
+            if (discordId == 0) {
+                do{
+                    discordId = PluginUtils.getRandomLong(0L, Long.MAX_VALUE);
+                }while (accountTable.isDiscordUserExist(discordId) == Status.Exist);
             }
-            // Encrypt password
-            String encryptedPassword = PluginUtils.encryptPassword(password);
-            // UUID uuid = Utils.getUUIDFromUsername(minecraftName);
-            // Set uuid to blank here
-            return accountTable.addAccount(null, minecraftName, discordId, encryptedPassword);
+            if(accountTable.isDiscordUserExist(discordId) == Status.NotExist || discordId == 0){
+                // Check password integrity
+                if(!PluginUtils.checkPasswordRegex(minecraftName) || !PluginUtils.checkPasswordRegex(password)){
+                    return Status.Invalid;
+                }
+                // Encrypt password
+                String encryptedPassword = PluginUtils.encryptPassword(password);
+                // UUID uuid = Utils.getUUIDFromUsername(minecraftName);
+                // Set uuid to blank here
+                return accountTable.addAccount(null, minecraftName, discordId, encryptedPassword);
+            }else{
+                return Status.Exist;
+            }
         }else{
-            return Status.Exist;
+            return Status.Denied;
         }
+
     }
 
     /**
