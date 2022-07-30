@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AccountTable extends Table {
@@ -265,6 +267,20 @@ public class AccountTable extends Table {
         String query;
         query = String.format("UPDATE %s SET password='%s' WHERE discordId='%s'", this.getTableName(), newPassword, discordId);
         return this.getDatabase().executeUpdateQuery(query);
+    }
+
+    public List<Long> getDbIds(){
+        List<Long> ids = new ArrayList<>();
+        String query = String.format("SELECT discordId FROM %s", this.getTableName());
+        ResultSet rs = this.getDatabase().executeQuery(query);
+        try{
+            while (rs.next()){
+                ids.add(rs.getLong("discordId"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ids;
     }
 
 }

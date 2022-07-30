@@ -13,12 +13,15 @@ public class AccountTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(commandSender instanceof Player player) {
-            if(args.length == 1) {
-                if(player.isOp()) {
-                    return List.of(new String[]{"create", "delete", "changepassword"});
-                }else{
-                    return List.of(new String[]{"changepassword"});
-                }
+            switch (args.length) {
+                case 1:
+                    if(player.isOp()) {
+                        return List.of(new String[]{"create", "manage", "delete"});
+                    }else{
+                        return List.of(new String[]{"manage", "delete"});
+                    }
+                case 2:
+                    return List.of(new String[]{"-password"});
             }
         }
         return null;

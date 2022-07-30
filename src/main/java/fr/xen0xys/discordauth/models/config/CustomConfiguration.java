@@ -1,4 +1,4 @@
-package fr.xen0xys.discordauth.config;
+package fr.xen0xys.discordauth.models.config;
 
 import fr.xen0xys.xen0lib.utils.ConfigurationReader;
 import org.bukkit.Bukkit;
@@ -50,23 +50,14 @@ public class CustomConfiguration extends ConfigurationReader {
     public String getReactionName() {
         return this.getConfiguration().getString("discord.reaction_name");
     }
-    public boolean getEnableConnectionMessage() {
-        return this.getConfiguration().getBoolean("discord.enable_connection_message");
-    }
-    public boolean getEnableSharedChat() {
-        return this.getConfiguration().getBoolean("discord.enable_shared_chat");
-    }
     public boolean getSendMessageToUnregisterUsers() {
         return this.getConfiguration().getBoolean("discord.send_message_to_unregister_users");
     }
-    public boolean getSendAdvancements() {
-        return this.getConfiguration().getBoolean("discord.send_advancements");
-    }
-    public boolean getDeathMessages(){
-        return this.getConfiguration().getBoolean("discord.send_death_messages");
-    }
     public boolean getStartStopMessages(){
         return this.getConfiguration().getBoolean("discord.send_start_stop_messages");
+    }
+    public boolean getUsernameChange(){
+        return this.getConfiguration().getBoolean("discord.change_username_on_register");
     }
     // Logo
     public boolean isLogoEnabled() {

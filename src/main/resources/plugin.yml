@@ -14,20 +14,15 @@ commands:
     usage: /discordauth <reload>
   account:
     permission: discordauth.account
-    usage: /account
+    usage: /account manage|delete
   login:
     aliases: [l]
     permission: discordauth.login
   logout:
     permission: discordauth.logout
-  changepassword:
-    permission: discordauth.changepassword
   forcelogin:
     permission: discordauth.forcelogin
     usage: /forcelogin <minecraftName>
-  ip:
-    permission: discordauth.ip
-    usage: /ip <allow | disallow | block | unblock | list> <current | x.x.x.x>
 
 permissions:
   discordauth.*:
@@ -37,7 +32,6 @@ permissions:
       discordauth.account: true
       discordauth.login: true
       discordauth.logout: true
-      discordauth.changepassword: true
       discordauth.forcelogin: true
   discordauth.discordauth:
     default: op
@@ -47,9 +41,5 @@ permissions:
     default: true
   discordauth.logout:
     default: true
-  discordauth.changepassword:
-    default: true
   discordauth.forcelogin:
     default: op
-  discordauth.ip:
-    default: true

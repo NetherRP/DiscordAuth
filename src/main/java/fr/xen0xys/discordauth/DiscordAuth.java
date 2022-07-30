@@ -1,8 +1,9 @@
 package fr.xen0xys.discordauth;
 
-import fr.xen0xys.discordauth.config.CustomConfiguration;
-import fr.xen0xys.discordauth.config.Language;
 import fr.xen0xys.discordauth.discord.BotUtils;
+import fr.xen0xys.discordauth.discord.events.MessageReactionAddListener;
+import fr.xen0xys.discordauth.models.config.CustomConfiguration;
+import fr.xen0xys.discordauth.models.config.Language;
 import fr.xen0xys.discordauth.discord.commands.AccountSlashCommand;
 import fr.xen0xys.discordauth.discord.commands.AdminAccountSlashCommand;
 import fr.xen0xys.discordauth.discord.commands.GetIdSlashCommand;
@@ -11,11 +12,9 @@ import fr.xen0xys.discordauth.discord.events.ButtonClickListener;
 import fr.xen0xys.discordauth.discord.events.SlashCommandListener;
 import fr.xen0xys.discordauth.models.User;
 import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth.plugin.commands.AccountCommand;
-import fr.xen0xys.discordauth.plugin.commands.ForceLoginCommand;
-import fr.xen0xys.discordauth.plugin.commands.LoginCommand;
-import fr.xen0xys.discordauth.plugin.commands.LogoutCommand;
+import fr.xen0xys.discordauth.plugin.commands.*;
 import fr.xen0xys.discordauth.plugin.commands.tabcompleters.AccountTabCompleter;
+import fr.xen0xys.discordauth.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
 import fr.xen0xys.discordauth.plugin.events.*;
 import fr.xen0xys.discordauth.utils.ConsoleFilter;
 import fr.xen0xys.xen0lib.database.Database;
@@ -24,7 +23,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.IGuildChannelContainer;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -33,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class DiscordAuth extends JavaPlugin {
@@ -53,9 +52,6 @@ public class DiscordAuth extends JavaPlugin {
     // Users
     private static final HashMap<String, User> users = new HashMap<>();
 
-
-
-
     @Override
     public void onLoad() {
         super.onLoad();
@@ -64,12 +60,6 @@ public class DiscordAuth extends JavaPlugin {
         this.registerFilters();
         config = new CustomConfiguration(this, "config.yml");
         language = new Language(this, String.format("resources/%s.yml", getConfiguration().getLanguage()));
-        try {
-            this.setupBot();
-        } catch (LoginException | InterruptedException e) {
-            e.printStackTrace();
-            this.getServer().shutdown();
-        }
 
         if(getConfiguration().isMySQLEnabled()){
             HashMap<String, Object> databaseInfos = getConfiguration().getDatabaseInfos();
@@ -95,6 +85,20 @@ public class DiscordAuth extends JavaPlugin {
                 "ip VARCHAR(100)," +
                 "lastLogin BIGINT," +
                 "hasSession TINYINT");
+        try {
+            if(!getConfiguration().isOnlySafety())
+                this.setupBot();
+        } catch (LoginException | InterruptedException e) {
+            e.printStackTrace();
+            this.getServer().shutdown();
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        this.registerEvents();
+        this.registerCommands();
     }
 
     @Override
@@ -103,13 +107,6 @@ public class DiscordAuth extends JavaPlugin {
         this.shutdownBot();
         this.unregisterEvents();
         database.disconnect();
-    }
-
-    @Override
-    public void onEnable() {
-        super.onEnable();
-        this.registerEvents();
-        this.registerCommands();
     }
 
     private void setupBot() throws LoginException, InterruptedException {
@@ -134,19 +131,31 @@ public class DiscordAuth extends JavaPlugin {
         // Add listeners
         bot.addEventListener(new SlashCommandListener());
         bot.addEventListener(new ButtonClickListener());
+        bot.addEventListener(new MessageReactionAddListener());
+
+        sendRegisterMessage();
     }
 
     private void shutdownBot(){
         bot.getRegisteredListeners().forEach(bot::removeEventListener);
-        if(getConfiguration().getStartStopMessages()){
-            BotUtils.sendMessage(BotUtils.getServerStopMessage());
-        }
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         bot.shutdown();
+    }
+
+    private void sendRegisterMessage(){
+        List<net.dv8tion.jda.api.entities.User> discordUsers = BotUtils.getUserWhoReact();
+        List<Long> ids = getAccountTable().getDbIds();
+        for(net.dv8tion.jda.api.entities.User discordUser : discordUsers){
+            if(!ids.contains(discordUser.getIdLong())){
+                discordUser.openPrivateChannel().queue(privateChannel -> {
+                    privateChannel.sendMessage(getLanguage().acceptMessage).queue();
+                });
+            }
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -156,6 +165,8 @@ public class DiscordAuth extends JavaPlugin {
         this.getCommand("logout").setExecutor(new LogoutCommand());
         this.getCommand("account").setExecutor(new AccountCommand());
         this.getCommand("account").setTabCompleter(new AccountTabCompleter());
+        this.getCommand("discordauth").setExecutor(new DiscordAuthCommand());
+        this.getCommand("discordauth").setTabCompleter(new DiscordAuthTabCompleter());
     }
 
     private void registerEvents(){

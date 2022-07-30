@@ -39,11 +39,6 @@ public class PluginAsyncLoop extends BukkitRunnable {
         while(isRunning){
             if(DiscordAuthOld.getConfiguration().getSendMessageToUnregisterUsers())
                 sendAccountMessageToUnsendUsers();
-            if(DiscordAuthOld.getConfiguration().getSendAdvancements()){
-                if(round % 2 == 0){
-
-                }
-            }
             this.custom_wait();
             if(round < Integer.MAX_VALUE){
                 round++;

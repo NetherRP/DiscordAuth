@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class AccountCommand implements CommandExecutor {
@@ -19,7 +20,7 @@ public class AccountCommand implements CommandExecutor {
                         String minecraftName = args[1];
                         long discordId = Long.parseLong(args[2]);
                         String password = args[3];
-                        Status status = Commands.createAccount(minecraftName, discordId, password);
+                        Status status = Commands.createAccount(minecraftName, discordId, password, true);
                         if(status == Status.Success){
                             commandSender.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().accountCreatedSuccessful);
                         }else if(status == Status.Exist){
@@ -35,8 +36,23 @@ public class AccountCommand implements CommandExecutor {
                     return true;
                 case "delete":
                     break;
-                case "changepassword":
-                    break;
+                case "manage":
+                    if(args.length >= 3){
+                        // Password changing
+                        if ("-password".equals(args[1])) {
+                            if (commandSender instanceof Player player) {
+                                switch (Commands.changePassword(player.getName(), args[2])) {
+                                    case Success ->
+                                            commandSender.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().updatedPassword);
+                                    case Invalid ->
+                                            commandSender.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().invalidPassword);
+                                    case SQLError ->
+                                            commandSender.sendMessage(ChatColor.GREEN + DiscordAuth.getLanguage().errorOccurred);
+                                }
+                            }
+                        }
+                    }
+                    return true;
             }
         }
         return false;

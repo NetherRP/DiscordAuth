@@ -164,4 +164,7 @@ public abstract class BotUtils {
         return DiscordAuthOld.getBot().getSelfUser().getJDA().openPrivateChannelById(id).complete();
     }
 
+    public static Guild getGuild() {
+        return DiscordAuth.getBot().getGuildById(DiscordAuth.getConfiguration().getGuildId());
+    }
 }

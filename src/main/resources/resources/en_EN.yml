@@ -36,7 +36,7 @@ kick_message: "You don't has access to this server!\nIn case of error, please co
 password_define_error: "The password length may be between 5 and 50 chars\nThey may contain only alphanumerical chars and following chars: @$!%*#?&"
 
 # Information
-accept_message: "You have accepted the message, now you can create your account by sending the command **/createaccount <username> <password>**"
+accept_message: "You have accepted the message, now you can create your account by sending the command **/account create** (if not available in MP, send it in the owner's discord server)"
 action_success: "Action executed with success!"
 
 # Adds
@@ -48,4 +48,4 @@ no_identical_passwords: "Passwords are not identical"
 account_deletion_confirm: "Are you sure you want to delete this account?"
 keep_account: "Keep account"
 delete_account: "Delete anyways"
-no_permission: "Vous n'avez pas la permission d'utiliser cette commande"
+no_permission: "You do not have permission to use this command"

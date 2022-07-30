@@ -1,20 +1,18 @@
 package fr.xen0xys.discordauth_old;
 
-import fr.xen0xys.discordauth.config.CustomConfiguration;
-import fr.xen0xys.discordauth.config.Language;
+import fr.xen0xys.discordauth.models.config.CustomConfiguration;
+import fr.xen0xys.discordauth.models.config.Language;
 import fr.xen0xys.discordauth.discord.BotUtils;
 import fr.xen0xys.discordauth.models.User;
 import fr.xen0xys.discordauth.models.database.AccountTable;
 import fr.xen0xys.discordauth.plugin.commands.LoginCommand;
 import fr.xen0xys.discordauth.plugin.commands.LogoutCommand;
 import fr.xen0xys.discordauth.plugin.events.*;
-import fr.xen0xys.discordauth_old.discord.events.OnMessageReceived;
 import fr.xen0xys.discordauth_old.plugin.PluginAsyncLoop;
 import fr.xen0xys.discordauth_old.plugin.commands.ChangePasswordCommand;
-import fr.xen0xys.discordauth.plugin.commands.CreateAccountCommand;
-import fr.xen0xys.discordauth_old.plugin.commands.DiscordAuthCommand;
+import fr.xen0xys.discordauth.plugin.commands.DiscordAuthCommand;
 import fr.xen0xys.discordauth.plugin.commands.ForceLoginCommand;
-import fr.xen0xys.discordauth_old.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
+import fr.xen0xys.discordauth.plugin.commands.tabcompleters.DiscordAuthTabCompleter;
 import fr.xen0xys.discordauth.utils.ConsoleFilter;
 import fr.xen0xys.xen0lib.database.Database;
 import fr.xen0xys.xen0lib.utils.Status;
@@ -188,7 +186,6 @@ public class DiscordAuthOld extends JavaPlugin {
 
     @SuppressWarnings("ConstantConditions")
     private void registerCommands(){
-        this.getCommand("createaccount").setExecutor(new CreateAccountCommand());
         this.getCommand("login").setExecutor(new LoginCommand());
         this.getCommand("logout").setExecutor(new LogoutCommand());
         this.getCommand("changepassword").setExecutor(new ChangePasswordCommand());
@@ -227,10 +224,6 @@ public class DiscordAuthOld extends JavaPlugin {
         if(message != null){
             message.addReaction(Emoji.fromUnicode(configuration.getReactionName())).complete();
         }
-        // Enable or not discord commands
-        if(!configuration.isOnlySafety()){
-            registerBotEvents();
-        }
     }
     private void stopBot(){
         bot.getRegisteredListeners().forEach(bot::removeEventListener);
@@ -243,10 +236,6 @@ public class DiscordAuthOld extends JavaPlugin {
             e.printStackTrace();
         }
         bot.shutdown();
-    }
-
-    private void registerBotEvents(){
-        bot.addEventListener(new OnMessageReceived());
     }
 
 

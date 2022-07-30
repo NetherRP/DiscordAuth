@@ -53,7 +53,18 @@ ip_blocked: "IP bloqués:"
 unauthorized_ip: "Votre ip n'a pas été autorisé par le propriétaire du compte!"
 
 # Information
-accept_message: "Vous avez accepté le message, vous pouvez désormais créer votre compte avec la commande **/createaccount <nom d'utilisateur> <mot de passe>**"
+accept_message: "Vous avez accepté le message, vous pouvez maintenant créer votre compte en envoyant la commande **/account create** (si elle n'est pas disponible en MP, envoyez-la sur le serveur discord du propriétaire)."
 action_success: "L'action a bien été effectué!"
 allowed: "Autorisés:"
 blocked: "Bloqués:"
+
+# Adds
+account_deleted: "Compte supprimé avec succès"
+no_account_for_username: "Aucun compte n'a été trouvé pour ce nom d'utilisateur"
+id_for_username: "Compte trouvé pour ce nom d'utilisateur : %s"
+invalid_username_password: "Le nom d'utilisateur ou le mot de passe n'est pas valide"
+no_identical_passwords: "Les mots de passe ne sont pas identiques"
+account_deletion_confirm: "Etes-vous sûr de vouloir supprimer ce compte?"
+keep_account: "Garder le compte"
+delete_account: "Supprimer quand même"
+no_permission: "Vous n'avez pas la permission d'utiliser cette commande"

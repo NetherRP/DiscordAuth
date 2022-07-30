@@ -1,4 +1,4 @@
-package fr.xen0xys.discordauth.config;
+package fr.xen0xys.discordauth.models.config;
 
 import fr.xen0xys.xen0lib.utils.ConfigurationReader;
 import org.bukkit.ChatColor;

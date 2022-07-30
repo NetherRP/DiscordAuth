@@ -1,4 +1,4 @@
-package fr.xen0xys.discordauth_old.plugin.commands.tabcompleters;
+package fr.xen0xys.discordauth.plugin.commands.tabcompleters;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

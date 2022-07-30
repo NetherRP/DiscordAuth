@@ -25,15 +25,15 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.19.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>fr.xen0xys</groupId>
             <artifactId>Xen0Lib</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
             <scope>system</scope>
-            <systemPath>${basedir}/Libs/Xen0Lib-1.1.5.jar</systemPath>
+            <systemPath>${basedir}/Libs/Xen0Lib-1.1.6.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>

@@ -88,12 +88,13 @@ public class SlashCommandListener extends ListenerAdapter {
                     long discordId = e.getOption("discordid").getAsLong();
                     String password = e.getOption("password").getAsString();
                     String confirm = e.getOption("confirm").getAsString();
-                    switch (this.createAccount(minecraftName, discordId, password, confirm)){
+                    switch (this.createAccount(minecraftName, discordId, password, confirm, true)){
                         case Success -> e.replyEmbeds(new MessageEmbed(StatusColor.OK, DiscordAuth.getLanguage().accountCreatedSuccessful).build()).setEphemeral(true).complete();
                         case Invalid -> e.replyEmbeds(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().invalidUsernamePassword).build()).setEphemeral(true).complete();
                         case Exist -> e.replyEmbeds(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().alreadyHasAccount).build()).setEphemeral(true).complete();
                         case SQLError -> e.replyEmbeds(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().errorOccurred).build()).setEphemeral(true).complete();
                         case Error -> e.replyEmbeds(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().invalidUsernamePassword).build()).setEphemeral(true).complete();
+                        case Denied -> e.replyEmbeds(new MessageEmbed(StatusColor.Error, "Denied").build()).setEphemeral(true).complete();
                     }
                     break;
                 case "manage":
@@ -118,6 +119,14 @@ public class SlashCommandListener extends ListenerAdapter {
             }
         }else{
             e.replyEmbeds(new MessageEmbed(StatusColor.Error, DiscordAuth.getLanguage().noPermission).build()).setEphemeral(true).complete();
+        }
+    }
+
+    private Status createAccount(String minecraftName, long discordId, String password, String confirm, boolean bypass){
+        if(password.equals(confirm)) {
+            return Commands.createAccount(minecraftName, discordId, password, bypass);
+        }else{
+            return Status.Error;
         }
     }
 

@@ -32,9 +32,8 @@ public class ConsoleFilter extends AbstractFilter {
     private Result isLoggable(String msg) {
         if (msg != null) {
             if (msg.contains("issued server command:")) {
-                if (msg.contains("/login") || msg.contains("/l") || msg.contains("/createaccount") || msg.contains("/changepassword")) {
+                if (msg.contains("/login") || msg.contains("/l") || msg.contains("/account"))
                     return Result.DENY;
-                }
             }else if(msg.contains("was kicked for floating too long!")){
                 return Result.DENY;
             }

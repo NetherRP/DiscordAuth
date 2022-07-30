@@ -1,5 +1,6 @@
-package fr.xen0xys.discordauth_old.plugin.commands;
+package fr.xen0xys.discordauth.plugin.commands;
 
+import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,8 +14,9 @@ public class DiscordAuthCommand implements CommandExecutor {
         if(args.length > 0){
             if(args[0].equals("reload")){
                 commandSender.sendMessage(ChatColor.GREEN + "Reloading DiscordAuth...");
-                DiscordAuthOld.getInstance().onDisable();
-                DiscordAuthOld.getInstance().onEnable();
+                DiscordAuth.getInstance().onDisable();
+                DiscordAuth.getInstance().onLoad();
+                DiscordAuth.getInstance().onEnable();
                 commandSender.sendMessage(ChatColor.GREEN + "DiscordAuth reloaded!");
                 return true;
             }

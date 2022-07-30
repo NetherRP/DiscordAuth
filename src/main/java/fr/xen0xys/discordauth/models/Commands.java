@@ -1,10 +1,13 @@
 package fr.xen0xys.discordauth.models;
 
 import fr.xen0xys.discordauth.DiscordAuth;
+import fr.xen0xys.discordauth.discord.BotUtils;
 import fr.xen0xys.discordauth.models.database.AccountTable;
 import fr.xen0xys.discordauth.utils.PluginUtils;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,8 +21,8 @@ public abstract class Commands {
      * @param password player password
      * @return Xen0Lib Status: Success, SQLError, Exist, Invalid
      */
-    public static Status createAccount(String minecraftName, long discordId, String password){
-        if(PluginUtils.isUserCanCreateAccount(discordId)){
+    public static Status createAccount(String minecraftName, long discordId, String password, boolean bypass){
+        if(PluginUtils.isUserCanCreateAccount(discordId) || bypass){
             // Check if account already exist
             AccountTable accountTable = DiscordAuth.getAccountTable();
             if (discordId == 0) {
@@ -36,14 +39,29 @@ public abstract class Commands {
                 String encryptedPassword = PluginUtils.encryptPassword(password);
                 // UUID uuid = Utils.getUUIDFromUsername(minecraftName);
                 // Set uuid to blank here
-                return accountTable.addAccount(null, minecraftName, discordId, encryptedPassword);
+                Status result = accountTable.addAccount(null, minecraftName, discordId, encryptedPassword);
+                if(result == Status.Success && DiscordAuth.getConfiguration().getUsernameChange()){
+                    Guild guild = BotUtils.getGuild();
+                    if(guild != null){
+                        Member member = guild.retrieveMemberById(discordId).complete();
+                        if(member != null){
+                            member.modifyNickname(minecraftName).queue();
+                        }
+                    }
+                }
+                System.out.println(result);
+                System.out.println(DiscordAuth.getConfiguration().getUsernameChange());
+                return result;
             }else{
                 return Status.Exist;
             }
         }else{
             return Status.Denied;
         }
+    }
 
+    public static Status createAccount(String minecraftName, long discordId, String password){
+        return createAccount(minecraftName, discordId, password, false);
     }
 
     /**
