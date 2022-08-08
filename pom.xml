@@ -31,9 +31,9 @@
         <dependency>
             <groupId>fr.xen0xys</groupId>
             <artifactId>Xen0Lib</artifactId>
-            <version>1.1.6</version>
+            <version>1.1.7</version>
             <scope>system</scope>
-            <systemPath>${basedir}/Libs/Xen0Lib-1.1.6.jar</systemPath>
+            <systemPath>${basedir}/Libs/Xen0Lib-1.1.7.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -61,7 +61,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -70,6 +70,18 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+
+                    <relocations>
+                        <relocation>
+                            <pattern>kotlin</pattern>
+                            <shadedPattern>kotlin.shaded</shadedPattern>
+                            <includes>
+                                <include>kotlin.**</include>
+                            </includes>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>

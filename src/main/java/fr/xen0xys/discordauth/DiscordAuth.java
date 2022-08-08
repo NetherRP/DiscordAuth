@@ -104,7 +104,9 @@ public class DiscordAuth extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
-        this.shutdownBot();
+        if(bot != null){
+            this.shutdownBot();
+        }
         this.unregisterEvents();
         database.disconnect();
     }
