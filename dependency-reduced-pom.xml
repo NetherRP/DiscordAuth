@@ -44,6 +44,11 @@
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
+    <repository>
+      <id>customlibs</id>
+      <name>CustomLibs</name>
+      <url>${basedir}/Libs</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -51,13 +56,6 @@
       <artifactId>paper-api</artifactId>
       <version>1.19.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>fr.xen0xys</groupId>
-      <artifactId>Xen0Lib</artifactId>
-      <version>1.1.6</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/Libs/Xen0Lib-1.1.6.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

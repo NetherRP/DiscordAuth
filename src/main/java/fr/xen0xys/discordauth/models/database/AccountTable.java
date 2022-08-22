@@ -46,11 +46,7 @@ public class AccountTable extends Table {
     public Status isUserHasAccount(UUID uuid, String minecraftName){
         boolean useUUID = DiscordAuth.getConfiguration().getPremium();
         String query;
-        if(useUUID){
-            query = String.format("SELECT discordId FROM %s WHERE UUID='%s'", this.getTableName(), uuid);
-        }else{
-            query = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
-        }
+        query = String.format("SELECT discordId FROM %s WHERE UUID='%s' OR minecraftName='%s'", this.getTableName(), uuid, minecraftName);
         return this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
     }
 

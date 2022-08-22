@@ -4,8 +4,6 @@ version: 3.0.0
 api-version: 1.19
 main: fr.xen0xys.discordauth.DiscordAuth
 database: true
-depend:
-  - Xen0Lib
 
 commands:
   discordauth:

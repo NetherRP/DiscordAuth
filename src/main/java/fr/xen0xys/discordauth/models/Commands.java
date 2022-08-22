@@ -8,6 +8,7 @@ import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -45,7 +46,11 @@ public abstract class Commands {
                     if(guild != null){
                         Member member = guild.retrieveMemberById(discordId).complete();
                         if(member != null){
-                            member.modifyNickname(minecraftName).queue();
+                            try{
+                                member.modifyNickname(minecraftName).queue();
+                            } catch (HierarchyException e){
+                                DiscordAuth.getInstance().getLogger().warning(String.format("Can't change username for %s", minecraftName));
+                            }
                         }
                     }
                 }

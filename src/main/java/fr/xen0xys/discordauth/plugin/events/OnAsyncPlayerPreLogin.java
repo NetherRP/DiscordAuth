@@ -20,14 +20,14 @@ public class OnAsyncPlayerPreLogin implements Listener {
         // Register last player connect ip
         String playerIp = e.getAddress().getHostAddress();
 
-        // Fix here because null pointer exception
-        if(table.getUUIDFromMinecraftName(e.getName()).equals("")){
-            table.setUUID(uuid, minecraftName);
-        }
-
         if(table.isUserHasAccount(uuid, minecraftName) != Status.Exist){
             e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST);
             e.setKickMessage(ChatColor.RED + DiscordAuth.getLanguage().kickMessage);
+        }else{
+            if(table.getUUIDFromMinecraftName(e.getName()).equals("")){
+                table.setUUID(uuid, minecraftName);
+            }
         }
+
     }
 }

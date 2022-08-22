@@ -19,6 +19,11 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>customlibs</id>
+            <name>CustomLibs</name>
+            <url>${basedir}/Libs</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -32,8 +37,6 @@
             <groupId>fr.xen0xys</groupId>
             <artifactId>Xen0Lib</artifactId>
             <version>1.1.7</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/Libs/Xen0Lib-1.1.7.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
