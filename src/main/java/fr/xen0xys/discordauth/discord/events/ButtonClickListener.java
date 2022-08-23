@@ -14,13 +14,13 @@ public class ButtonClickListener extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         super.onButtonInteraction(event);
         if(event.getComponentId().equals("da_keep")) {
-            event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.OK, "Account successful keeped").build()).setActionRows().complete();
+            event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.OK, "Account successful keeped").build()).setComponents().complete();
         }else if(event.getComponentId().equals("da_delete")){
             Status status = Commands.deleteAccount(event.getMember().getIdLong());
             switch (status){
-                case Success -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.OK, "Account deleted").build()).setActionRows().complete();
-                case NotExist -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.Error, "Account not found").build()).setActionRows().complete();
-                case SQLError -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.Error, "Un erreur est survenue").build()).setActionRows().complete();
+                case Success -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.OK, "Account deleted").build()).setComponents().complete();
+                case NotExist -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.Error, "Account not found").build()).setComponents().complete();
+                case SQLError -> event.deferEdit().setEmbeds(new MessageEmbed(StatusColor.Error, "Un erreur est survenue").build()).setComponents().complete();
             }
         }
     }
