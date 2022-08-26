@@ -1,6 +1,7 @@
 package fr.xen0xys.discordauth.models.config;
 
 import fr.xen0xys.xen0lib.utils.ConfigurationReader;
+import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +22,7 @@ public class CustomConfiguration extends ConfigurationReader {
     }
     public HashMap<String, Object> getDatabaseInfos(){
         HashMap<String, Object> infos = new HashMap<>();
-        FileConfiguration config = this.getConfiguration();
+        YamlConfiguration config = this.getConfiguration();
         infos.put("host", config.getString("mysql.host"));
         infos.put("port", config.getInt("mysql.port"));
         infos.put("user", config.getString("mysql.user"));
