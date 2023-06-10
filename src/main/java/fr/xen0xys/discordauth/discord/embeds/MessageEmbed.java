@@ -1,7 +1,7 @@
 package fr.xen0xys.discordauth.discord.embeds;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth.plugin.utils.StatusColor;
+import fr.xen0xys.discordauth.utils.StatusColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MessageEmbed extends EmbedBuilder implements CustomEmbed{

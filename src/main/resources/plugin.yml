@@ -1,56 +1,43 @@
 author: Xen0Xys
 name: DiscordAuth
-version: 2.1.0
-api-version: 1.18
+version: 3.0.0
+api-version: 1.19
 main: fr.xen0xys.discordauth.DiscordAuth
 database: true
-depend:
-  - JDASpigot
-  - Xen0Lib
 
 commands:
   discordauth:
     permission: discordauth.discordauth
     aliases: [da]
     usage: /discordauth <reload>
-  createaccount:
-    permission: discordauth.createaccount
-    usage: /createaccount <minecraftName> <discordId> <password>
+  account:
+    permission: discordauth.account
+    usage: /account manage|delete
   login:
     aliases: [l]
     permission: discordauth.login
   logout:
     permission: discordauth.logout
-  changepassword:
-    permission: discordauth.changepassword
   forcelogin:
     permission: discordauth.forcelogin
     usage: /forcelogin <minecraftName>
-  ip:
-    permission: discordauth.ip
-    usage: /ip <allow | disallow | block | unblock | list> <current | x.x.x.x>
 
 permissions:
   discordauth.*:
     description: Gives access to all DiscordAuth commands
     children:
       discordauth.discordauth: true
-      discordauth.createaccount: true
+      discordauth.account: true
       discordauth.login: true
       discordauth.logout: true
-      discordauth.changepassword: true
       discordauth.forcelogin: true
   discordauth.discordauth:
     default: op
-  discordauth.createaccount:
-    default: op
+  discordauth.account:
+    default: true
   discordauth.login:
     default: true
   discordauth.logout:
     default: true
-  discordauth.changepassword:
-    default: true
   discordauth.forcelogin:
     default: op
-  discordauth.ip:
-    default: true

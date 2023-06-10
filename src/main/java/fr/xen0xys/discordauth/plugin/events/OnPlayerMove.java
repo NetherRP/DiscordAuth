@@ -14,12 +14,9 @@ public class OnPlayerMove implements Listener {
         User user = DiscordAuth.getUsers().get(player.getName());
         // Disable move for no-login player
         if(user != null && !user.isLogged()){
-            if(e.getTo() != null){
-                if(user.getLoginLocation().getWorld() == e.getTo().getWorld()){
-                    if(user.getLoginLocation().distance(e.getTo()) >= 3){
-                        e.setCancelled(true);
-                    }
-                }else{
+            e.getTo();
+            if(user.getLoginLocation().getWorld() == e.getTo().getWorld()){
+                if(user.getLoginLocation().distance(e.getTo()) >= 3){
                     e.setCancelled(true);
                 }
             }else{

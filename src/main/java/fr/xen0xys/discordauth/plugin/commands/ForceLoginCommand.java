@@ -2,6 +2,7 @@ package fr.xen0xys.discordauth.plugin.commands;
 
 import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.models.Commands;
+import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

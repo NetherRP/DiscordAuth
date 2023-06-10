@@ -3,8 +3,10 @@ package fr.xen0xys.discordauth.discord;
 import fr.xen0xys.discordauth.DiscordAuth;
 import fr.xen0xys.discordauth.discord.embeds.CustomEmbed;
 import fr.xen0xys.discordauth.models.database.AccountTable;
+import fr.xen0xys.discordauth_old.DiscordAuthOld;
 import fr.xen0xys.xen0lib.utils.Status;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 
@@ -26,7 +28,7 @@ public abstract class BotUtils {
             TextChannel channel = DiscordAuth.getBot().getTextChannelById(DiscordAuth.getConfiguration().getChannelId());
             if(channel != null){
                 channel.sendTyping().complete();
-                channel.sendMessage(embed.build()).complete();
+                channel.sendMessageEmbeds(embed.build()).complete();
             }
         }
     }
@@ -34,7 +36,7 @@ public abstract class BotUtils {
     public static void sendEmbed(CustomEmbed embed, PrivateChannel channel){
         if(channel != null){
             channel.sendTyping().complete();
-            channel.sendMessage(embed.build()).complete();
+            channel.sendMessageEmbeds(embed.build()).complete();
         }
     }
 
@@ -50,7 +52,7 @@ public abstract class BotUtils {
         if(message != null){
             reactToMessage(message);
             for(MessageReaction messageReaction: message.getReactions()){
-                if(messageReaction.getReactionEmote().toString().split(":")[1].equals(DiscordAuth.getConfiguration().getReactionName())){
+                if(messageReaction.getEmoji().asUnicode().equals(Emoji.fromUnicode(DiscordAuth.getConfiguration().getReactionName()))){
                     List<User> users = messageReaction.retrieveUsers().complete();
                     users.remove(DiscordAuth.getBot().getSelfUser());
                     return users;
@@ -89,7 +91,7 @@ public abstract class BotUtils {
     }
 
     public static void reactToMessage(Message message){
-        message.addReaction(DiscordAuth.getConfiguration().getReactionName()).complete();
+        message.addReaction(Emoji.fromUnicode(DiscordAuth.getConfiguration().getReactionName())).complete();
     }
 
     public static Member getMemberFromUser(User user){
@@ -112,7 +114,7 @@ public abstract class BotUtils {
         if(user.getIdLong() != DiscordAuth.getBot().getSelfUser().getIdLong()){
             PrivateChannel channel = user.openPrivateChannel().complete();
             if(channel != null){
-                channel.sendMessage(embed.build()).queue();
+                channel.sendMessageEmbeds(embed.build()).complete();
             }
         }
     }
@@ -159,7 +161,10 @@ public abstract class BotUtils {
     }
 
     public static PrivateChannel getUserPrivateChannelFromId(long id){
-        return DiscordAuth.getBot().getSelfUser().getJDA().openPrivateChannelById(id).complete();
+        return DiscordAuthOld.getBot().getSelfUser().getJDA().openPrivateChannelById(id).complete();
     }
 
+    public static Guild getGuild() {
+        return DiscordAuth.getBot().getGuildById(DiscordAuth.getConfiguration().getGuildId());
+    }
 }

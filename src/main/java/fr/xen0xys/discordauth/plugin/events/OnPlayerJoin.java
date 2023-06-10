@@ -1,18 +1,15 @@
 package fr.xen0xys.discordauth.plugin.events;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth.discord.BotUtils;
-import fr.xen0xys.discordauth.discord.embeds.PlayerJoinEmbed;
 import fr.xen0xys.discordauth.models.User;
 import fr.xen0xys.discordauth.models.database.AccountTable;
-import fr.xen0xys.discordauth.plugin.utils.PluginUtils;
+import fr.xen0xys.discordauth.utils.PluginUtils;
 import fr.xen0xys.xen0lib.utils.Status;
 import fr.xen0xys.xen0lib.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -22,16 +19,11 @@ public class OnPlayerJoin implements Listener {
 
         AccountTable accountTable = DiscordAuth.getAccountTable();
         Player player = e.getPlayer();
-        User user;
 
         // If tp on login is enabled
         if(DiscordAuth.getConfiguration().isTpOnLogin()){
             player.teleport(DiscordAuth.getConfiguration().getSpawnPoint());
         }
-
-        // Send message if login sending is enabled
-        if(DiscordAuth.getConfiguration().getEnableConnectionMessage())
-            BotUtils.sendEmbed(new PlayerJoinEmbed(player));
 
 
         Location playerLocation = player.getLocation();
@@ -41,7 +33,7 @@ public class OnPlayerJoin implements Listener {
             playerLocation = DiscordAuth.getConfiguration().getSpawnPoint();
         }
 
-        user = new User(player, playerLocation);
+        User user = new User(player, playerLocation);
         // Check if payer has session
         if(accountTable.isPlayerHasSession(player) == Status.HasSession){
             user.setIsLogged(true);

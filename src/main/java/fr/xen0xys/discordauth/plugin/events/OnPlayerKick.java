@@ -10,7 +10,7 @@ public class OnPlayerKick implements Listener {
     @EventHandler
     public void onPlayerKick(PlayerKickEvent e){
         Player player = e.getPlayer();
-        if(e.getReason().equals("Flying is not enabled on this server") && !DiscordAuth.getUsers().get(player.getName()).isLogged()){
+        if(e.reason().toString().equals("Flying is not enabled on this server") && !DiscordAuth.getUsers().get(player.getName()).isLogged()){
             e.setCancelled(true);
         }
     }

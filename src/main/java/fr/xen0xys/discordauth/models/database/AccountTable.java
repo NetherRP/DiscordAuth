@@ -1,7 +1,7 @@
 package fr.xen0xys.discordauth.models.database;
 
 import fr.xen0xys.discordauth.DiscordAuth;
-import fr.xen0xys.discordauth.plugin.utils.PluginUtils;
+import fr.xen0xys.discordauth.utils.PluginUtils;
 import fr.xen0xys.xen0lib.database.Database;
 import fr.xen0xys.xen0lib.database.Table;
 import fr.xen0xys.xen0lib.utils.Status;
@@ -46,37 +46,8 @@ public class AccountTable extends Table {
     public Status isUserHasAccount(UUID uuid, String minecraftName){
         boolean useUUID = DiscordAuth.getConfiguration().getPremium();
         String query;
-        if(useUUID){
-            query = String.format("SELECT discordId FROM %s WHERE UUID='%s'", this.getTableName(), uuid);
-        }else{
-            query = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
-        }
-        Status status = this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
-        if(status == Status.Exist){
-            // Set uuid if not exist and if crack
-            if(!useUUID){
-                String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
-                if(fetchedUUID != null && fetchedUUID.equals("")){
-                    this.setUUID(uuid, minecraftName);
-                }
-            }
-            // Account exist
-            return Status.Exist;
-        }else if(status == Status.NotExist){
-            if(useUUID){
-                String query2 = String.format("SELECT discordId FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
-                if(this.getDatabase().isDataExist(this.getDatabase().executeQuery(query2)) == Status.Exist){
-                    String fetchedUUID = this.getUUIDFromMinecraftName(minecraftName);
-                    if(fetchedUUID != null && fetchedUUID.equals("")){
-                        this.setUUID(uuid, minecraftName);
-                        return Status.Exist;
-                    }
-                }
-            }
-            return Status.NotExist;
-        }else{
-            return Status.SQLError;
-        }
+        query = String.format("SELECT discordId FROM %s WHERE UUID='%s' OR minecraftName='%s'", this.getTableName(), uuid, minecraftName);
+        return this.getDatabase().isDataExist(this.getDatabase().executeQuery(query));
     }
 
 
@@ -249,135 +220,63 @@ public class AccountTable extends Table {
         if(uuid == null){
             if(discordId != 0){
                 if(this.isDiscordUserExist(discordId) == Status.NotExist){
-                    String query = String.format("INSERT INTO %s VALUES (NULL, '', '%s', %d, '%s', '', NULL, NULL, '', '')", this.getTableName(), minecraftName, discordId, encryptedPassword);
+                    String query = String.format("INSERT INTO %s VALUES (NULL, '', '%s', %d, '%s', '', NULL, NULL)", this.getTableName(), minecraftName, discordId, encryptedPassword);
                     return this.getDatabase().executeUpdateQuery(query);
                 }else{
                     return Status.Exist;
                 }
             }else{
-                String query = String.format("INSERT INTO %s VALUES (NULL, '', '%s', %d, '%s', '', NULL, NULL, '', '')", this.getTableName(), minecraftName, discordId, encryptedPassword);
+                String query = String.format("INSERT INTO %s VALUES (NULL, '', '%s', %d, '%s', '', NULL, NULL)", this.getTableName(), minecraftName, discordId, encryptedPassword);
                 return this.getDatabase().executeUpdateQuery(query);
             }
         }
         if(discordId != 0){
             if(this.isDiscordUserExist(discordId) == Status.NotExist){
-                String query = String.format("INSERT INTO %s VALUES (NULL, '%s', '%s', %d, '%s', '', NULL, NULL, '', '')", this.getTableName(), uuid, minecraftName, discordId, encryptedPassword);
+                String query = String.format("INSERT INTO %s VALUES (NULL, '%s', '%s', %d, '%s', '', NULL, NULL)", this.getTableName(), uuid, minecraftName, discordId, encryptedPassword);
                 return this.getDatabase().executeUpdateQuery(query);
             }else{
                 return Status.Exist;
             }
         }else{
-            String query = String.format("INSERT INTO %s VALUES (NULL, '%s', '%s', %d, '%s', '', NULL, NULL, '', '')", this.getTableName(), uuid, minecraftName, discordId, encryptedPassword);
+            String query = String.format("INSERT INTO %s VALUES (NULL, '%s', '%s', %d, '%s', '', NULL, NULL)", this.getTableName(), uuid, minecraftName, discordId, encryptedPassword);
             return this.getDatabase().executeUpdateQuery(query);
         }
-
     }
 
     /**
      * Set player session
-     * @param player Player
+     * @param discordId player's discord id
+     * @return Xen0Lib Status: Success, SQLError
+     */
+    public Status deleteAccount(long discordId){
+        String query = String.format("DELETE FROM %s WHERE discordId='%d'", this.getTableName(), discordId);
+        return this.getDatabase().executeUpdateQuery(query);
+    }
+
+    /**
+     * Set player session
+     * @param discordId Account's discord ID
      * @param newPassword New Player password
      * @return Xen0Lib Status: Success, SQLError
      */
-    public Status setPassword(Player player, String newPassword){
+    public Status setPassword(long discordId, String newPassword){
         String query;
-        if(DiscordAuth.getConfiguration().getPremium()){
-            query = String.format("UPDATE %s SET password='%s' WHERE uuid='%s'", this.getTableName(), newPassword, player.getUniqueId());
-        }else{
-            query = String.format("UPDATE %s SET password='%s' WHERE minecraftName='%s'", this.getTableName(), newPassword, player.getName());
-        }
+        query = String.format("UPDATE %s SET password='%s' WHERE discordId='%s'", this.getTableName(), newPassword, discordId);
         return this.getDatabase().executeUpdateQuery(query);
     }
 
-    /**
-     * Get ips from chosen field
-     * @param uuid Player UUID
-     * @param minecraftName Player name
-     * @param allowed if it's allowed or denied field
-     * @return Ip list, empty string or null if error
-     */
-    public String[] getIps(UUID uuid, String minecraftName, boolean allowed){
-        String query;
-        if(DiscordAuth.getConfiguration().getPremium()){
-            query = String.format("SELECT allowedIps FROM %s WHERE UUID='%s'", this.getTableName(), uuid);
-        }else{
-            query = String.format("SELECT allowedIps FROM %s WHERE minecraftName='%s'", this.getTableName(), minecraftName);
-        }
-        if(!allowed){
-            query = query.replace("allowedIps", "deniedIps");
-        }
+    public List<Long> getDbIds(){
+        List<Long> ids = new ArrayList<>();
+        String query = String.format("SELECT discordId FROM %s", this.getTableName());
         ResultSet rs = this.getDatabase().executeQuery(query);
-        try {
-            if (rs.next()) {
-                if(allowed){
-                    return rs.getString("allowedIps").split(";");
-                }else{
-                    return rs.getString("deniedIps").split(";");
-                }
+        try{
+            while (rs.next()){
+                ids.add(rs.getLong("discordId"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
+        return ids;
     }
-
-    /**
-     * Add single or multiples ips into chosen field
-     * @param uuid Player UUID
-     * @param minecraftName Player name
-     * @param allowed if it's allowed or denied field
-     * @param ips ips to add
-     * @return Xen0Lib Status: Success, SQLError, Invalid
-     */
-    public Status addIps(UUID uuid, String minecraftName, boolean allowed, String[] ips){
-        if(!PluginUtils.checkIpsFormat(ips)){
-            return Status.Invalid;
-        }
-        String[] currentIps = this.getIps(uuid, minecraftName, allowed);
-        String finalIps = PluginUtils.serializeIps(PluginUtils.concatenateTabs(currentIps, ips));
-        return this.setIps(uuid, minecraftName, allowed, finalIps);
-    }
-
-    /**
-     * Remove single or multiples ips into chosen field
-     * @param uuid Player UUID
-     * @param minecraftName Player name
-     * @param allowed if it's allowed or denied field
-     * @param ips ips to add
-     * @return Xen0Lib Status: Success, SQLError, Invalid
-     */
-    public Status removeIps(UUID uuid, String minecraftName, boolean allowed, String[] ips){
-        if(!PluginUtils.checkIpsFormat(ips)){
-            return Status.Invalid;
-        }
-        List<String> currentIpsArray = new ArrayList<>(List.of(this.getIps(uuid, minecraftName, allowed)));
-        for(String ip: ips){
-            currentIpsArray.remove(ip);
-        }
-        String[] currentIps = new String[currentIpsArray.size()];
-        currentIps = currentIpsArray.toArray(currentIps);
-        return this.setIps(uuid, minecraftName, allowed, PluginUtils.serializeIps(currentIps));
-    }
-
-    /**
-     * Set ip into chosen field, put empty string for reset
-     * @param uuid Player UUID
-     * @param minecraftName Player name
-     * @param allowed if it's allowed or denied field
-     * @return Xen0Lib Status: Success, SQLError
-     */
-    public Status setIps(UUID uuid, String minecraftName, boolean allowed, String ips){
-        String query;
-        if(DiscordAuth.getConfiguration().getPremium()){
-            query = String.format("UPDATE %s SET allowedIps='%s' WHERE UUID='%s'", this.getTableName(), ips, uuid);
-        }else{
-            query = String.format("UPDATE %s SET allowedIps='%s' WHERE minecraftName='%s'", this.getTableName(), ips, minecraftName);
-        }
-        if(!allowed){
-            query = query.replace("allowedIps", "deniedIps");
-        }
-        return this.getDatabase().executeUpdateQuery(query);
-    }
-
 
 }

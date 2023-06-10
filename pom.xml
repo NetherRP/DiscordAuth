@@ -6,7 +6,7 @@
 
     <groupId>fr.xen0xys</groupId>
     <artifactId>DiscordAuth</artifactId>
-    <version>2.1.0</version>
+    <version>3.0.0</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <properties>
@@ -16,30 +16,37 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>customlibs</id>
+            <name>CustomLibs</name>
+            <url>${basedir}/Libs</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.19.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>fr.xen0xys</groupId>
             <artifactId>Xen0Lib</artifactId>
-            <version>1.1.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/Libs/Xen0Lib-1.1.5.jar</systemPath>
+            <version>1.1.8</version>
         </dependency>
         <dependency>
-            <groupId>me.Porama6400</groupId>
-            <artifactId>JDASpigot</artifactId>
-            <version>4.3.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/Libs/JDASpigot.jar</systemPath>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-alpha.18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.18.0</version>
         </dependency>
     </dependencies>
 
@@ -57,7 +64,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -66,6 +73,18 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+
+                    <relocations>
+                        <relocation>
+                            <pattern>kotlin</pattern>
+                            <shadedPattern>kotlin.shaded</shadedPattern>
+                            <includes>
+                                <include>kotlin.**</include>
+                            </includes>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
