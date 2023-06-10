@@ -6,47 +6,43 @@
 
     <groupId>fr.xen0xys</groupId>
     <artifactId>DiscordAuth</artifactId>
-    <version>3.0.0</version>
+    <version>4.0.0-beta</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
         <repository>
-            <id>papermc</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
+            <id>Discord Java Lib</id>
+            <url>https://github.com/Xen0Xys/Discord-Java-Lib</url>
         </repository>
         <repository>
-            <id>customlibs</id>
-            <name>CustomLibs</name>
-            <url>${basedir}/Libs</url>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
+            <groupId>fr.xen0xys</groupId>
+            <artifactId>discord-java-lib</artifactId>
+            <version>0.1.1-beta</version>
+        </dependency>
+        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.1-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>fr.xen0xys</groupId>
-            <artifactId>Xen0Lib</artifactId>
-            <version>1.1.8</version>
-        </dependency>
-        <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.18</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.18.0</version>
+            <groupId>io.github.waterfallmc</groupId>
+            <artifactId>waterfall-api</artifactId>
+            <version>1.19-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -57,10 +53,9 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <outputDirectory>Server/plugins</outputDirectory>
+                    <outputDirectory>Servers/PaperMC/plugins</outputDirectory>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -74,7 +69,6 @@
                     </execution>
                 </executions>
                 <configuration>
-
                     <relocations>
                         <relocation>
                             <pattern>kotlin</pattern>
@@ -86,7 +80,28 @@
                     </relocations>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>create-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <outputDirectory>Servers/Waterfall/plugins</outputDirectory>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <attach>true</attach>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 </project>

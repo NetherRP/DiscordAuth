@@ -1,8 +1,8 @@
 author: Xen0Xys
 name: DiscordAuth
-version: 3.0.0
+version: 4.0.0-beta
 api-version: 1.19
-main: fr.xen0xys.discordauth.DiscordAuth
+main: fr.xen0xys.discordauth.papermc.DiscordAuthPlugin
 database: true
 
 commands:
