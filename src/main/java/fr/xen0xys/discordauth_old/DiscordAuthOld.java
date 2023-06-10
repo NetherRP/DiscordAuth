@@ -29,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -96,7 +97,7 @@ public class DiscordAuthOld extends JavaPlugin {
         logger = this.getLogger();
 
         logger.info("Loading configuration...");
-        configuration = new CustomConfiguration(this, "config.yml");
+        configuration = new CustomConfiguration(new File("plugins/DiscordAuth"), "config.yml");
         language = new Language(this, String.format("resources/%s.yml", configuration.getLanguage()));
         logger.info("Configuration loaded!");
 

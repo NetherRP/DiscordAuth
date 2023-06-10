@@ -7,12 +7,13 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class CustomConfiguration extends ConfigurationReader {
 
-    public CustomConfiguration(Plugin plugin, String configName) {
-        super(plugin, configName);
+    public CustomConfiguration(File dataFolder, String configName) {
+        super(dataFolder, configName);
     }
 
 

@@ -30,6 +30,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -58,7 +59,7 @@ public class DiscordAuth extends JavaPlugin {
         instance = this;
         logger = this.getLogger();
         this.registerFilters();
-        config = new CustomConfiguration(this, "config.yml");
+        config = new CustomConfiguration(new File("plugins/DiscordAuth"), "config.yml");
         language = new Language(this, String.format("resources/%s.yml", getConfiguration().getLanguage()));
 
         if(getConfiguration().isMySQLEnabled()){
