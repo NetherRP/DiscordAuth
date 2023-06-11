@@ -1,5 +1,7 @@
 package fr.xen0xys.discordauth.common.network.packets;
 
+import fr.xen0xys.discordauth.common.network.Packet;
+
 public class SessionResponsePacket extends Packet {
 
     private final boolean hasSession;

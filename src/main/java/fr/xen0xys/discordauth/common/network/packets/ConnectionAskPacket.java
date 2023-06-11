@@ -1,8 +1,10 @@
 package fr.xen0xys.discordauth.common.network.packets;
 
+import fr.xen0xys.discordauth.common.network.Packet;
+
 import java.util.UUID;
 
-public class ConnectionAskPacket extends Packet{
+public class ConnectionAskPacket extends Packet {
 
     private final boolean onlineMode;
     private final String username;
