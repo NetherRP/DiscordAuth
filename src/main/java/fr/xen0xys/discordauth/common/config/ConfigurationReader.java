@@ -14,9 +14,11 @@ public class ConfigurationReader {
     private final String configName;
     private final YamlConfiguration configuration;
     private final File configFile;
+    private final String dataFolder;
 
     public ConfigurationReader(@NotNull final File dataFolder, @NotNull final String configName){
         this.configName = configName;
+        this.dataFolder = dataFolder.getPath();
         this.configFile = new File(dataFolder, configName);
         if(!this.configFile.exists()) {
             this.configFile.getParentFile().mkdirs();
@@ -47,5 +49,8 @@ public class ConfigurationReader {
 
     public YamlConfiguration getConfiguration(){
         return this.configuration;
+    }
+    public String getDataFolder() {
+        return dataFolder;
     }
 }

@@ -13,13 +13,13 @@ both:
 # Settings for core server only
 core:
   enable: false # BungeeCord enable core features by default
-  mysql:
-    enable: false
+  database:
+    type: SQLITE # Can be SQLITE, MYSQL or POSTGRESQL
     host: 0.0.0.0
     port: 3306
+    database: database_name
     user: username
     password: password
-    database: database_name
   # Duration of a player session in seconds
   session_duration: 3600
   discord:
