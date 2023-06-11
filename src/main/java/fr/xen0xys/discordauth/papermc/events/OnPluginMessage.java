@@ -2,7 +2,6 @@ package fr.xen0xys.discordauth.papermc.events;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import fr.xen0xys.discordauth.common.GsonUtils;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
@@ -10,6 +9,7 @@ import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
+import fr.xen0xys.discordauth.papermc.network.ServerPacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -36,8 +36,9 @@ public class OnPluginMessage implements PluginMessageListener {
     }
 
     private void onSessionResponse(Player player, ByteArrayDataInput input){
-        SessionResponsePacket inPacket = GsonUtils.getGson().fromJson(input.readUTF(), SessionResponsePacket.class);
-        if(inPacket.hasSession()){
+        SessionResponsePacket packet = ServerPacket.decryptServer(SessionResponsePacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        if(packet.hasSession()){
             player.sendMessage(Component.text("You are connected (session)!").color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getConnectedPlayers().add(player);
         }else{
@@ -47,8 +48,9 @@ public class OnPluginMessage implements PluginMessageListener {
     }
 
     private void onConnectionResponse(Player player, ByteArrayDataInput input){
-        ConnectionResponsePacket inPacket = GsonUtils.getGson().fromJson(input.readUTF(), ConnectionResponsePacket.class);
-        if(inPacket.isConnected()){
+        ConnectionResponsePacket packet = ServerPacket.decryptServer(ConnectionResponsePacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        if(packet.isConnected()){
             player.sendMessage(Component.text("You are connected (connection)!").color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getConnectedPlayers().add(player);
         }else{
@@ -66,7 +68,7 @@ public class OnPluginMessage implements PluginMessageListener {
             DiscordAuthPlugin.getInstance().getLogger().info("Code entered: " + stateSnapshot.getText());
             String hashedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(stateSnapshot.getText());
             ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), hashedPassword);
-            packet.sendServer(DiscordAuthPlugin.getInstance(), player, SubChannels.CONNECTION_ASK);
+            ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
             return List.of(AnvilGUI.ResponseAction.close());
         });
         builder.open(player);

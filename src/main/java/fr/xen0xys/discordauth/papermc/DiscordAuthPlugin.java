@@ -1,6 +1,7 @@
 package fr.xen0xys.discordauth.papermc;
 
 import fr.xen0xys.discordauth.common.PluginInfos;
+import fr.xen0xys.discordauth.common.config.Configuration;
 import fr.xen0xys.discordauth.papermc.events.OnPlayerJoin;
 import fr.xen0xys.discordauth.papermc.events.OnPluginMessage;
 import org.bukkit.entity.Player;
@@ -14,12 +15,14 @@ public class DiscordAuthPlugin extends JavaPlugin {
 
     private static DiscordAuthPlugin instance;
     private static Logger logger;
+    private static Configuration configuration;
     private static final List<Player> connectedPlayers = new ArrayList<>();
 
     @Override
     public void onLoad() {
         instance = this;
         logger = this.getLogger();
+        configuration = new Configuration(this.getDataFolder(), "config.yml");
     }
 
     @Override
@@ -37,6 +40,9 @@ public class DiscordAuthPlugin extends JavaPlugin {
 
     public static DiscordAuthPlugin getInstance() {
         return instance;
+    }
+    public static Configuration getConfiguration() {
+        return configuration;
     }
     public static List<Player> getConnectedPlayers() {
         return connectedPlayers;

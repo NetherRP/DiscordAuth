@@ -2,7 +2,6 @@ package fr.xen0xys.discordauth.waterfall.events;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import fr.xen0xys.discordauth.common.GsonUtils;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
@@ -11,6 +10,7 @@ import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionAskPacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
 import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
+import fr.xen0xys.discordauth.waterfall.network.ProxyPacket;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
@@ -35,22 +35,24 @@ public class OnPluginMessage implements Listener {
     }
 
     private void onSessionAsk(Connection connection, ByteArrayDataInput input){
-        SessionAskPacket inPacket = GsonUtils.getGson().fromJson(input.readUTF(), SessionAskPacket.class);
+        SessionAskPacket packet = ProxyPacket.decryptProxy(SessionAskPacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
         ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
         if (Objects.isNull(player)) return;
         SessionResponsePacket outPacket = new SessionResponsePacket(false); // TODO
-        outPacket.sendProxy(player, SubChannels.SESSION_RESPONSE);
+        ProxyPacket.sendProxy(player, SubChannels.SESSION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent session response for " + player.getName());
     }
 
     private void onConnectionAsk(Connection connection, ByteArrayDataInput input){
-        ConnectionAskPacket inPacket = GsonUtils.getGson().fromJson(input.readUTF(), ConnectionAskPacket.class);
+        ConnectionAskPacket packet = ProxyPacket.decryptProxy(ConnectionAskPacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
         ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
         if (Objects.isNull(player)) return;
         // TODO: temporary
-        boolean state = new Encryption(DiscordAuthProxy.getInstance().getLogger()).compareHash("passwd", inPacket.getPassword());
+        boolean state = new Encryption(DiscordAuthProxy.getInstance().getLogger()).compareHash("passwd", packet.getPassword());
         ConnectionResponsePacket outPacket = new ConnectionResponsePacket(state);
-        outPacket.sendProxy(player, SubChannels.CONNECTION_RESPONSE);
+        ProxyPacket.sendProxy(player, SubChannels.CONNECTION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent connection response for " + player.getName());
     }
 }

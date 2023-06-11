@@ -1,6 +1,7 @@
 package fr.xen0xys.discordauth.waterfall;
 
 import fr.xen0xys.discordauth.common.PluginInfos;
+import fr.xen0xys.discordauth.common.config.Configuration;
 import fr.xen0xys.discordauth.waterfall.events.OnPluginMessage;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -10,11 +11,13 @@ public class DiscordAuthProxy extends Plugin {
 
     private static DiscordAuthProxy instance;
     private static Logger logger;
+    private static Configuration configuration;
 
     @Override
     public void onLoad() {
         instance = this;
         logger = this.getLogger();
+        configuration = new Configuration(this.getDataFolder(), "config.yml");
     }
 
     @Override
@@ -31,5 +34,8 @@ public class DiscordAuthProxy extends Plugin {
 
     public static DiscordAuthProxy getInstance() {
         return instance;
+    }
+    public static Configuration getConfiguration() {
+        return configuration;
     }
 }
