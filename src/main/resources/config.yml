@@ -20,12 +20,11 @@ core:
     user: username
     password: password
     database: database_name
+  # Duration of a player session in seconds
   session_duration: 3600
   discord:
     #* Put here your bot token
     token: token
-    # Disable discord part of the plugin, but keep server's safety and account management
-    only_safety: false
     # Add logo to private messages response
     logo:
       enable: false
