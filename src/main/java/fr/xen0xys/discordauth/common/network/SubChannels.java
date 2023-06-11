@@ -1,5 +1,7 @@
 package fr.xen0xys.discordauth.common.network;
 
+import java.util.Arrays;
+
 public enum SubChannels {
     SESSION_ASK("SessionAsk"),
     SESSION_RESPONSE("SessionResponse"),
@@ -17,9 +19,6 @@ public enum SubChannels {
     }
 
     public static SubChannels from(String value){
-        for(SubChannels subChannel : SubChannels.values())
-            if(subChannel.getName().equals(value))
-                return subChannel;
-        return null;
+        return Arrays.stream(SubChannels.values()).filter(subChannel -> subChannel.getName().equals(value)).findFirst().orElse(null);
     }
 }
