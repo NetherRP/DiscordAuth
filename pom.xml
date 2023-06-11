@@ -28,6 +28,11 @@
             <id>codemc-snapshots</id>
             <url>https://repo.codemc.io/repository/maven-snapshots/</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <name>discord-java-lib</name>
+            <url>https://maven.pkg.github.com/Xen0Xys/Discord-Java-Lib</url>
+        </repository>
     </repositories>
 
     <dependencies>
