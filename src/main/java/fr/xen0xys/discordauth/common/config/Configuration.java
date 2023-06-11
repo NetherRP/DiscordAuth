@@ -37,4 +37,8 @@ public class Configuration extends ConfigurationReader{
                 .setPassword(password)
                 .getSessionFactory();
     }
+
+    public String getBotToken() {
+        return this.getConfiguration().getString("core.discord.token");
+    }
 }
