@@ -6,7 +6,9 @@ public enum SubChannels {
     SESSION_ASK("SessionAsk"),
     SESSION_RESPONSE("SessionResponse"),
     CONNECTION_ASK("ConnectionAsk"),
-    CONNECTION_RESPONSE("ConnectionResponse");
+    CONNECTION_RESPONSE("ConnectionResponse"),
+    SESSION_INVALIDATION_ASK("SessionInvalidationAsk"),
+    SESSION_INVALIDATION_RESPONSE("SessionInvalidationResponse");
 
     private final String name;
 

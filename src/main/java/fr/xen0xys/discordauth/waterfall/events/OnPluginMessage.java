@@ -6,10 +6,7 @@ import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.database.models.Account;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
-import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
-import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
-import fr.xen0xys.discordauth.common.network.packets.SessionAskPacket;
-import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
+import fr.xen0xys.discordauth.common.network.packets.*;
 import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import fr.xen0xys.discordauth.waterfall.network.ProxyPacket;
 import net.md_5.bungee.api.connection.Connection;
@@ -31,6 +28,7 @@ public class OnPluginMessage implements Listener {
         switch (subChannel) {
             case SESSION_ASK -> onSessionAsk(e.getReceiver(), input);
             case CONNECTION_ASK -> onConnectionAsk(e.getReceiver(), input);
+            case SESSION_INVALIDATION_ASK -> onSessionInvalidationAsk(e.getReceiver(), input);
             default -> DiscordAuthProxy.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -62,5 +60,19 @@ public class OnPluginMessage implements Listener {
         ConnectionResponsePacket outPacket = new ConnectionResponsePacket(state);
         ProxyPacket.sendProxy(player, SubChannels.CONNECTION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent connection response for " + player.getName());
+    }
+
+    private void onSessionInvalidationAsk(Connection connection, ByteArrayDataInput input){
+        SessionInvalidationAskPacket packet = ProxyPacket.decryptProxy(SessionInvalidationAskPacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
+        if (Objects.isNull(player)) return;
+        Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(player.getUniqueId());
+        account.setLastConnection(0);
+        DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
+        DiscordAuthProxy.getSessions().remove(player.getUniqueId());
+        SessionInvalidationResponsePacket outPacket = new SessionInvalidationResponsePacket(true);
+        ProxyPacket.sendProxy(player, SubChannels.SESSION_INVALIDATION_RESPONSE, outPacket);
+        DiscordAuthProxy.getInstance().getLogger().info("Sent session invalidation response for " + player.getName());
     }
 }

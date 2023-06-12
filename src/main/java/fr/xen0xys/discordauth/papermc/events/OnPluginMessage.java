@@ -6,6 +6,7 @@ import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
+import fr.xen0xys.discordauth.common.network.packets.SessionInvalidationResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
@@ -30,6 +31,7 @@ public class OnPluginMessage implements PluginMessageListener {
         switch (subChannel) {
             case SESSION_RESPONSE -> onSessionResponse(player, input);
             case CONNECTION_RESPONSE -> onConnectionResponse(player, input);
+            case SESSION_INVALIDATION_RESPONSE -> onSessionInvalidationResponse(player, input);
             default -> DiscordAuthPlugin.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -55,6 +57,17 @@ public class OnPluginMessage implements PluginMessageListener {
         }else{
             player.sendMessage(Component.text("Invalid password, please login yourself").color(NamedTextColor.RED));
             displayPasswordAsk(player);
+        }
+    }
+
+    private void onSessionInvalidationResponse(Player player, ByteArrayDataInput input){
+        SessionInvalidationResponsePacket packet = ServerPacket.decryptServer(SessionInvalidationResponsePacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        if(packet.isSuccess()){
+            player.sendMessage(Component.text("You are disconnected!").color(NamedTextColor.GREEN));
+            DiscordAuthPlugin.getConnectedPlayers().remove(player);
+        }else{
+            player.sendMessage(Component.text("Error when disconnecting!").color(NamedTextColor.RED));
         }
     }
 
