@@ -3,7 +3,6 @@ package fr.xen0xys.discordauth.papermc.events;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.xen0xys.discordauth.common.PluginInfos;
-import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
@@ -65,9 +64,7 @@ public class OnPluginMessage implements PluginMessageListener {
         builder.title("Password :");
         builder.text("Enter your password");
         builder.onClick((slot, stateSnapshot) -> {
-            DiscordAuthPlugin.getInstance().getLogger().info("Code entered: " + stateSnapshot.getText());
-            String hashedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(stateSnapshot.getText());
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), hashedPassword);
+            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), stateSnapshot.getText());
             ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
             return List.of(AnvilGUI.ResponseAction.close());
         });

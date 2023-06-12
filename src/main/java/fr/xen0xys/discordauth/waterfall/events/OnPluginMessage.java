@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.waterfall.events;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.xen0xys.discordauth.common.PluginInfos;
+import fr.xen0xys.discordauth.common.database.models.Account;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
@@ -39,7 +40,7 @@ public class OnPluginMessage implements Listener {
         if(Objects.isNull(packet)) return;
         ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
         if (Objects.isNull(player)) return;
-        SessionResponsePacket outPacket = new SessionResponsePacket(false); // TODO
+        SessionResponsePacket outPacket = new SessionResponsePacket(DiscordAuthProxy.getSessions().contains(player.getUniqueId())); // TODO
         ProxyPacket.sendProxy(player, SubChannels.SESSION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent session response for " + player.getName());
     }
@@ -49,8 +50,15 @@ public class OnPluginMessage implements Listener {
         if(Objects.isNull(packet)) return;
         ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
         if (Objects.isNull(player)) return;
-        // TODO: temporary
-        boolean state = new Encryption(DiscordAuthProxy.getInstance().getLogger()).compareHash("passwd", packet.getPassword());
+        Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(player.getUniqueId());
+        boolean state = new Encryption(DiscordAuthProxy.getInstance().getLogger()).compareHash(packet.getPassword(), account.getPassword());
+        if(state){
+            account.setLastConnection(System.currentTimeMillis());
+            Encryption encryption = new Encryption(DiscordAuthProxy.getInstance().getLogger());
+            String lastIp = encryption.hash(Account.clearIP(player.getSocketAddress().toString()));
+            account.setLastIp(lastIp);
+            DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
+        }
         ConnectionResponsePacket outPacket = new ConnectionResponsePacket(state);
         ProxyPacket.sendProxy(player, SubChannels.CONNECTION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent connection response for " + player.getName());
