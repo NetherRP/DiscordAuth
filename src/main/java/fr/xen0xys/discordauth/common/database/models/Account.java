@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@Table(name = "*discordauth_accounts")
+@Table(name = "discordauth_accounts")
 public class Account {
 
     @Id

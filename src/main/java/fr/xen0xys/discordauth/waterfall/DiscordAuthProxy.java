@@ -33,7 +33,7 @@ public class DiscordAuthProxy extends Plugin {
         commonConfig = new CommonConfig(this.getDataFolder());
         coreConfig = new CoreConfig(this.getDataFolder());
         databaseHandler = new DatabaseHandler(coreConfig.getSessionFactory());
-//        bot = new Bot(coreConfig);
+        bot = new Bot(coreConfig);
     }
 
     @Override
