@@ -21,7 +21,7 @@ public abstract class ProxyPacket extends Packet {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(channel.getName());
         Encryption encryption = new Encryption(DiscordAuthProxy.getInstance().getLogger());
-        String encryptedPacket = encryption.encryptSymmetric(DiscordAuthProxy.getConfiguration().getSecret(), packet.serialize());
+        String encryptedPacket = encryption.encryptSymmetric(DiscordAuthProxy.getCommonConfig().getSecret(), packet.serialize());
         if(Objects.isNull(encryptedPacket)){
             DiscordAuthProxy.getInstance().getLogger().severe("Failed to encrypt packet !");
             return;
@@ -34,7 +34,7 @@ public abstract class ProxyPacket extends Packet {
     public static <T extends Packet> T decryptProxy(Class<T> packetClass, String encryptedPacket){
         Logger logger = DiscordAuthProxy.getInstance().getLogger();
         Encryption encryption = new Encryption(logger);
-        String decryptedPacket = encryption.decryptSymmetric(DiscordAuthProxy.getConfiguration().getSecret(), encryptedPacket);
+        String decryptedPacket = encryption.decryptSymmetric(DiscordAuthProxy.getCommonConfig().getSecret(), encryptedPacket);
         if(Objects.isNull(decryptedPacket)){
             logger.severe("Failed to decrypt packet !");
             return null;

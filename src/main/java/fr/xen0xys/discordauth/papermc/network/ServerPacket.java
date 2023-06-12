@@ -21,7 +21,7 @@ public abstract class ServerPacket extends Packet {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(channel.getName());
         Encryption encryption = new Encryption(DiscordAuthPlugin.getInstance().getLogger());
-        String encryptedPacket = encryption.encryptSymmetric(DiscordAuthPlugin.getConfiguration().getSecret(), packet.serialize());
+        String encryptedPacket = encryption.encryptSymmetric(DiscordAuthPlugin.getCommonConfig().getSecret(), packet.serialize());
         if(Objects.isNull(encryptedPacket)){
             DiscordAuthPlugin.getInstance().getLogger().severe("Failed to encrypt packet !");
             return;
@@ -34,7 +34,7 @@ public abstract class ServerPacket extends Packet {
     public static <T extends Packet> T decryptServer(Class<T> packetClass, String encryptedPacket){
         Logger logger = DiscordAuthPlugin.getInstance().getLogger();
         Encryption encryption = new Encryption(logger);
-        String decryptedPacket = encryption.decryptSymmetric(DiscordAuthPlugin.getConfiguration().getSecret(), encryptedPacket);
+        String decryptedPacket = encryption.decryptSymmetric(DiscordAuthPlugin.getCommonConfig().getSecret(), encryptedPacket);
         if(Objects.isNull(decryptedPacket)){
             logger.severe("Failed to decrypt packet !");
             return null;
