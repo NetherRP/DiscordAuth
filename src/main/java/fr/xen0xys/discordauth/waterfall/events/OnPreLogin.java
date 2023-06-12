@@ -17,7 +17,7 @@ public class OnPreLogin implements Listener {
         Encryption encryption = new Encryption(DiscordAuthProxy.getInstance().getLogger());
         if(DiscordAuthProxy.getDatabaseHandler().isAccountExists(uuid)){
             Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(uuid);
-            if(account.hasSession(e.getConnection().getSocketAddress().toString(), encryption))
+            if(account.hasSession(e.getConnection().getSocketAddress().toString(), encryption, DiscordAuthProxy.getCoreConfig().getSessionDuration()))
                 DiscordAuthProxy.getSessions().add(uuid);
             return;
         }

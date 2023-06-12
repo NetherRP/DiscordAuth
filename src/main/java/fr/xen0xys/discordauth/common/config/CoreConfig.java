@@ -13,8 +13,6 @@ public class CoreConfig extends ConfigurationReader{
         super(dataFolder, "configs/core.yml");
     }
 
-
-
     public SessionFactory getSessionFactory(){
         DatabaseType databaseType = DatabaseType.from(this.getConfiguration().getString("database.type"));
         String host = this.getConfiguration().getString("database.host");
@@ -37,7 +35,24 @@ public class CoreConfig extends ConfigurationReader{
                 .getSessionFactory();
     }
 
+    public long getSessionDuration(){
+        return this.getConfiguration().getLong("session_duration");
+    }
+
     public String getBotToken() {
         return this.getConfiguration().getString("discord.token");
+    }
+
+    public boolean isActivityEnable(){
+        return this.getConfiguration().getBoolean("discord.activity.enable");
+    }
+    public String getActivityType(){
+        return this.getConfiguration().getString("discord.activity.type");
+    }
+    public String getActivityText(){
+        return this.getConfiguration().getString("discord.activity.text");
+    }
+    public String getActivityUrl(){
+        return this.getConfiguration().getString("discord.activity.url");
     }
 }

@@ -1,7 +1,6 @@
 package fr.xen0xys.discordauth.common.database.models;
 
 import fr.xen0xys.discordauth.common.encryption.Encryption;
-import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -42,20 +41,8 @@ public class Account {
     	this.lastConnection = lastConnection;
     }
 
-    public boolean hasSession(String newIp, Encryption encryption){
-        String formattedIP = clearIP(newIp);
-        DiscordAuthProxy.getInstance().getLogger().info("Last IP : %s; New IP : %s".formatted(lastIp, formattedIP));
-        if(encryption.compareHash(formattedIP, this.lastIp)){
-            DiscordAuthProxy.getInstance().getLogger().info("Same IP");
-        }else{
-            DiscordAuthProxy.getInstance().getLogger().info("Different IP");
-        }
-        if(System.currentTimeMillis() - lastConnection > 1000 * 60 * 5){
-            DiscordAuthProxy.getInstance().getLogger().info("Time out");
-        }else{
-            DiscordAuthProxy.getInstance().getLogger().info("Not time out");
-        }
-        return encryption.compareHash(formattedIP, this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * 60 * 5;
+    public boolean hasSession(String newIp, Encryption encryption, long sessionDuration){
+        return encryption.compareHash(clearIP(newIp), this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * sessionDuration;
     }
 
     public static String clearIP(String ip){
