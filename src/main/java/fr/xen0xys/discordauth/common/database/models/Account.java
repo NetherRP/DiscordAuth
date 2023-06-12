@@ -1,11 +1,14 @@
 package fr.xen0xys.discordauth.common.database.models;
 
+import fr.xen0xys.discordauth.common.encryption.Encryption;
+import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@Table(name = "discordauth_accounts")
+@Table(name = "*discordauth_accounts")
 public class Account {
 
     @Id
@@ -39,6 +42,26 @@ public class Account {
     	this.lastConnection = lastConnection;
     }
 
+    public boolean hasSession(String newIp, Encryption encryption){
+        String formattedIP = clearIP(newIp);
+        DiscordAuthProxy.getInstance().getLogger().info("Last IP : %s; New IP : %s".formatted(lastIp, formattedIP));
+        if(encryption.compareHash(formattedIP, this.lastIp)){
+            DiscordAuthProxy.getInstance().getLogger().info("Same IP");
+        }else{
+            DiscordAuthProxy.getInstance().getLogger().info("Different IP");
+        }
+        if(System.currentTimeMillis() - lastConnection > 1000 * 60 * 5){
+            DiscordAuthProxy.getInstance().getLogger().info("Time out");
+        }else{
+            DiscordAuthProxy.getInstance().getLogger().info("Not time out");
+        }
+        return encryption.compareHash(formattedIP, this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * 60 * 5;
+    }
+
+    public static String clearIP(String ip){
+        return ip.replace("/", "").split(":")[0];
+    }
+
     public UUID getUuid() {
         return uuid;
     }
@@ -55,11 +78,14 @@ public class Account {
         return lastConnection;
     }
 
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
     public void setPassword(String password) {
         this.password = password;
     }
     public void setLastIp(String lastIp) {
-        this.lastIp = lastIp;
+        this.lastIp = clearIP(lastIp);
     }
     public void setLastConnection(long lastConnection) {
         this.lastConnection = lastConnection;
