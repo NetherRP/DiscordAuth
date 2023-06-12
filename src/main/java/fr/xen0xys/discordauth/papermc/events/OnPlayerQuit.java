@@ -8,6 +8,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class OnPlayerQuit implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
-        DiscordAuthPlugin.getConnectedPlayers().remove(e.getPlayer());
+        if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId()))
+            e.getPlayer().teleport(DiscordAuthPlugin.getUnauthenticatedPlayers().get(e.getPlayer().getUniqueId()));
+        DiscordAuthPlugin.getUnauthenticatedPlayers().remove(e.getPlayer().getUniqueId());
     }
 }

@@ -35,8 +35,8 @@ public class CoreConfig extends ConfigurationReader{
                 .getSessionFactory();
     }
 
-    public long getSessionDuration(){
-        return this.getConfiguration().getLong("session_duration");
+    public int getSessionDuration(){
+        return this.getConfiguration().getInt("session_duration");
     }
 
     public String getBotToken() {

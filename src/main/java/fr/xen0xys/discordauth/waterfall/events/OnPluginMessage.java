@@ -38,7 +38,7 @@ public class OnPluginMessage implements Listener {
         if(Objects.isNull(packet)) return;
         ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
         if (Objects.isNull(player)) return;
-        SessionResponsePacket outPacket = new SessionResponsePacket(DiscordAuthProxy.getSessions().contains(player.getUniqueId())); // TODO
+        SessionResponsePacket outPacket = new SessionResponsePacket(DiscordAuthProxy.getSessions().contains(player.getUniqueId()));
         ProxyPacket.sendProxy(player, SubChannels.SESSION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent session response for " + player.getName());
     }

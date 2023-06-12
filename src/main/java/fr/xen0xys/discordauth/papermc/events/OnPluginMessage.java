@@ -41,7 +41,7 @@ public class OnPluginMessage implements PluginMessageListener {
         if(Objects.isNull(packet)) return;
         if(packet.hasSession()){
             player.sendMessage(Component.text("You are connected (session)!").color(NamedTextColor.GREEN));
-            DiscordAuthPlugin.getConnectedPlayers().add(player);
+            DiscordAuthPlugin.getUnauthenticatedPlayers().remove(player.getUniqueId());
         }else{
             player.sendMessage(Component.text("Please login yourself").color(NamedTextColor.RED));
             displayPasswordAsk(player);
@@ -53,7 +53,7 @@ public class OnPluginMessage implements PluginMessageListener {
         if(Objects.isNull(packet)) return;
         if(packet.isConnected()){
             player.sendMessage(Component.text("You are connected (connection)!").color(NamedTextColor.GREEN));
-            DiscordAuthPlugin.getConnectedPlayers().add(player);
+            DiscordAuthPlugin.getUnauthenticatedPlayers().remove(player.getUniqueId());
         }else{
             player.sendMessage(Component.text("Invalid password, please login yourself").color(NamedTextColor.RED));
             displayPasswordAsk(player);
@@ -65,7 +65,7 @@ public class OnPluginMessage implements PluginMessageListener {
         if(Objects.isNull(packet)) return;
         if(packet.isSuccess()){
             player.sendMessage(Component.text("You are disconnected!").color(NamedTextColor.GREEN));
-            DiscordAuthPlugin.getConnectedPlayers().remove(player);
+            DiscordAuthPlugin.getUnauthenticatedPlayers().put(player.getUniqueId(), player.getLocation());
         }else{
             player.sendMessage(Component.text("Error when disconnecting!").color(NamedTextColor.RED));
         }

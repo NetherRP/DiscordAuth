@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class OnPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        DiscordAuthPlugin.getUnauthenticatedPlayers().put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
         new BukkitRunnable() {
             @Override
             public void run() {

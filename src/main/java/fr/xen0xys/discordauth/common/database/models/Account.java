@@ -1,6 +1,7 @@
 package fr.xen0xys.discordauth.common.database.models;
 
 import fr.xen0xys.discordauth.common.encryption.Encryption;
+import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -42,6 +43,10 @@ public class Account {
     }
 
     public boolean hasSession(String newIp, Encryption encryption, long sessionDuration){
+        if(!encryption.compareHash(clearIP(newIp), this.lastIp))
+            DiscordAuthProxy.getInstance().getLogger().warning("IPs are not the same : %s != %s".formatted(clearIP(newIp), this.lastIp));
+        if(!(System.currentTimeMillis() - lastConnection > 1000 * sessionDuration))
+            DiscordAuthProxy.getInstance().getLogger().warning("Session is expired : %s > %s".formatted(System.currentTimeMillis() - lastConnection, 1000 * sessionDuration));
         return encryption.compareHash(clearIP(newIp), this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * sessionDuration;
     }
 

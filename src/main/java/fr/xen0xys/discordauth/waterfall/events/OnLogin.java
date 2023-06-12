@@ -9,16 +9,18 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.UUID;
 
-public class OnPreLogin implements Listener {
+public class OnLogin implements Listener {
     @EventHandler
-    public void onPlayerPreLogin(LoginEvent e){
+    public void onLogin(LoginEvent e){
         String username = e.getConnection().getName();
         UUID uuid = e.getConnection().getUniqueId();
         Encryption encryption = new Encryption(DiscordAuthProxy.getInstance().getLogger());
+        DiscordAuthProxy.getInstance().getLogger().info("OnLogin: " + username + " " + uuid);
         if(DiscordAuthProxy.getDatabaseHandler().isAccountExists(uuid)){
             Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(uuid);
             if(account.hasSession(e.getConnection().getSocketAddress().toString(), encryption, DiscordAuthProxy.getCoreConfig().getSessionDuration()))
                 DiscordAuthProxy.getSessions().add(uuid);
+            DiscordAuthProxy.getInstance().getLogger().info(DiscordAuthProxy.getSessions().toString());
             return;
         }
         if(!DiscordAuthProxy.getDatabaseHandler().isAccountExists(username)){

@@ -5,14 +5,13 @@ import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.CoreConfig;
 import fr.xen0xys.discordauth.common.database.DatabaseHandler;
 import fr.xen0xys.discordauth.common.discord.Bot;
+import fr.xen0xys.discordauth.waterfall.events.OnLogin;
 import fr.xen0xys.discordauth.waterfall.events.OnPlayerDisconnect;
 import fr.xen0xys.discordauth.waterfall.events.OnPluginMessage;
-import fr.xen0xys.discordauth.waterfall.events.OnPreLogin;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -25,7 +24,7 @@ public class DiscordAuthProxy extends Plugin {
     private static DatabaseHandler databaseHandler;
     private static Bot bot;
 
-    private static final List<UUID> sessions = new ArrayList<>();
+    private static final Set<UUID> sessions = new HashSet<>();
 
     @Override
     public void onLoad() {
@@ -34,14 +33,14 @@ public class DiscordAuthProxy extends Plugin {
         commonConfig = new CommonConfig(this.getDataFolder());
         coreConfig = new CoreConfig(this.getDataFolder());
         databaseHandler = new DatabaseHandler(coreConfig.getSessionFactory());
-        bot = new Bot(coreConfig);
+//        bot = new Bot(coreConfig);
     }
 
     @Override
     public void onEnable() {
         this.getProxy().registerChannel(PluginInfos.CHANNEL);
         getProxy().getPluginManager().registerListener(this, new OnPluginMessage());
-        getProxy().getPluginManager().registerListener(this, new OnPreLogin());
+        getProxy().getPluginManager().registerListener(this, new OnLogin());
         getProxy().getPluginManager().registerListener(this, new OnPlayerDisconnect());
         logger.info("DiscordAuth is started !");
     }
@@ -65,7 +64,7 @@ public class DiscordAuthProxy extends Plugin {
         return databaseHandler;
     }
 
-    public static List<UUID> getSessions() {
+    public static Set<UUID> getSessions() {
         return sessions;
     }
 }
