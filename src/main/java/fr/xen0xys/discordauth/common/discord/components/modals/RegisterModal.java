@@ -12,25 +12,34 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegisterModal extends AbstractModal {
 
-    private static final ModalField username = new ModalField("username", "Name", TextInputStyle.SHORT, "Username");
+    private static final ModalField username = new ModalField("username", "Username", TextInputStyle.SHORT, "Username");
+    private static final ModalField usernameConfirmation = new ModalField("username_confirmation", "Username Confirmation", TextInputStyle.SHORT, "Username Confirmation");
     private static final ModalField password = new ModalField("password", "Password", TextInputStyle.SHORT, "Password");
-    private static final ModalField passwordConfirmation = new ModalField("password_confirmation", "Confirmation", TextInputStyle.SHORT, "Confirmation");
+    private static final ModalField passwordConfirmation = new ModalField("password_confirmation", "Password Confirmation", TextInputStyle.SHORT, "Password Confirmation");
 
     public RegisterModal() {
-        super("discordauth-register", "Register account", username, password, passwordConfirmation);
+        super("discordauth-register", "Register account", username, usernameConfirmation, password, passwordConfirmation);
     }
 
     @Override
     public void callback(@NotNull DJApp djApp, @NotNull ModalInteractionEvent modalInteractionEvent) {
         String username = modalInteractionEvent.getValues().get(0).getAsString();
-        String password = modalInteractionEvent.getValues().get(1).getAsString();
-        String passwordConfirmation = modalInteractionEvent.getValues().get(2).getAsString();
+        String usernameConfirmation = modalInteractionEvent.getValues().get(1).getAsString();
+        String password = modalInteractionEvent.getValues().get(2).getAsString();
+        String passwordConfirmation = modalInteractionEvent.getValues().get(3).getAsString();
+        if(!username.equals(usernameConfirmation)){
+            modalInteractionEvent.deferReply(true).addContent("Usernames do not match").queue();
+            return;
+        }
         if(!password.equals(passwordConfirmation)){
             modalInteractionEvent.deferReply(true).addContent("Passwords do not match").queue();
             return;
         }
         String hashedPassword = new Encryption(djApp.getLogger()).hash(password);
-        DiscordAuthProxy.getDatabaseHandler().addAccount(new Account(null, username, hashedPassword, null, -1));
-        modalInteractionEvent.deferReply(true).addContent("Account created").queue();
+        boolean state = DiscordAuthProxy.getDatabaseHandler().addAccount(new Account(null, username, hashedPassword, null, -1));
+        if(state)
+            modalInteractionEvent.deferReply(true).addContent("Account created").queue();
+        else
+            modalInteractionEvent.deferReply(true).addContent("Account already exists").queue();
     }
 }

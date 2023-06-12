@@ -1,6 +1,6 @@
 package fr.xen0xys.discordauth.common.discord;
 
-import fr.xen0xys.discordauth.common.config.Configuration;
+import fr.xen0xys.discordauth.common.config.CoreConfig;
 import fr.xen0xys.discordauth.common.discord.components.buttons.RegisterButton;
 import fr.xen0xys.discordauth.common.discord.components.commands.DisplayRegisterCommand;
 import fr.xen0xys.discordjava.DJApp;
@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class Bot {
 
-    public Bot(Configuration configuration){
-        this(configuration.getBotToken());
+    public Bot(CoreConfig coreConfig){
+        this(coreConfig.getBotToken());
     }
 
     public Bot(String token){
