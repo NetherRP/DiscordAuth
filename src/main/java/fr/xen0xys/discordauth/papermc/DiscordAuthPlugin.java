@@ -3,10 +3,7 @@ package fr.xen0xys.discordauth.papermc;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.ServerConfig;
-import fr.xen0xys.discordauth.papermc.events.OnPlayerJoin;
-import fr.xen0xys.discordauth.papermc.events.OnPlayerMove;
-import fr.xen0xys.discordauth.papermc.events.OnPlayerQuit;
-import fr.xen0xys.discordauth.papermc.events.OnPluginMessage;
+import fr.xen0xys.discordauth.papermc.events.*;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,8 +33,9 @@ public class DiscordAuthPlugin extends JavaPlugin {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, PluginInfos.CHANNEL);
         this.getServer().getMessenger().registerIncomingPluginChannel(this, PluginInfos.CHANNEL, new OnPluginMessage());
         this.getServer().getPluginManager().registerEvents(new OnPlayerJoin(), this);
-        this.getServer().getPluginManager().registerEvents(new OnPlayerMove(), this);
         this.getServer().getPluginManager().registerEvents(new OnPlayerQuit(), this);
+        this.getServer().getPluginManager().registerEvents(new OnPreventions(), this);
+        this.getServer().getPluginManager().registerEvents(new OnPlayerRespawn(), this);
         logger.info("DiscordAuth is started !");
     }
 
