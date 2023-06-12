@@ -1,0 +1,30 @@
+#
+# THANKS FOR USING DISCORDAUTH!
+#
+# Notes: some settings need to be changed, there are noted by "#*"
+
+# Settings for core server only
+database:
+  type: SQLITE # Can be SQLITE, MYSQL or POSTGRESQL
+  host: 0.0.0.0
+  port: 3306
+  database: database_name
+  user: username
+  password: password
+# Duration of a player session in seconds
+session_duration: 3600
+discord:
+  #* Put here your bot token
+  token: token
+  # Add logo to private messages response
+  logo:
+    enable: false
+    url: null
+  # Set bot status here
+  activity:
+    enable: true
+    # Can be PLAYING, STREAMING, LISTENING or WATCHING
+    type: PLAYING
+    text: DiscordAuth V3.0!
+    # Only for streaming
+    url: null

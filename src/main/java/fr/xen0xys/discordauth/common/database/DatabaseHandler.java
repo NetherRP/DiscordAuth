@@ -32,12 +32,16 @@ public class DatabaseHandler {
         }
     }
 
-    public void addAccount(Account account){
+    public boolean addAccount(Account account){
+        if(isAccountExists(account.getUuid()) || isAccountExists(account.getUsername())){
+            return false;
+        }
         try(Session session = this.sessionFactory.openSession()){
             session.beginTransaction();
             session.persist(account);
             session.getTransaction().commit();
         }
+        return true;
     }
 
     public void updateAccount(Account account){
@@ -56,9 +60,19 @@ public class DatabaseHandler {
         }
     }
 
-    public Account getAccount(String uuid){
+    public Account getAccount(UUID uuid){
         try(Session session = this.sessionFactory.openSession()){
-            return session.get(Account.class, uuid);
+            Query<Account> query = session.createQuery("FROM Account WHERE uuid = :uuid", Account.class);
+            query.setParameter("uuid", uuid);
+            return query.uniqueResult();
+        }
+    }
+
+    public Account getAccount(String username){
+        try(Session session = this.sessionFactory.openSession()){
+            Query<Account> query = session.createQuery("FROM Account WHERE username = :username", Account.class);
+            query.setParameter("username", username);
+            return query.uniqueResult();
         }
     }
 }
