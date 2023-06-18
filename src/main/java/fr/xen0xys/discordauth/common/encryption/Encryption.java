@@ -89,7 +89,7 @@ public class Encryption {
     }
 
     public String hash(String data) {
-        return BCrypt.withDefaults().hashToString(10, data.toCharArray());
+        return BCrypt.withDefaults().hashToString(12, data.toCharArray());
     }
 
     public boolean compareHash(String data, String hashedData) {
