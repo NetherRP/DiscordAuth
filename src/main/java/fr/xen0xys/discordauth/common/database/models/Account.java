@@ -5,6 +5,7 @@ import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import jakarta.persistence.*;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
@@ -12,8 +13,8 @@ import java.util.UUID;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "discord_id")
+    private long discordId;
 
     @Column(name = "uuid")
     private UUID uuid;
@@ -34,7 +35,8 @@ public class Account {
 
     }
 
-    public Account(UUID uuid, String username, String password, String lastIp, long lastConnection) {
+    public Account(long discordId, UUID uuid, String username, String password, String lastIp, long lastConnection) {
+        this.discordId = discordId;
     	this.uuid = uuid;
         this.username = username;
     	this.password = password;
@@ -45,8 +47,8 @@ public class Account {
     public boolean hasSession(String newIp, Encryption encryption, long sessionDuration){
         if(!encryption.compareHash(clearIP(newIp), this.lastIp))
             DiscordAuthProxy.getInstance().getLogger().warning("IPs are not the same : %s != %s".formatted(clearIP(newIp), this.lastIp));
-        if(!(System.currentTimeMillis() - lastConnection > 1000 * sessionDuration))
-            DiscordAuthProxy.getInstance().getLogger().warning("Session is expired : %s > %s".formatted(System.currentTimeMillis() - lastConnection, 1000 * sessionDuration));
+        if(!(System.currentTimeMillis() - lastConnection < 1000 * sessionDuration))
+            DiscordAuthProxy.getInstance().getLogger().warning("Session is expired : %s < %s".formatted(System.currentTimeMillis() - lastConnection, 1000 * sessionDuration));
         return encryption.compareHash(clearIP(newIp), this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * sessionDuration;
     }
 
@@ -54,6 +56,9 @@ public class Account {
         return ip.replace("/", "").split(":")[0];
     }
 
+    public long getDiscordId() {
+        return discordId;
+    }
     public UUID getUuid() {
         return uuid;
     }
@@ -70,14 +75,19 @@ public class Account {
         return lastConnection;
     }
 
+    public void setDiscordId(int discordId) {
+        this.discordId = discordId;
+    }
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setLastIp(String lastIp) {
-        this.lastIp = clearIP(lastIp);
+    public void setLastIp(String lastIp, Logger logger) {
+        logger.info("Setting last IP to %s".formatted(lastIp));
+        Encryption encryption = new Encryption(logger);
+        this.lastIp = encryption.hash(clearIP(lastIp));
     }
     public void setLastConnection(long lastConnection) {
         this.lastConnection = lastConnection;
