@@ -3,6 +3,11 @@ package fr.xen0xys.discordauth.papermc;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.ServerConfig;
+import fr.xen0xys.discordauth.papermc.commands.completers.DiscordAuthCompleter;
+import fr.xen0xys.discordauth.papermc.commands.executors.AccountCommand;
+import fr.xen0xys.discordauth.papermc.commands.executors.DiscordAuthCommand;
+import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
+import fr.xen0xys.discordauth.papermc.commands.executors.LogoutCommand;
 import fr.xen0xys.discordauth.papermc.events.*;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+@SuppressWarnings("DataFlowIssue")
 public class DiscordAuthPlugin extends JavaPlugin {
 
     private static DiscordAuthPlugin instance;
@@ -36,6 +42,11 @@ public class DiscordAuthPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new OnPlayerQuit(), this);
         this.getServer().getPluginManager().registerEvents(new OnPreventions(), this);
         this.getServer().getPluginManager().registerEvents(new OnPlayerRespawn(), this);
+        this.getCommand("login").setExecutor(new LoginCommand());
+        this.getCommand("logout").setExecutor(new LogoutCommand());
+        this.getCommand("discordauth").setExecutor(new DiscordAuthCommand());
+        this.getCommand("discordauth").setTabCompleter(new DiscordAuthCompleter());
+        this.getCommand("account").setExecutor(new AccountCommand()); // TODO: Tab completer
         logger.info("DiscordAuth is started !");
     }
 
