@@ -17,6 +17,7 @@ commands:
     aliases: [l]
     permission: discordauth.login
   logout:
+    aliases: [disconnect]
     permission: discordauth.logout
   forcelogin:
     permission: discordauth.forcelogin
