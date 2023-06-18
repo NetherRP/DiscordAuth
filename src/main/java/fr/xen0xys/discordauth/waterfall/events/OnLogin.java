@@ -31,7 +31,7 @@ public class OnLogin implements Listener {
         Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(username);
         account.setUuid(uuid);
         account.setLastConnection(System.currentTimeMillis());
-        account.setLastIp(encryption.hash(Account.clearIP(e.getConnection().getSocketAddress().toString())));
+        account.setLastIp(e.getConnection().getSocketAddress().toString(), DiscordAuthProxy.getInstance().getLogger());
         DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
     }
 }
