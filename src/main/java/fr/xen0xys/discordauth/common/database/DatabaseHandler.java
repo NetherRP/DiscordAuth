@@ -32,6 +32,12 @@ public class DatabaseHandler {
         }
     }
 
+    public boolean isAccountExists(long discordId) {
+        try (Session session = this.sessionFactory.openSession()) {
+            return Objects.nonNull(session.get(Account.class, discordId));
+        }
+    }
+
     public boolean addAccount(Account account){
         if(isAccountExists(account.getUuid()) || isAccountExists(account.getUsername())){
             return false;
