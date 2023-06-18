@@ -9,12 +9,13 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Bot {
 
-    public Bot(CoreConfig coreConfig){
+    public Bot(CoreConfig coreConfig, Logger logger){
         try {
-            DJApp app = new DJApp(coreConfig.getBotToken(), "DiscordAuthBot");
+            DJApp app = new DJApp(coreConfig.getBotToken(), logger);
 //            new DisplayRegisterCommand().register(this.app.getCommandsManager(), true);
             Guild guild = app.getJDA().getGuildById(1016358670600245369L);
             if(Objects.isNull(guild)) return;
