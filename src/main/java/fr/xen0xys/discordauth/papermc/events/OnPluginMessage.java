@@ -4,20 +4,19 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.network.SubChannels;
-import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
+import fr.xen0xys.discordauth.common.network.packets.AccountCreationResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionInvalidationResponsePacket;
 import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
+import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
@@ -32,6 +31,7 @@ public class OnPluginMessage implements PluginMessageListener {
             case SESSION_RESPONSE -> onSessionResponse(player, input);
             case CONNECTION_RESPONSE -> onConnectionResponse(player, input);
             case SESSION_INVALIDATION_RESPONSE -> onSessionInvalidationResponse(player, input);
+            case ACCOUNT_CREATION_RESPONSE -> onAccountCreationResponse(player, input);
             default -> DiscordAuthPlugin.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -44,7 +44,7 @@ public class OnPluginMessage implements PluginMessageListener {
             DiscordAuthPlugin.getUnauthenticatedPlayers().remove(player.getUniqueId());
         }else{
             player.sendMessage(Component.text("Please login yourself").color(NamedTextColor.RED));
-            displayPasswordAsk(player);
+            LoginCommand.displayPasswordAsk(player);
         }
     }
 
@@ -56,7 +56,7 @@ public class OnPluginMessage implements PluginMessageListener {
             DiscordAuthPlugin.getUnauthenticatedPlayers().remove(player.getUniqueId());
         }else{
             player.sendMessage(Component.text("Invalid password, please login yourself").color(NamedTextColor.RED));
-            displayPasswordAsk(player);
+            LoginCommand.displayPasswordAsk(player);
         }
     }
 
@@ -71,16 +71,12 @@ public class OnPluginMessage implements PluginMessageListener {
         }
     }
 
-    private void displayPasswordAsk(Player player){
-        AnvilGUI.Builder builder = new AnvilGUI.Builder();
-        builder.plugin(DiscordAuthPlugin.getInstance());
-        builder.title("Password :");
-        builder.text("Enter your password");
-        builder.onClick((slot, stateSnapshot) -> {
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), stateSnapshot.getText());
-            ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
-            return List.of(AnvilGUI.ResponseAction.close());
-        });
-        builder.open(player);
+    private void onAccountCreationResponse(Player player, ByteArrayDataInput input){
+        AccountCreationResponsePacket packet = ServerPacket.decryptServer(AccountCreationResponsePacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        if(packet.isSuccess())
+            player.sendMessage(Component.text("Account created!").color(NamedTextColor.GREEN));
+        else
+            player.sendMessage(Component.text("Error when creating account!").color(NamedTextColor.RED));
     }
 }

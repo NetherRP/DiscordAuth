@@ -29,6 +29,7 @@ public class OnPluginMessage implements Listener {
             case SESSION_ASK -> onSessionAsk(e.getReceiver(), input);
             case CONNECTION_ASK -> onConnectionAsk(e.getReceiver(), input);
             case SESSION_INVALIDATION_ASK -> onSessionInvalidationAsk(e.getReceiver(), input);
+            case ACCOUNT_CREATION_ASK -> onAccountCreationAsk(e.getReceiver(), input);
             default -> DiscordAuthProxy.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -52,9 +53,7 @@ public class OnPluginMessage implements Listener {
         boolean state = new Encryption(DiscordAuthProxy.getInstance().getLogger()).compareHash(packet.getPassword(), account.getPassword());
         if(state){
             account.setLastConnection(System.currentTimeMillis());
-            Encryption encryption = new Encryption(DiscordAuthProxy.getInstance().getLogger());
-            String lastIp = encryption.hash(Account.clearIP(player.getSocketAddress().toString()));
-            account.setLastIp(lastIp);
+            account.setLastIp(player.getSocketAddress().toString(), DiscordAuthProxy.getInstance().getLogger());
             DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
         }
         ConnectionResponsePacket outPacket = new ConnectionResponsePacket(state);
@@ -74,5 +73,17 @@ public class OnPluginMessage implements Listener {
         SessionInvalidationResponsePacket outPacket = new SessionInvalidationResponsePacket(true);
         ProxyPacket.sendProxy(player, SubChannels.SESSION_INVALIDATION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent session invalidation response for " + player.getName());
+    }
+
+    private void onAccountCreationAsk(Connection connection, ByteArrayDataInput input){
+        AccountCreationAskPacket packet = ProxyPacket.decryptProxy(AccountCreationAskPacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
+        if (Objects.isNull(player)) return;
+        Account account = new Account(packet.getDiscordId(), null, packet.getUsername(), packet.getPassword(), null, -1);
+        boolean state = DiscordAuthProxy.getDatabaseHandler().addAccount(account);
+        AccountCreationResponsePacket outPacket = new AccountCreationResponsePacket(state);
+        ProxyPacket.sendProxy(player, SubChannels.ACCOUNT_CREATION_RESPONSE, outPacket);
+        DiscordAuthProxy.getInstance().getLogger().info("Sent account creation response for " + player.getName());
     }
 }
