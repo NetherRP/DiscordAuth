@@ -37,8 +37,6 @@ public class LoginCommand implements CommandExecutor {
                 .title("Password :")
                 .text("➞");
         builder.onClick((slot, stateSnapshot) -> {
-            if(slot != 2)
-                return List.of(AnvilGUI.ResponseAction.close());
             String password = stateSnapshot.getText();
             if(password.contains("➞"))
                 password = password.replace("➞", "");

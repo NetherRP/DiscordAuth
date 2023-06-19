@@ -71,8 +71,8 @@ public class AccountCommand implements CommandExecutor {
         }
         if (args.length == 3) {
             // Change self password
-            if (!player.hasPermission("discordauth.account.modify.self")) {
-                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.modify.self)"));
+            if (!player.hasPermission("discordauth.account.manage.self")) {
+                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.manage.self)"));
                 return false;
             }
             String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
@@ -80,8 +80,8 @@ public class AccountCommand implements CommandExecutor {
             ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
         } else if (args.length == 4) {
             // Change other password
-            if (!player.hasPermission("discordauth.account.modify.other")) {
-                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.modify.other)"));
+            if (!player.hasPermission("discordauth.account.manage.other")) {
+                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.manage.other)"));
                 return false;
             }
             Player target = DiscordAuthPlugin.getInstance().getServer().getPlayer(args[3]);

@@ -22,7 +22,6 @@ public class DiscordAuthProxy extends Plugin {
     private static CommonConfig commonConfig;
     private static CoreConfig coreConfig;
     private static DatabaseHandler databaseHandler;
-    private static Bot bot;
 
     private static final Set<UUID> sessions = new HashSet<>();
 
@@ -33,7 +32,7 @@ public class DiscordAuthProxy extends Plugin {
         commonConfig = new CommonConfig(this.getDataFolder());
         coreConfig = new CoreConfig(this.getDataFolder());
         databaseHandler = new DatabaseHandler(coreConfig.getSessionFactory());
-        bot = new Bot(coreConfig, logger);
+        new Bot(coreConfig, logger);
     }
 
     @Override

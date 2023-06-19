@@ -5,7 +5,7 @@
 
 # Settings for game server only
 spawnpoint:
-  # Enable first time spawn point
+  # Enable packet time spawn point
   first_time_tp: false
   # Tp player at spawn point on login
   tp_on_login: false
