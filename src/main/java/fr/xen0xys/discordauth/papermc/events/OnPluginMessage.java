@@ -4,10 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.network.SubChannels;
-import fr.xen0xys.discordauth.common.network.packets.AccountCreationResponsePacket;
-import fr.xen0xys.discordauth.common.network.packets.ConnectionResponsePacket;
-import fr.xen0xys.discordauth.common.network.packets.SessionInvalidationResponsePacket;
-import fr.xen0xys.discordauth.common.network.packets.SessionResponsePacket;
+import fr.xen0xys.discordauth.common.network.packets.*;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
@@ -32,6 +29,7 @@ public class OnPluginMessage implements PluginMessageListener {
             case CONNECTION_RESPONSE -> onConnectionResponse(player, input);
             case SESSION_INVALIDATION_RESPONSE -> onSessionInvalidationResponse(player, input);
             case ACCOUNT_CREATION_RESPONSE -> onAccountCreationResponse(player, input);
+            case CHANGE_PASSWORD_RESPONSE -> onChangePasswordResponse(player, input);
             default -> DiscordAuthPlugin.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -78,5 +76,14 @@ public class OnPluginMessage implements PluginMessageListener {
             player.sendMessage(Component.text("Account created!").color(NamedTextColor.GREEN));
         else
             player.sendMessage(Component.text("Error when creating account!").color(NamedTextColor.RED));
+    }
+
+    private void onChangePasswordResponse(Player player, ByteArrayDataInput input){
+        ChangePasswordResponsePacket packet = ServerPacket.decryptServer(ChangePasswordResponsePacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        if(packet.isSuccess())
+            player.sendMessage(Component.text("Password changed!").color(NamedTextColor.GREEN));
+        else
+            player.sendMessage(Component.text("Error when changing password!").color(NamedTextColor.RED));
     }
 }

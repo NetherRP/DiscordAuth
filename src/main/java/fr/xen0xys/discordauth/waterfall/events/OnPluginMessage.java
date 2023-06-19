@@ -30,6 +30,7 @@ public class OnPluginMessage implements Listener {
             case CONNECTION_ASK -> onConnectionAsk(e.getReceiver(), input);
             case SESSION_INVALIDATION_ASK -> onSessionInvalidationAsk(e.getReceiver(), input);
             case ACCOUNT_CREATION_ASK -> onAccountCreationAsk(e.getReceiver(), input);
+            case CHANGE_PASSWORD_ASK -> onChangePasswordAsk(e.getReceiver(), input);
             default -> DiscordAuthProxy.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
         }
     }
@@ -85,5 +86,17 @@ public class OnPluginMessage implements Listener {
         AccountCreationResponsePacket outPacket = new AccountCreationResponsePacket(state);
         ProxyPacket.sendProxy(player, SubChannels.ACCOUNT_CREATION_RESPONSE, outPacket);
         DiscordAuthProxy.getInstance().getLogger().info("Sent account creation response for " + player.getName());
+    }
+
+    private void onChangePasswordAsk(Connection connection, ByteArrayDataInput input){
+        ChangePasswordAskPacket packet = ProxyPacket.decryptProxy(ChangePasswordAskPacket.class, input.readUTF());
+        if(Objects.isNull(packet)) return;
+        ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
+        if (Objects.isNull(player)) return;
+        Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(player.getUniqueId());
+        account.setPassword(packet.getNewPassword());
+        DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
+        ChangePasswordResponsePacket outPacket = new ChangePasswordResponsePacket(true);
+        ProxyPacket.sendProxy(player, SubChannels.CHANGE_PASSWORD_RESPONSE, outPacket);
     }
 }
