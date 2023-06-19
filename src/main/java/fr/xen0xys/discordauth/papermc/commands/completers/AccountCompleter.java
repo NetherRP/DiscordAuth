@@ -13,7 +13,7 @@ import java.util.List;
 public class AccountCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(commandSender instanceof Player player) {
+        if(commandSender instanceof final Player player) {
             switch (args.length) {
                 case 1 -> {
                     List<String> list = new ArrayList<>();

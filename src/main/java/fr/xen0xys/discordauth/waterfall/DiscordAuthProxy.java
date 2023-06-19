@@ -29,30 +29,33 @@ public class DiscordAuthProxy extends Plugin {
     public void onLoad() {
         instance = this;
         logger = this.getLogger();
+        logger.info("Loading configs...");
         commonConfig = new CommonConfig(this.getDataFolder());
         coreConfig = new CoreConfig(this.getDataFolder());
+        logger.info("Loading database...");
         databaseHandler = new DatabaseHandler(coreConfig.getSessionFactory());
+        logger.info("Registering channels...");
+        this.registerBungeeCordChannels();
+        logger.info("Registering events...");
+        this.registerEvents();
+        logger.info("Loading Discord bot...");
         new Bot(coreConfig, logger);
+        logger.info("DiscordAuth is loaded !");
     }
 
-    @Override
-    public void onEnable() {
+    private void registerBungeeCordChannels(){
         this.getProxy().registerChannel(PluginInfos.CHANNEL);
+    }
+
+    private void registerEvents(){
         getProxy().getPluginManager().registerListener(this, new OnPluginMessage());
         getProxy().getPluginManager().registerListener(this, new OnLogin());
         getProxy().getPluginManager().registerListener(this, new OnPlayerDisconnect());
-        logger.info("DiscordAuth is started !");
-    }
-
-    @Override
-    public void onDisable() {
-        super.onDisable();
     }
 
     public static DiscordAuthProxy getInstance() {
         return instance;
     }
-
     public static CommonConfig getCommonConfig() {
         return commonConfig;
     }
@@ -62,7 +65,6 @@ public class DiscordAuthProxy extends Plugin {
     public static DatabaseHandler getDatabaseHandler() {
         return databaseHandler;
     }
-
     public static Set<UUID> getSessions() {
         return sessions;
     }

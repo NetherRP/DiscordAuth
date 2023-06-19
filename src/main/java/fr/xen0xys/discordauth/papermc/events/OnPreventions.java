@@ -13,48 +13,49 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.jetbrains.annotations.NotNull;
 
 public class OnPreventions implements Listener {
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e){
+    public void onInventoryClick(@NotNull final InventoryClickEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getWhoClicked().getUniqueId()))
             e.setCancelled(true);
     }
     @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent e){
+    public void onFoodLevelChange(@NotNull final FoodLevelChangeEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getEntity().getUniqueId()))
             e.setCancelled(true);
     }
     @EventHandler
-    public void onEntityDamagedByEntity(EntityDamageByEntityEvent e){
+    public void onEntityDamagedByEntity(@NotNull final EntityDamageByEntityEvent e){
         if(e.getDamager() instanceof Player player && DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(player.getUniqueId()))
             e.setCancelled(true);
         if(e.getEntity() instanceof Player player && DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(player.getUniqueId()))
             e.setCancelled(true);
     }
     @EventHandler
-    public void onEntityDamaged(EntityDamageEvent e) {
+    public void onEntityDamaged(@NotNull final EntityDamageEvent e) {
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getEntity().getUniqueId())){
             e.getEntity().sendMessage(Component.text("Please login to take damage !"));
             e.setCancelled(true);
         }
     }
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e) {
+    public void onBlockBreak(@NotNull final BlockBreakEvent e) {
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId())){
             e.getPlayer().sendMessage(Component.text("Please login to break blocks !"));
             e.setCancelled(true);
         }
     }
     @EventHandler
-    public void onAsyncChat(AsyncChatEvent e){
+    public void onAsyncChat(@NotNull final AsyncChatEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId())){
             e.getPlayer().sendMessage(Component.text("Please login to use chat !"));
             e.setCancelled(true);
         }
     }
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e){
+    public void onPlayerMove(@NotNull final PlayerMoveEvent e){
         Player player = e.getPlayer();
         if(!DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(player.getUniqueId()))
             return;
@@ -67,23 +68,23 @@ public class OnPreventions implements Listener {
         }
     }
     @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
+    public void onPlayerCommandPreprocess(@NotNull final PlayerCommandPreprocessEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId()))
             if(!e.getMessage().startsWith("/login") && !e.getMessage().startsWith("/l"))
                 e.setCancelled(true);
     }
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent e){
+    public void onPlayerDropItem(@NotNull final PlayerDropItemEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId()))
             e.setCancelled(true);
     }
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e){
+    public void onPlayerInteract(@NotNull final PlayerInteractEvent e){
         if(DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId()))
             e.setCancelled(true);
     }
     @EventHandler
-    public void onPlayerKick(PlayerKickEvent e){
+    public void onPlayerKick(@NotNull final PlayerKickEvent e){
         if(e.reason().toString().equals("Flying is not enabled on this server") && DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(e.getPlayer().getUniqueId()))
             e.setCancelled(true);
     }

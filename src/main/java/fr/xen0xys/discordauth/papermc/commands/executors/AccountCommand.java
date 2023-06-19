@@ -15,19 +15,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class AccountCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(commandSender instanceof Player player){
-            if(strings.length < 1)
+            if(args.length < 1)
                 return false;
-            switch (strings[0]){
+            switch (args[0]){
                 case "create" -> {
-                    return createAccount(player, strings);
+                    return createAccount(player, args);
                 }
                 case "delete" -> {
-                    return deleteAccount(player, strings);
+                    return deleteAccount(player, args);
                 }
                 case "manage" -> {
-                    return manageAccount(player, strings);
+                    return manageAccount(player, args);
                 }
                 default -> {
                     commandSender.sendMessage(Component.text("Usage: /account <create|delete|manage>"));
@@ -38,7 +38,7 @@ public class AccountCommand implements CommandExecutor {
         return false;
     }
 
-    private boolean createAccount(Player player, String[] args){
+    private boolean createAccount(@NotNull final Player player, @NotNull final String[] args){
         if(args.length < 4){
             player.sendMessage(Component.text("Usage: /account create <discordId> <minecraftName> <password>"));
             return false;
@@ -49,18 +49,20 @@ public class AccountCommand implements CommandExecutor {
         }
         long discordId = Long.parseLong(args[1]);
         String minecraftName = args[2];
-        Encryption encryption = new Encryption(DiscordAuthPlugin.getInstance().getLogger());
+        Encryption encryption = new Encryption();
         String encryptedPassword = encryption.hash(args[3]);
         AccountCreationAskPacket packet = new AccountCreationAskPacket(discordId, minecraftName, encryptedPassword);
         ServerPacket.sendServer(player, SubChannels.ACCOUNT_CREATION_ASK, packet);
         return true;
     }
-    private boolean deleteAccount(Player player, String[] args){
+
+    @SuppressWarnings("unused")
+    private boolean deleteAccount(@NotNull final Player player, @NotNull final String[] args){
         // TODO
         return false;
     }
 
-    private boolean manageAccount(Player player, String[] args){
+    private boolean manageAccount(@NotNull final Player player, @NotNull final String[] args){
         if(args.length < 2){
             player.sendMessage(Component.text("Usage: /account manage <password> <newPassword> [player]"));
             return false;
@@ -75,7 +77,7 @@ public class AccountCommand implements CommandExecutor {
                 player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.manage.self)"));
                 return false;
             }
-            String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
+            String encryptedPassword = new Encryption().hash(args[2]);
             ChangePasswordAskPacket packet = new ChangePasswordAskPacket(player.getUniqueId(), encryptedPassword);
             ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
         } else if (args.length == 4) {
@@ -89,7 +91,7 @@ public class AccountCommand implements CommandExecutor {
                 player.sendMessage(Component.text("Player not found!"));
                 return false;
             }
-            String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
+            String encryptedPassword = new Encryption().hash(args[2]);
             ChangePasswordAskPacket packet = new ChangePasswordAskPacket(target.getUniqueId(), encryptedPassword);
             ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
         }

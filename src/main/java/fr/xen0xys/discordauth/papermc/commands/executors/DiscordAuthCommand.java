@@ -8,19 +8,19 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("SwitchStatementWithTooFewBranches")
 public class DiscordAuthCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(strings.length != 1)
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(args.length != 1)
             return false;
-        switch (strings[0]) {
+        switch (args[0]) {
             case "reload" -> reload();
             default -> {
                 return false;
             }
-        };
+        }
         return true;
     }
 
     private void reload(){
-
+        // TODO
     }
 }

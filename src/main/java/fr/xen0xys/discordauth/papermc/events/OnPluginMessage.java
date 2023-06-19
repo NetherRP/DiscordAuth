@@ -7,7 +7,8 @@ import fr.xen0xys.discordauth.common.network.PacketTuple;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.exceptions.NullPacketException;
 import fr.xen0xys.discordauth.common.network.exceptions.NullSenderException;
-import fr.xen0xys.discordauth.common.network.packets.*;
+import fr.xen0xys.discordauth.common.network.exceptions.PacketEncryptionException;
+import fr.xen0xys.discordauth.common.network.packets.TargetedResponsePacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
@@ -20,10 +21,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-@SuppressWarnings({"UnstableApiUsage", "NullableProblems", "SameParameterValue"})
 public class OnPluginMessage implements PluginMessageListener {
+    @SuppressWarnings({"NullableProblems", "UnstableApiUsage"})
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] bytes) {
+    public void onPluginMessageReceived(@NotNull final String channel, @NotNull final Player player, @NotNull final byte[] bytes) {
         if(!channel.equals(PluginInfos.CHANNEL)) return;
         ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
         SubChannels subChannel = SubChannels.from(input.readUTF());
@@ -37,16 +38,17 @@ public class OnPluginMessage implements PluginMessageListener {
                 case CHANGE_PASSWORD_RESPONSE -> onChangePasswordResponse(player, input);
                 default -> DiscordAuthPlugin.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
             }
-        } catch (NullPacketException ex){
+        } catch (NullPacketException | NullSenderException | PacketEncryptionException ex){
             ex.printStackTrace();
         }
     }
 
-    private <T extends TargetedResponsePacket> PacketTuple<T, Player> getPacketAndPlayer(Class<T> packetClass, ByteArrayDataInput input){
+    @SuppressWarnings("SameParameterValue")
+    private <T extends TargetedResponsePacket> PacketTuple<T, Player> getPacketAndPlayer(@NotNull final Class<T> packetClass, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException{
         return this.getPacketAndPlayer(packetClass, input, true);
     }
 
-    private <T extends TargetedResponsePacket> PacketTuple<T, Player> getPacketAndPlayer(Class<T> packetClass, ByteArrayDataInput input, boolean throwNullTarget){
+    private <T extends TargetedResponsePacket> PacketTuple<T, Player> getPacketAndPlayer(@NotNull final Class<T> packetClass, @NotNull final ByteArrayDataInput input, final boolean throwNullTarget) throws NullPacketException, NullSenderException{
         T packet = ServerPacket.decryptServer(packetClass, input.readUTF());
         if(Objects.isNull(packet)) throw new NullPacketException("ChangePasswordAskPacket is null");
         Player player = null;
@@ -60,7 +62,7 @@ public class OnPluginMessage implements PluginMessageListener {
         return new PacketTuple<>(packet, player);
     }
 
-    private void onSessionResponse(Player player, ByteArrayDataInput input){
+    private void onSessionResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
             player.sendMessage(Component.text("Session check for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
@@ -73,7 +75,7 @@ public class OnPluginMessage implements PluginMessageListener {
         }
     }
 
-    private void onConnectionResponse(Player player, ByteArrayDataInput input){
+    private void onConnectionResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
             player.sendMessage(Component.text("Connection check for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
@@ -86,7 +88,7 @@ public class OnPluginMessage implements PluginMessageListener {
         }
     }
 
-    private void onSessionInvalidationResponse(Player player, ByteArrayDataInput input){
+    private void onSessionInvalidationResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
             player.sendMessage(Component.text("Session invalidation for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
@@ -99,7 +101,7 @@ public class OnPluginMessage implements PluginMessageListener {
         }
     }
 
-    private void onAccountCreationResponse(Player player, ByteArrayDataInput input){
+    private void onAccountCreationResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input, false);
         if(tuple.packet().isSuccess())
             player.sendMessage(Component.text("Account created!").color(NamedTextColor.GREEN));
@@ -107,7 +109,7 @@ public class OnPluginMessage implements PluginMessageListener {
             player.sendMessage(Component.text("Error when creating account!").color(NamedTextColor.RED));
     }
 
-    private void onChangePasswordResponse(Player player, ByteArrayDataInput input){
+    private void onChangePasswordResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
             player.sendMessage(Component.text("Password change for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));

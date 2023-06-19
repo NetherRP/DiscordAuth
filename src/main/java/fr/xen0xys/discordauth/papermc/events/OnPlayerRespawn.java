@@ -5,22 +5,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class OnPlayerRespawn implements Listener {
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent e){
+    public void onPlayerRespawn(@NotNull final PlayerRespawnEvent e){
         Player player = e.getPlayer();
-        // If respawn function is enable
-        if(DiscordAuthPlugin.getServerConfig().isRespawnEnable()){
-            // Override bed respawn if it is enabled in configuration
-            if(DiscordAuthPlugin.getServerConfig().isRespawnEvenWithBed()){
+        if(DiscordAuthPlugin.getServerConfig().isRespawnEnable())
+            if(DiscordAuthPlugin.getServerConfig().isRespawnEvenWithBed())
                 e.setRespawnLocation(DiscordAuthPlugin.getServerConfig().getSpawnPoint());
-                // Only change respawn point if player don't have bed location!
-            }else{
-                if(player.getBedSpawnLocation() == null){
+            else
+                if(Objects.isNull(player.getBedSpawnLocation()))
                     e.setRespawnLocation(DiscordAuthPlugin.getServerConfig().getSpawnPoint());
-                }
-            }
-        }
     }
 }

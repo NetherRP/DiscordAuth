@@ -11,26 +11,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class LoginCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(commandSender instanceof Player player){
-            if(strings.length == 0){
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(commandSender instanceof final Player player){
+            if(args.length == 0){
                 displayPasswordAsk(player);
                 return true;
             }
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), strings[0]);
+            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), args[0]);
             ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
             return true;
         }
         return false;
     }
 
-    public static void displayPasswordAsk(Player player){
+    public static void displayPasswordAsk(@NotNull final Player player){
         AnvilGUI.Builder builder = new AnvilGUI.Builder()
                 .plugin(DiscordAuthPlugin.getInstance())
                 .itemLeft(new ItemStack(Material.PAPER))
@@ -40,8 +41,14 @@ public class LoginCommand implements CommandExecutor {
             String password = stateSnapshot.getText();
             if(password.contains("➞"))
                 password = password.replace("➞", "");
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), password);
-            ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
+            final String finalPassword = password;
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), finalPassword);
+                    ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
+                }
+            }.runTaskAsynchronously(DiscordAuthPlugin.getInstance());
             return List.of(AnvilGUI.ResponseAction.close());
         });
         builder.open(player);

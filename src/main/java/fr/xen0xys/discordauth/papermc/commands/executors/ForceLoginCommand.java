@@ -2,19 +2,22 @@ package fr.xen0xys.discordauth.papermc.commands.executors;
 
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class ForceLoginCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(strings.length != 1)
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(args.length != 1)
             return false;
-        Player targetPlayer = commandSender.getServer().getPlayer(strings[0]);
-        if(targetPlayer == null){
+        Player targetPlayer = Bukkit.getPlayer(args[0]);
+        if(Objects.isNull(targetPlayer)){
             commandSender.sendMessage(Component.text("This player is not online!"));
             return false;
         }

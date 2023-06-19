@@ -1,13 +1,14 @@
 package fr.xen0xys.discordauth.common.database.models;
 
 import fr.xen0xys.discordauth.common.encryption.Encryption;
-import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
+@SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
 @Entity
 @Table(name = "discordauth_accounts")
 public class Account {
@@ -31,9 +32,7 @@ public class Account {
     @Column(name = "last_connection")
     private long lastConnection;
 
-    public Account() {
-
-    }
+    public Account() {}
 
     public Account(long discordId, UUID uuid, String username, String password, String lastIp, long lastConnection) {
         this.discordId = discordId;
@@ -45,10 +44,6 @@ public class Account {
     }
 
     public boolean hasSession(String newIp, Encryption encryption, long sessionDuration){
-        if(!encryption.compareHash(clearIP(newIp), this.lastIp))
-            DiscordAuthProxy.getInstance().getLogger().warning("IPs are not the same : %s != %s".formatted(clearIP(newIp), this.lastIp));
-        if(!(System.currentTimeMillis() - lastConnection < 1000 * sessionDuration))
-            DiscordAuthProxy.getInstance().getLogger().warning("Session is expired : %s < %s".formatted(System.currentTimeMillis() - lastConnection, 1000 * sessionDuration));
         return encryption.compareHash(clearIP(newIp), this.lastIp) && System.currentTimeMillis() - lastConnection < 1000 * sessionDuration;
     }
 
@@ -84,9 +79,8 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setLastIp(String lastIp, Logger logger) {
-        logger.info("Setting last IP to %s".formatted(lastIp));
-        Encryption encryption = new Encryption(logger);
+    public void setLastIp(String lastIp) {
+        Encryption encryption = new Encryption();
         this.lastIp = encryption.hash(clearIP(lastIp));
     }
     public void setLastConnection(long lastConnection) {

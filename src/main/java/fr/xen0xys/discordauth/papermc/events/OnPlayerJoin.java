@@ -8,10 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 public class OnPlayerJoin implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
+    public void onPlayerJoin(@NotNull final PlayerJoinEvent e) {
         DiscordAuthPlugin.getUnauthenticatedPlayers().put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
         new BukkitRunnable() {
             @Override

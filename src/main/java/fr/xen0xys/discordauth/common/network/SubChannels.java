@@ -1,5 +1,7 @@
 package fr.xen0xys.discordauth.common.network;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public enum SubChannels {
@@ -16,7 +18,7 @@ public enum SubChannels {
 
     private final String name;
 
-    SubChannels(String name) {
+    SubChannels(@NotNull final String name) {
         this.name = name;
     }
 
@@ -24,7 +26,7 @@ public enum SubChannels {
         return name;
     }
 
-    public static SubChannels from(String value){
+    public static SubChannels from(@NotNull final String value){
         return Arrays.stream(SubChannels.values()).filter(subChannel -> subChannel.getName().equals(value)).findFirst().orElse(null);
     }
 }

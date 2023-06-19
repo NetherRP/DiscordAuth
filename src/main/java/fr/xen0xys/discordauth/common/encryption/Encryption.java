@@ -9,43 +9,21 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Encryption {
 
-    private final Logger logger;
-
-    public Encryption(@NotNull final Logger logger){
-        this.logger = logger;
-    }
-
     private boolean checkKey(@NotNull final String key) {
-        // Check minimum key length
-        if (key.length() < 8) {
-            this.logger.severe("The key must be at least 8 characters long.");
-            return false;
-        }
-        // Check if the key contains lowercase alphabetic characters
-        if (!Pattern.compile(".*[a-z].*").matcher(key).matches()) {
-            this.logger.severe("The key must contain at least one lowercase alphabetic character.");
-            return false;
-        }
-        // Check if the key contains uppercase alphabetic characters
-        if (!Pattern.compile(".*[A-Z].*").matcher(key).matches()) {
-            this.logger.severe("The key must contain at least one uppercase alphabetic character.");
-            return false;
-        }
-        // Check if the key contains digits
-        if (!Pattern.compile(".*\\d.*").matcher(key).matches()) {
-            this.logger.severe("The key must contain at least one digit.");
-            return false;
-        }
-        // Check if the key contains special characters
-        if (!Pattern.compile(".*[^a-zA-Z0-9].*").matcher(key).matches()) {
-            this.logger.severe("The key must contain at least one special character.");
-            return false;
-        }
+        if (key.length() < 8)
+            throw new SecurityException("The key must be at least 8 characters long.");
+        if (!Pattern.compile(".*[a-z].*").matcher(key).matches())
+            throw new SecurityException("The key must contain at least one lowercase alphabetic character.");
+        if (!Pattern.compile(".*[A-Z].*").matcher(key).matches())
+            throw new SecurityException("The key must contain at least one uppercase alphabetic character.");
+        if (!Pattern.compile(".*\\d.*").matcher(key).matches())
+            throw new SecurityException("The key must contain at least one digit.");
+        if (!Pattern.compile(".*[^a-zA-Z0-9].*").matcher(key).matches())
+            throw new SecurityException("The key must contain at least one special character.");
         return true;
     }
 

@@ -1,4 +1,5 @@
 package fr.xen0xys.discordauth.common.network;
 
-public record PacketTuple<A extends Packet, B>(A packet, B player) {
-}
+import org.jetbrains.annotations.NotNull;
+
+public record PacketTuple<A extends Packet, B>(@NotNull A packet, B player) {}
