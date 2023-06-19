@@ -11,8 +11,8 @@ commands:
     aliases: [da]
     usage: /discordauth <reload>
   account:
-    permission: discordauth.account
-    usage: /account manage|delete
+    permission: discordauth.account.command
+    usage: /account create|manage|delete
   login:
     aliases: [l]
     permission: discordauth.login
@@ -28,24 +28,35 @@ permissions:
     description: Grants access to all DiscordAuth commands
     children:
       discordauth.discordauth: true
-      discordauth.account: true
+      discordauth.account.*: true
       discordauth.login: true
       discordauth.logout: true
       discordauth.forcelogin: true
   discordauth.discordauth:
     default: op
-  discordauth.account:
+  discordauth.login:
     default: true
+  discordauth.logout:
+    default: true
+  discordauth.forcelogin:
+    default: op
+  # Account
+  discordauth.account.*:
     children:
+      discordauth.account.command: true
       discordauth.account.create: true
-      discordauth.account.delete: true
-      discordauth.account.modify: true
+      discordauth.account.delete.*: true
+      discordauth.account.manage.*: true
+  discordauth.account.command:
+    description: Allows using /account command
+    default: true
+  # Account creation
   discordauth.account.create:
     description: Allows creating a user account
     default: op
-  discordauth.account.delete:
+  # Account deletion
+  discordauth.account.delete.*:
     description: Allows deleting a user account
-    default: op
     children:
       discordauth.account.delete.self: true
       discordauth.account.delete.other: true
@@ -55,21 +66,15 @@ permissions:
   discordauth.account.delete.other:
     description: Allows deleting another user account
     default: op
-  discordauth.account.modify:
+  # Account management
+  discordauth.account.manage.*:
     description: Allows modifying a user account
-    default: true
     children:
-      discordauth.account.modify.self: true
-      discordauth.account.modify.other: true
-  discordauth.account.modify.self:
+      discordauth.account.manage.self: true
+      discordauth.account.manage.other: true
+  discordauth.account.manage.self:
     description: Allows modifying own user account
     default: true
-  discordauth.account.modify.other:
+  discordauth.account.manage.other:
     description: Allows modifying another user account
-    default: op
-  discordauth.login:
-    default: true
-  discordauth.logout:
-    default: true
-  discordauth.forcelogin:
     default: op

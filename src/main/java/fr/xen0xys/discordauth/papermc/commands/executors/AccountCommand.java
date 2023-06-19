@@ -56,6 +56,7 @@ public class AccountCommand implements CommandExecutor {
         return true;
     }
     private boolean deleteAccount(Player player, String[] args){
+        // TODO
         return false;
     }
 
@@ -70,6 +71,10 @@ public class AccountCommand implements CommandExecutor {
         }
         if (args.length == 3) {
             // Change self password
+            if (!player.hasPermission("discordauth.account.modify.self")) {
+                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.modify.self)"));
+                return false;
+            }
             String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
             ChangePasswordAskPacket packet = new ChangePasswordAskPacket(player.getUniqueId(), encryptedPassword);
             ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
