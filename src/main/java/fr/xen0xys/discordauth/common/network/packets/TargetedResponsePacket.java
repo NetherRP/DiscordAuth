@@ -4,15 +4,20 @@ import fr.xen0xys.discordauth.common.network.Packet;
 
 import java.util.UUID;
 
-public class SessionAskPacket extends Packet {
+public class TargetedResponsePacket extends Packet {
 
     private final UUID target;
+    private final boolean success;
 
-    public SessionAskPacket(UUID target) {
+    public TargetedResponsePacket(UUID target, boolean success) {
         this.target = target;
+        this.success = success;
     }
 
     public UUID getTarget() {
         return target;
+    }
+    public boolean isSuccess() {
+        return success;
     }
 }

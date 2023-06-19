@@ -5,10 +5,12 @@ import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,12 +31,18 @@ public class LoginCommand implements CommandExecutor {
     }
 
     public static void displayPasswordAsk(Player player){
-        AnvilGUI.Builder builder = new AnvilGUI.Builder();
-        builder.plugin(DiscordAuthPlugin.getInstance());
-        builder.title("Password :");
-        builder.text("");
+        AnvilGUI.Builder builder = new AnvilGUI.Builder()
+                .plugin(DiscordAuthPlugin.getInstance())
+                .itemLeft(new ItemStack(Material.PAPER))
+                .title("Password :")
+                .text("➞");
         builder.onClick((slot, stateSnapshot) -> {
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), stateSnapshot.getText());
+            if(slot != 2)
+                return List.of(AnvilGUI.ResponseAction.close());
+            String password = stateSnapshot.getText();
+            if(password.contains("➞"))
+                password = password.replace("➞", "");
+            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), password);
             ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
             return List.of(AnvilGUI.ResponseAction.close());
         });
