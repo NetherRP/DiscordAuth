@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.papermc.commands.executors;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.AccountCreationAskPacket;
+import fr.xen0xys.discordauth.common.network.packets.ChangePasswordAskPacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
 import net.kyori.adventure.text.Component;
@@ -20,27 +21,13 @@ public class AccountCommand implements CommandExecutor {
                 return false;
             switch (strings[0]){
                 case "create" -> {
-                    if(strings.length < 4){
-                        commandSender.sendMessage(Component.text("Usage: /account create <discordId> <minecraftName> <password>"));
-                        return false;
-                    }
-                    if(!commandSender.isOp()){
-                        commandSender.sendMessage(Component.text("You don't have the permission to do that!"));
-                        return false;
-                    }
-                    long discordId = Long.parseLong(strings[1]);
-                    String minecraftName = strings[2];
-                    Encryption encryption = new Encryption(DiscordAuthPlugin.getInstance().getLogger());
-                    String encryptedPassword = encryption.hash(strings[3]);
-                    AccountCreationAskPacket packet = new AccountCreationAskPacket(discordId, minecraftName, encryptedPassword);
-                    ServerPacket.sendServer(player, SubChannels.ACCOUNT_CREATION_ASK, packet);
-                    return true;
+                    return createAccount(player, strings);
                 }
                 case "delete" -> {
-                    return false;
+                    return deleteAccount(player, strings);
                 }
                 case "manage" -> {
-                    return false;
+                    return manageAccount(player, strings);
                 }
                 default -> {
                     commandSender.sendMessage(Component.text("Usage: /account <create|delete|manage>"));
@@ -49,5 +36,58 @@ public class AccountCommand implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    private boolean createAccount(Player player, String[] args){
+        if(args.length < 4){
+            player.sendMessage(Component.text("Usage: /account create <discordId> <minecraftName> <password>"));
+            return false;
+        }
+        if(!player.hasPermission("discordauth.account.create")){
+            player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.create)"));
+            return false;
+        }
+        long discordId = Long.parseLong(args[1]);
+        String minecraftName = args[2];
+        Encryption encryption = new Encryption(DiscordAuthPlugin.getInstance().getLogger());
+        String encryptedPassword = encryption.hash(args[3]);
+        AccountCreationAskPacket packet = new AccountCreationAskPacket(discordId, minecraftName, encryptedPassword);
+        ServerPacket.sendServer(player, SubChannels.ACCOUNT_CREATION_ASK, packet);
+        return true;
+    }
+    private boolean deleteAccount(Player player, String[] args){
+        return false;
+    }
+
+    private boolean manageAccount(Player player, String[] args){
+        if(args.length < 2){
+            player.sendMessage(Component.text("Usage: /account manage <password> <newPassword> [player]"));
+            return false;
+        }
+        if(!args[1].equals("password")){
+            player.sendMessage(Component.text("Usage: /account manage <password> <newPassword> [player]"));
+            return false;
+        }
+        if (args.length == 3) {
+            // Change self password
+            String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
+            ChangePasswordAskPacket packet = new ChangePasswordAskPacket(player.getUniqueId(), encryptedPassword);
+            ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
+        } else if (args.length == 4) {
+            // Change other password
+            if (!player.hasPermission("discordauth.account.modify.other")) {
+                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.modify.other)"));
+                return false;
+            }
+            Player target = DiscordAuthPlugin.getInstance().getServer().getPlayer(args[3]);
+            if (target == null) {
+                player.sendMessage(Component.text("Player not found!"));
+                return false;
+            }
+            String encryptedPassword = new Encryption(DiscordAuthPlugin.getInstance().getLogger()).hash(args[2]);
+            ChangePasswordAskPacket packet = new ChangePasswordAskPacket(target.getUniqueId(), encryptedPassword);
+            ServerPacket.sendServer(player, SubChannels.CHANGE_PASSWORD_ASK, packet);
+        }
+        return true;
     }
 }

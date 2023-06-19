@@ -10,7 +10,9 @@ public enum SubChannels {
     SESSION_INVALIDATION_ASK("SessionInvalidationAsk"),
     SESSION_INVALIDATION_RESPONSE("SessionInvalidationResponse"),
     ACCOUNT_CREATION_ASK("AccountCreationAsk"),
-    ACCOUNT_CREATION_RESPONSE("AccountCreationResponse");
+    ACCOUNT_CREATION_RESPONSE("AccountCreationResponse"),
+    CHANGE_PASSWORD_ASK("ChangePasswordAsk"),
+    CHANGE_PASSWORD_RESPONSE("ChangePasswordResponse");
 
     private final String name;
 
