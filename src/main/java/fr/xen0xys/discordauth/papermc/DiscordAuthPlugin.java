@@ -3,12 +3,15 @@ package fr.xen0xys.discordauth.papermc;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.ServerConfig;
+import fr.xen0xys.discordauth.papermc.commands.completers.AccountCompleter;
 import fr.xen0xys.discordauth.papermc.commands.completers.DiscordAuthCompleter;
 import fr.xen0xys.discordauth.papermc.commands.executors.AccountCommand;
 import fr.xen0xys.discordauth.papermc.commands.executors.DiscordAuthCommand;
 import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
 import fr.xen0xys.discordauth.papermc.commands.executors.LogoutCommand;
 import fr.xen0xys.discordauth.papermc.events.*;
+import fr.xen0xys.discordauth.papermc.models.ConsoleFilter;
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +35,9 @@ public class DiscordAuthPlugin extends JavaPlugin {
         logger = this.getLogger();
         commonConfig = new CommonConfig(this.getDataFolder());
         serverConfig = new ServerConfig(this.getDataFolder());
+        // Add logging filter
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new ConsoleFilter());
     }
 
     @Override
@@ -46,7 +52,8 @@ public class DiscordAuthPlugin extends JavaPlugin {
         this.getCommand("logout").setExecutor(new LogoutCommand());
         this.getCommand("discordauth").setExecutor(new DiscordAuthCommand());
         this.getCommand("discordauth").setTabCompleter(new DiscordAuthCompleter());
-        this.getCommand("account").setExecutor(new AccountCommand()); // TODO: Tab completer
+        this.getCommand("account").setExecutor(new AccountCommand());
+        this.getCommand("account").setTabCompleter(new AccountCompleter());
         logger.info("DiscordAuth is started !");
     }
 
