@@ -25,7 +25,7 @@ commands:
 
 permissions:
   discordauth.*:
-    description: Gives access to all DiscordAuth commands
+    description: Grants access to all DiscordAuth commands
     children:
       discordauth.discordauth: true
       discordauth.account: true
@@ -36,6 +36,37 @@ permissions:
     default: op
   discordauth.account:
     default: true
+    children:
+      discordauth.account.create: true
+      discordauth.account.delete: true
+      discordauth.account.modify: true
+  discordauth.account.create:
+    description: Allows creating a user account
+    default: op
+  discordauth.account.delete:
+    description: Allows deleting a user account
+    default: op
+    children:
+      discordauth.account.delete.self: true
+      discordauth.account.delete.other: true
+  discordauth.account.delete.self:
+    description: Allows deleting own user account
+    default: true
+  discordauth.account.delete.other:
+    description: Allows deleting another user account
+    default: op
+  discordauth.account.modify:
+    description: Allows modifying a user account
+    default: true
+    children:
+      discordauth.account.modify.self: true
+      discordauth.account.modify.other: true
+  discordauth.account.modify.self:
+    description: Allows modifying own user account
+    default: true
+  discordauth.account.modify.other:
+    description: Allows modifying another user account
+    default: op
   discordauth.login:
     default: true
   discordauth.logout:
