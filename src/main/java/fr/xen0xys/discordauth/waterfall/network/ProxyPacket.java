@@ -21,6 +21,7 @@ public abstract class ProxyPacket extends Packet {
     public static void sendProxy(@NotNull final ProxiedPlayer player, @NotNull final SubChannels channel, @NotNull final Packet packet) throws PacketEncryptionException{
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(channel.getName());
+        output.writeUTF(player.getUniqueId().toString());
         String encryptedPacket = new Encryption().encryptSymmetric(DiscordAuthProxy.getCommonConfig().getSecret(), packet.serialize());
         if(Objects.isNull(encryptedPacket))
             throw new PacketEncryptionException("Failed to encrypt packet !");

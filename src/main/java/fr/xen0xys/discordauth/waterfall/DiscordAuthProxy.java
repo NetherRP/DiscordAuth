@@ -5,14 +5,17 @@ import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.CoreConfig;
 import fr.xen0xys.discordauth.common.database.DatabaseHandler;
 import fr.xen0xys.discordauth.common.discord.Bot;
+import fr.xen0xys.discordauth.common.logging.ConsoleFilter;
 import fr.xen0xys.discordauth.waterfall.events.OnLogin;
 import fr.xen0xys.discordauth.waterfall.events.OnPlayerDisconnect;
 import fr.xen0xys.discordauth.waterfall.events.OnPluginMessage;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DiscordAuthProxy extends Plugin {
@@ -40,6 +43,9 @@ public class DiscordAuthProxy extends Plugin {
         this.registerEvents();
         logger.info("Loading Discord bot...");
         new Bot(coreConfig, logger);
+        logger.info("Creating logging filter...");
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new ConsoleFilter());
         logger.info("DiscordAuth is loaded !");
     }
 

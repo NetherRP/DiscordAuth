@@ -20,15 +20,19 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class OnPluginMessage implements PluginMessageListener {
     @SuppressWarnings({"NullableProblems", "UnstableApiUsage"})
     @Override
-    public void onPluginMessageReceived(@NotNull final String channel, @NotNull final Player player, @NotNull final byte[] bytes) {
+    public void onPluginMessageReceived(@NotNull final String channel, @NotNull final Player _player, @NotNull final byte[] bytes) {
         if(!channel.equals(PluginInfos.CHANNEL)) return;
         ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
         SubChannels subChannel = SubChannels.from(input.readUTF());
         if(Objects.isNull(subChannel)) return;
+        UUID sender = UUID.fromString(input.readUTF());
+        Player player = Bukkit.getPlayer(sender);
+        if(Objects.isNull(player)) return;
         try{
             switch (subChannel) {
                 case SESSION_RESPONSE -> onSessionResponse(player, input);

@@ -1,4 +1,4 @@
-package fr.xen0xys.discordauth.papermc.models;
+package fr.xen0xys.discordauth.common.logging;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
@@ -35,6 +35,14 @@ public class ConsoleFilter extends AbstractFilter {
             if (msg.contains("/login") || msg.contains("/l") || msg.contains("/account"))
                 return Result.DENY;
         else if(msg.contains("was kicked for floating too long!"))
+            return Result.DENY;
+        if(msg.startsWith("Plugin listener fr.xen0xys.discordauth.waterfall.events"))
+            return Result.DENY;
+        if(msg.startsWith("Event LoginEvent"))
+            return Result.DENY;
+        if(msg.startsWith("Event DisconnectEvent"))
+            return Result.DENY;
+        if(msg.startsWith("Event PluginMessageEvent"))
             return Result.DENY;
         return Result.NEUTRAL;
     }

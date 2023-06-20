@@ -8,7 +8,7 @@ import fr.xen0xys.discordauth.papermc.commands.completers.AccountCompleter;
 import fr.xen0xys.discordauth.papermc.commands.completers.DiscordAuthCompleter;
 import fr.xen0xys.discordauth.papermc.commands.executors.*;
 import fr.xen0xys.discordauth.papermc.events.*;
-import fr.xen0xys.discordauth.papermc.models.ConsoleFilter;
+import fr.xen0xys.discordauth.common.logging.ConsoleFilter;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -31,13 +31,14 @@ public class OnPluginMessage implements Listener {
         ByteArrayDataInput input = ByteStreams.newDataInput(e.getData());
         SubChannels subChannel = SubChannels.from(input.readUTF());
         if(Objects.isNull(subChannel)) return;
+        Connection connection = e.getReceiver();
         try{
             switch (subChannel) {
-                case SESSION_ASK -> onSessionAsk(e.getReceiver(), input);
-                case CONNECTION_ASK -> onConnectionAsk(e.getReceiver(), input);
-                case SESSION_INVALIDATION_ASK -> onSessionInvalidationAsk(e.getReceiver(), input);
-                case ACCOUNT_CREATION_ASK -> onAccountCreationAsk(e.getReceiver(), input);
-                case CHANGE_PASSWORD_ASK -> onChangePasswordAsk(e.getReceiver(), input);
+                case SESSION_ASK -> onSessionAsk(connection, input);
+                case CONNECTION_ASK -> onConnectionAsk(connection, input);
+                case SESSION_INVALIDATION_ASK -> onSessionInvalidationAsk(connection, input);
+                case ACCOUNT_CREATION_ASK -> onAccountCreationAsk(connection, input);
+                case CHANGE_PASSWORD_ASK -> onChangePasswordAsk(connection, input);
                 default -> DiscordAuthProxy.getInstance().getLogger().warning("Unknown sub-channel: " + subChannel);
             }
         }catch (NullPacketException | NullSenderException | PacketEncryptionException ex){
@@ -48,8 +49,8 @@ public class OnPluginMessage implements Listener {
     private <T extends Packet> PacketTuple<T, ProxiedPlayer> getPacketAndPlayer(@NotNull final Class<T> packetClass, @NotNull final Connection connection, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         T packet = ProxyPacket.decryptProxy(packetClass, input.readUTF());
         if(Objects.isNull(packet)) throw new NullPacketException("ChangePasswordAskPacket is null");
-        ProxiedPlayer player = DiscordAuthProxy.getInstance().getProxy().getPlayer(connection.toString());
-        if (Objects.isNull(player)) throw new NullSenderException("Null sender for ChangePasswordAskPacket");
+        ProxiedPlayer player = (ProxiedPlayer) connection;
+//        if (Objects.isNull(player)) throw new NullSenderException("Null sender for ChangePasswordAskPacket");
         return new PacketTuple<>(packet, player);
     }
 
