@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.papermc.events;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.xen0xys.discordauth.common.PluginInfos;
+import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.network.PacketTuple;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.exceptions.NullPacketException;
@@ -12,7 +13,6 @@ import fr.xen0xys.discordauth.common.network.packets.TargetedResponsePacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.commands.executors.LoginCommand;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -65,12 +65,12 @@ public class OnPluginMessage implements PluginMessageListener {
     private void onSessionResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
-            player.sendMessage(Component.text("Session check for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
+            player.sendMessage(LangField.SESSION_CHECK.asComponent(tuple.player().getName(), tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
         if(tuple.packet().isSuccess()){
-            tuple.player().sendMessage(Component.text("You are connected (session)!").color(NamedTextColor.GREEN));
+            tuple.player().sendMessage(LangField.CONNECTED_SESSION.asComponent().color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getUnauthenticatedPlayers().remove(tuple.player().getUniqueId());
         }else{
-            tuple.player().sendMessage(Component.text("Please login yourself").color(NamedTextColor.RED));
+            tuple.player().sendMessage(LangField.LOGIN_ASK.asComponent().color(NamedTextColor.RED));
             LoginCommand.displayPasswordAsk(tuple.player());
         }
     }
@@ -78,12 +78,12 @@ public class OnPluginMessage implements PluginMessageListener {
     private void onConnectionResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
-            player.sendMessage(Component.text("Connection check for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
+            player.sendMessage(LangField.CONNECTION_CHECK.asComponent(tuple.player().getName(), tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
         if(tuple.packet().isSuccess()){
-            tuple.player().sendMessage(Component.text("You are connected (connection)!").color(NamedTextColor.GREEN));
+            tuple.player().sendMessage(LangField.CONNECTED_LOGIN.asComponent().color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getUnauthenticatedPlayers().remove(tuple.player().getUniqueId());
         }else{
-            tuple.player().sendMessage(Component.text("Invalid password, please login yourself").color(NamedTextColor.RED));
+            tuple.player().sendMessage(LangField.INVALID_PASSWORD.asComponent().color(NamedTextColor.RED));
             LoginCommand.displayPasswordAsk(tuple.player());
         }
     }
@@ -91,34 +91,33 @@ public class OnPluginMessage implements PluginMessageListener {
     private void onSessionInvalidationResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
-            player.sendMessage(Component.text("Session invalidation for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
+            player.sendMessage(LangField.SESSION_INVALIDATION_CHECK.asComponent(tuple.player().getName(), tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
         if(tuple.packet().isSuccess()){
-            tuple.player().sendMessage(Component.text("You are disconnected!").color(NamedTextColor.RED));
+            tuple.player().sendMessage(LangField.DISCONNECTED.asComponent().color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getUnauthenticatedPlayers().put(tuple.player().getUniqueId(), tuple.player().getLocation());
             LoginCommand.displayPasswordAsk(tuple.player());
         }else{
-            tuple.player().sendMessage(Component.text("Error when disconnecting!").color(NamedTextColor.RED));
+            tuple.player().sendMessage(LangField.DISCONNECTING_ERROR.asComponent().color(NamedTextColor.RED));
         }
     }
 
     private void onAccountCreationResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input, false);
         if(tuple.packet().isSuccess())
-            player.sendMessage(Component.text("Account created!").color(NamedTextColor.GREEN));
+            player.sendMessage(LangField.ACCOUNT_CREATED.asComponent().color(NamedTextColor.GRAY));
         else
-            player.sendMessage(Component.text("Error when creating account!").color(NamedTextColor.RED));
+            player.sendMessage(LangField.ACCOUNT_CREATION_ERROR.asComponent().color(NamedTextColor.RED));
     }
 
     private void onChangePasswordResponse(@NotNull final Player player, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException{
         PacketTuple<TargetedResponsePacket, Player> tuple = this.getPacketAndPlayer(TargetedResponsePacket.class, input);
         if(!player.equals(tuple.player()))
-            player.sendMessage(Component.text("Password change for " + tuple.player().getName() + ": " + tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
+            player.sendMessage(LangField.PASSWORD_CHANGE_CHECK.asComponent(tuple.player().getName(), tuple.packet().isSuccess()).color(NamedTextColor.GRAY));
         if(tuple.packet().isSuccess()){
-            tuple.player().sendMessage(Component.text("Password changed! Please login again").color(NamedTextColor.GREEN));
+            tuple.player().sendMessage(LangField.PASSWORD_CHANGED.asComponent().color(NamedTextColor.GREEN));
             DiscordAuthPlugin.getUnauthenticatedPlayers().put(tuple.player().getUniqueId(), tuple.player().getLocation());
             LoginCommand.displayPasswordAsk(tuple.player());
-        }
-        else
-            tuple.player().sendMessage(Component.text("Error when changing password!").color(NamedTextColor.RED));
+        }else
+            tuple.player().sendMessage(LangField.PASSWORD_CHANGING_ERROR.asComponent().color(NamedTextColor.RED));
     }
 }

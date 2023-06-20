@@ -40,7 +40,7 @@ public class RegisterModal extends AbstractModal {
             modalInteractionEvent.deferReply(true).addContent("Account already exists").queue();
             return;
         }
-        String hashedPassword = new Encryption(djApp.getLogger()).hash(password);
+        String hashedPassword = new Encryption().hash(password);
         boolean state = DiscordAuthProxy.getDatabaseHandler().addAccount(new Account(userId, null, username, hashedPassword, null, -1));
         if(state)
             modalInteractionEvent.deferReply(true).addContent("Account created").queue();

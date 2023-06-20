@@ -13,4 +13,8 @@ public class CommonConfig extends ConfigurationReader{
     public String getSecret(){
         return this.getConfiguration().getString("secret");
     }
+
+    public String getLanguage(){
+        return this.getConfiguration().getString("language");
+    }
 }

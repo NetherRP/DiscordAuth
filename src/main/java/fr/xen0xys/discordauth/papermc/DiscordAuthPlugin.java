@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.papermc;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.ServerConfig;
+import fr.xen0xys.discordauth.common.config.language.LangConfig;
 import fr.xen0xys.discordauth.papermc.commands.completers.AccountCompleter;
 import fr.xen0xys.discordauth.papermc.commands.completers.DiscordAuthCompleter;
 import fr.xen0xys.discordauth.papermc.commands.executors.*;
@@ -33,6 +34,7 @@ public class DiscordAuthPlugin extends JavaPlugin {
         logger.info("Loading configs...");
         commonConfig = new CommonConfig(this.getDataFolder());
         serverConfig = new ServerConfig(this.getDataFolder());
+        new LangConfig(this.getDataFolder(), commonConfig.getLanguage());
         logger.info("Registering channels...");
         this.registerBungeeCordChannels();
         logger.info("Creating logging filter...");

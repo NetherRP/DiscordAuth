@@ -27,14 +27,6 @@ public class ConfigurationReader {
         this.configuration = YamlConfiguration.loadConfiguration(this.configFile);
     }
 
-    public void save(){
-        try {
-            this.configuration.save("plugins/MultiMC-Culinary/" + this.configName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void saveDefault(){
         try {
             InputStream configInputStream = getClass().getClassLoader().getResourceAsStream(this.configName);
