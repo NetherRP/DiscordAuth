@@ -43,6 +43,10 @@ public class CoreConfig extends ConfigurationReader{
         return this.getConfiguration().getString("discord.token");
     }
 
+    public long getGuildId(){
+        return this.getConfiguration().getLong("discord.guild_id");
+    }
+
     public boolean isActivityEnable(){
         return this.getConfiguration().getBoolean("discord.activity.enable");
     }

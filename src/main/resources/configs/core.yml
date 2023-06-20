@@ -16,6 +16,8 @@ session_duration: 3600
 discord:
   #* Put here your bot token
   token: token
+  # If set, create the commands on guild and not globally
+  guild_id: 0
   # Add logo to private messages response
   logo:
     enable: false

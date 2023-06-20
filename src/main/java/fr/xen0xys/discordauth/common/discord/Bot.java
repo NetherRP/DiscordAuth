@@ -16,10 +16,12 @@ public class Bot {
     public Bot(CoreConfig coreConfig, Logger logger){
         try {
             DJApp app = new DJApp(coreConfig.getBotToken(), logger);
-//            new DisplayRegisterCommand().register(this.app.getCommandsManager(), true);
-            Guild guild = app.getJDA().getGuildById(1016358670600245369L);
-            if(Objects.isNull(guild)) return;
-            new DisplayRegisterCommand().registerLocal(app.getCommandsManager(), guild, true);
+            if(coreConfig.getGuildId() != 0){
+                Guild guild = app.getJDA().getGuildById(coreConfig.getGuildId());
+                if(Objects.nonNull(guild))
+                    new DisplayRegisterCommand().registerLocal(app.getCommandsManager(), guild, true);
+            }else
+                new DisplayRegisterCommand().register(app.getCommandsManager(), true);
             new RegisterButton().register(app.getComponentsManager());
             this.setupActivity(app.getJDA(), coreConfig);
         } catch (InterruptedException e) {
