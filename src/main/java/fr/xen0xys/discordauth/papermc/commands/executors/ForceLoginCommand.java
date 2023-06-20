@@ -26,6 +26,7 @@ public class ForceLoginCommand implements CommandExecutor {
             return false;
         }
         DiscordAuthPlugin.getUnauthenticatedPlayers().remove(targetPlayer.getUniqueId());
+        targetPlayer.sendMessage(Component.text("You have been authenticated!"));
         return true;
     }
 }
