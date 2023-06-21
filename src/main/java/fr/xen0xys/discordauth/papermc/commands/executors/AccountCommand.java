@@ -16,26 +16,24 @@ import org.jetbrains.annotations.NotNull;
 public class AccountCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(commandSender instanceof Player player){
-            if(args.length < 1)
+        if(!(commandSender instanceof Player player)) return false;
+        if(args.length < 1)
+            return false;
+        switch (args[0]){
+            case "create" -> {
+                return createAccount(player, args);
+            }
+            case "delete" -> {
+                return deleteAccount(player, args);
+            }
+            case "manage" -> {
+                return manageAccount(player, args);
+            }
+            default -> {
+                commandSender.sendMessage(Component.text("Usage: /account <create|delete|manage>"));
                 return false;
-            switch (args[0]){
-                case "create" -> {
-                    return createAccount(player, args);
-                }
-                case "delete" -> {
-                    return deleteAccount(player, args);
-                }
-                case "manage" -> {
-                    return manageAccount(player, args);
-                }
-                default -> {
-                    commandSender.sendMessage(Component.text("Usage: /account <create|delete|manage>"));
-                    return false;
-                }
             }
         }
-        return false;
     }
 
     private boolean createAccount(@NotNull final Player player, @NotNull final String[] args){

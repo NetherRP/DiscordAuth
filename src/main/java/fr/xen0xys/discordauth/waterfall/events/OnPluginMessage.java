@@ -56,9 +56,10 @@ public class OnPluginMessage implements Listener {
 
     private void onSessionAsk(@NotNull final Connection connection, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException {
         PacketTuple<SessionAskPacket, ProxiedPlayer> tuple = this.getPacketAndPlayer(SessionAskPacket.class, connection, input);
+        DiscordAuthProxy.getInstance().getLogger().info(DiscordAuthProxy.getSessions().toString());
         TargetedResponsePacket outPacket = new TargetedResponsePacket(tuple.packet().getTarget(), DiscordAuthProxy.getSessions().contains(tuple.packet().getTarget()));
         ProxyPacket.sendProxy(tuple.player(), SubChannels.SESSION_RESPONSE, outPacket);
-        DiscordAuthProxy.getInstance().getLogger().info("Sent session response for " + tuple.player().getName());
+        DiscordAuthProxy.getInstance().getLogger().info("Sent session response for %s: %s".formatted(tuple.player().getName(), outPacket.isSuccess()));
     }
 
     private void onConnectionAsk(@NotNull final Connection connection, @NotNull final ByteArrayDataInput input) throws NullPacketException, NullSenderException, PacketEncryptionException {
@@ -69,6 +70,7 @@ public class OnPluginMessage implements Listener {
             account.setLastConnection(System.currentTimeMillis());
             account.setLastIp(tuple.player().getSocketAddress().toString());
             DiscordAuthProxy.getDatabaseHandler().updateAccount(account);
+            DiscordAuthProxy.getSessions().add(tuple.player().getUniqueId());
         }
         TargetedResponsePacket outPacket = new TargetedResponsePacket(account.getUuid(), state);
         ProxyPacket.sendProxy(tuple.player(), SubChannels.CONNECTION_RESPONSE, outPacket);

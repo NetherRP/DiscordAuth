@@ -19,16 +19,14 @@ import java.util.List;
 public class LoginCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(commandSender instanceof final Player player){
-            if(args.length == 0){
-                displayPasswordAsk(player);
-                return true;
-            }
-            ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), args[0]);
-            ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
+        if(!(commandSender instanceof Player player)) return false;
+        if(args.length == 0){
+            displayPasswordAsk(player);
             return true;
         }
-        return false;
+        ConnectionAskPacket packet = new ConnectionAskPacket(player.getUniqueId(), args[0]);
+        ServerPacket.sendServer(player, SubChannels.CONNECTION_ASK, packet);
+        return true;
     }
 
     public static void displayPasswordAsk(@NotNull final Player player){

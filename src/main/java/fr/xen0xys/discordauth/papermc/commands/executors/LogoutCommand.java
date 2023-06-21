@@ -12,11 +12,9 @@ import org.jetbrains.annotations.NotNull;
 public class LogoutCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(commandSender instanceof Player player){
-            SessionInvalidationAskPacket packet = new SessionInvalidationAskPacket(player.getUniqueId());
-            ServerPacket.sendServer(player, SubChannels.SESSION_INVALIDATION_ASK, packet);
-            return true;
-        }
-        return false;
+        if(!(commandSender instanceof Player player)) return false;
+        SessionInvalidationAskPacket packet = new SessionInvalidationAskPacket(player.getUniqueId());
+        ServerPacket.sendServer(player, SubChannels.SESSION_INVALIDATION_ASK, packet);
+        return true;
     }
 }
