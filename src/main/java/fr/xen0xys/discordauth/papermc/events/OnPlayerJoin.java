@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class OnPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(@NotNull final PlayerJoinEvent e) {
+        if(DiscordAuthPlugin.getServerConfig().isTpOnLogin() || (e.getPlayer().hasPlayedBefore() && DiscordAuthPlugin.getServerConfig().isFirstTimeTp()))
+            e.getPlayer().teleport(DiscordAuthPlugin.getServerConfig().getSpawnPoint());
         DiscordAuthPlugin.getUnauthenticatedPlayers().put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
         new BukkitRunnable() {
             @Override

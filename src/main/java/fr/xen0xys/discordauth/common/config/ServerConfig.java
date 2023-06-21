@@ -32,4 +32,12 @@ public class ServerConfig extends ConfigurationReader{
         }
         return null;
     }
+
+    public boolean isTpOnLogin() {
+        return this.getConfiguration().getBoolean("spawnpoint.tp_on_login");
+    }
+
+    public boolean isFirstTimeTp() {
+        return this.getConfiguration().getBoolean("spawnpoint.first_time_tp");
+    }
 }
