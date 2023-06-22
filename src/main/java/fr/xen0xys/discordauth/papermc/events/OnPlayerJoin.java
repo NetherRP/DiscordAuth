@@ -5,13 +5,14 @@ import fr.xen0xys.discordauth.common.network.packets.SessionAskPacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
 import fr.xen0xys.discordauth.papermc.network.ServerPacket;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class OnPlayerJoin implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(@NotNull final PlayerJoinEvent e) {
         if(DiscordAuthPlugin.getServerConfig().isTpOnLogin() || (e.getPlayer().hasPlayedBefore() && DiscordAuthPlugin.getServerConfig().isFirstTimeTp()))
             e.getPlayer().teleport(DiscordAuthPlugin.getServerConfig().getSpawnPoint());

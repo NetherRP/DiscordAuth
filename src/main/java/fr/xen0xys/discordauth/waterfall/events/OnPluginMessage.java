@@ -19,13 +19,14 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
 public class OnPluginMessage implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPluginMessage(@NotNull final PluginMessageEvent e){
         if(!e.getTag().equals(PluginInfos.CHANNEL)) return;
         ByteArrayDataInput input = ByteStreams.newDataInput(e.getData());

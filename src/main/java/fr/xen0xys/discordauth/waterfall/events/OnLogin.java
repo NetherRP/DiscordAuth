@@ -6,12 +6,13 @@ import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class OnLogin implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onLogin(@NotNull final LoginEvent e){
         String username = e.getConnection().getName();
         UUID uuid = e.getConnection().getUniqueId();
