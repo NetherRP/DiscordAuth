@@ -27,6 +27,6 @@ discord:
     enable: true
     # Can be PLAYING, STREAMING, LISTENING or WATCHING
     type: PLAYING
-    text: DiscordAuth V4.0!
+    text: DiscordAuth v4.0.0-beta
     # Only for streaming
     url: null
