@@ -1,5 +1,6 @@
 package fr.xen0xys.discordauth.papermc.commands.executors;
 
+import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.ConnectionAskPacket;
 import fr.xen0xys.discordauth.papermc.DiscordAuthPlugin;
@@ -20,6 +21,10 @@ public class LoginCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(!(commandSender instanceof Player player)) return false;
+        if(!DiscordAuthPlugin.getUnauthenticatedPlayers().containsKey(player.getUniqueId())){
+            player.sendMessage(LangField.ALREADY_CONNECTED.asComponent());
+            return true;
+        }
         if(args.length == 0){
             displayPasswordAsk(player);
             return true;

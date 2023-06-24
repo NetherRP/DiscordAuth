@@ -16,12 +16,10 @@ public class OnLogin implements Listener {
     public void onLogin(@NotNull final LoginEvent e){
         String username = e.getConnection().getName();
         UUID uuid = e.getConnection().getUniqueId();
-        DiscordAuthProxy.getInstance().getLogger().info("OnLogin: " + username + " " + uuid);
         if(DiscordAuthProxy.getDatabaseHandler().isAccountExists(uuid)){
             Account account = DiscordAuthProxy.getDatabaseHandler().getAccount(uuid);
             if(account.hasSession(e.getConnection().getSocketAddress().toString(), new Encryption(), DiscordAuthProxy.getCoreConfig().getSessionDuration()))
                 DiscordAuthProxy.getSessions().add(uuid);
-            DiscordAuthProxy.getInstance().getLogger().info(DiscordAuthProxy.getSessions().toString());
             return;
         }
         if(!DiscordAuthProxy.getDatabaseHandler().isAccountExists(username)){

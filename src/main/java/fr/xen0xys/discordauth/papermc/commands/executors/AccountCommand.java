@@ -1,5 +1,6 @@
 package fr.xen0xys.discordauth.papermc.commands.executors;
 
+import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.common.network.SubChannels;
 import fr.xen0xys.discordauth.common.network.packets.AccountCreationAskPacket;
@@ -30,19 +31,15 @@ public class AccountCommand implements CommandExecutor {
                 return manageAccount(player, args);
             }
             default -> {
-                commandSender.sendMessage(Component.text("Usage: /account <create|delete|manage>"));
                 return false;
             }
         }
     }
 
     private boolean createAccount(@NotNull final Player player, @NotNull final String[] args){
-        if(args.length < 4){
-            player.sendMessage(Component.text("Usage: /account create <discordId> <minecraftName> <password>"));
-            return false;
-        }
+        if(args.length < 4) return false;
         if(!player.hasPermission("discordauth.account.create")){
-            player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.create)"));
+            player.sendMessage(LangField.MISSING_PERMISSION.asComponent("discordauth.account.create"));
             return false;
         }
         long discordId = Long.parseLong(args[1]);
@@ -72,7 +69,7 @@ public class AccountCommand implements CommandExecutor {
         if (args.length == 3) {
             // Change self password
             if (!player.hasPermission("discordauth.account.manage.self")) {
-                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.manage.self)"));
+                player.sendMessage(LangField.MISSING_PERMISSION.asComponent("discordauth.account.manage.self"));
                 return false;
             }
             String encryptedPassword = new Encryption().hash(args[2]);
@@ -81,12 +78,12 @@ public class AccountCommand implements CommandExecutor {
         } else if (args.length == 4) {
             // Change other password
             if (!player.hasPermission("discordauth.account.manage.other")) {
-                player.sendMessage(Component.text("You don't have the permission to do that! (discordauth.account.manage.other)"));
+                player.sendMessage(LangField.MISSING_PERMISSION.asComponent("discordauth.account.manage.other"));
                 return false;
             }
             Player target = DiscordAuthPlugin.getInstance().getServer().getPlayer(args[3]);
             if (target == null) {
-                player.sendMessage(Component.text("Player not found!"));
+                player.sendMessage(LangField.PLAYER_NOT_FOUND.asComponent());
                 return false;
             }
             String encryptedPassword = new Encryption().hash(args[2]);
