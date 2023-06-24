@@ -30,7 +30,21 @@ public enum LangField {
     PREVENTION_COMMANDS("prevention_commands"),
     PREVENTION_DROP_ITEMS("prevention_drop_items"),
     PREVENTION_INTERACT("prevention_interact"),
-    ALREADY_CONNECTED("already_connected");
+    ALREADY_CONNECTED("already_connected"),
+    DISCORD_REGISTER_BUTTON("discord_register_button"),
+    MODAL_USERNAME_FIELD("modal_username_field"),
+    MODAL_USERNAME_CONFIRMATION_FIELD("modal_username_confirmation_field"),
+    MODAL_PASSWORD_FIELD("modal_password_field"),
+    MODAL_PASSWORD_CONFIRMATION_FIELD("modal_password_confirmation_field"),
+    MODAL_REGISTER_TITLE("modal_register_title"),
+    DISCORD_USERNAMES_NOT_MATCHING("discord_usernames_not_matching"),
+    DISCORD_PASSWORDS_NOT_MATCHING("discord_passwords_not_matching"),
+    DISCORD_ACCOUNT_ALREADY_EXISTS("discord_account_already_exists"),
+    DISCORD_USER_ALREADY_REGISTERED("discord_user_already_registered"),
+    DISCORD_ACCOUNT_CREATED("discord_account_created"),
+    REGISTER_MESSAGE_CONTENT("register_message_content"),
+    REGISTER_MESSAGE_ADDED("register_message_added"),
+    REGISTER_COMMAND_DESCRIPTION("register_command_description");
 
 
     private final String key;

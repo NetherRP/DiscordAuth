@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.waterfall;
 import fr.xen0xys.discordauth.common.PluginInfos;
 import fr.xen0xys.discordauth.common.config.CommonConfig;
 import fr.xen0xys.discordauth.common.config.CoreConfig;
+import fr.xen0xys.discordauth.common.config.language.LangConfig;
 import fr.xen0xys.discordauth.common.database.DatabaseHandler;
 import fr.xen0xys.discordauth.common.discord.Bot;
 import fr.xen0xys.discordauth.common.logging.ConsoleFilter;
@@ -21,7 +22,6 @@ import java.util.logging.Logger;
 public class DiscordAuthProxy extends Plugin {
 
     private static DiscordAuthProxy instance;
-    private static Logger logger;
     private static CommonConfig commonConfig;
     private static CoreConfig coreConfig;
     private static DatabaseHandler databaseHandler;
@@ -31,10 +31,11 @@ public class DiscordAuthProxy extends Plugin {
     @Override
     public void onLoad() {
         instance = this;
-        logger = this.getLogger();
+        Logger logger = this.getLogger();
         logger.info("Loading configs...");
         commonConfig = new CommonConfig(this.getDataFolder());
         coreConfig = new CoreConfig(this.getDataFolder());
+        new LangConfig(this.getDataFolder(), commonConfig.getLanguage());
         logger.info("Loading database...");
         databaseHandler = new DatabaseHandler(coreConfig.getSessionFactory());
         logger.info("Registering channels...");
@@ -44,8 +45,8 @@ public class DiscordAuthProxy extends Plugin {
         logger.info("Loading Discord bot...");
         new Bot(coreConfig, logger);
         logger.info("Creating logging filter...");
-        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
-        logger.addFilter(new ConsoleFilter());
+        org.apache.logging.log4j.core.Logger filteredLogger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        filteredLogger.addFilter(new ConsoleFilter());
         logger.info("DiscordAuth is loaded !");
     }
 

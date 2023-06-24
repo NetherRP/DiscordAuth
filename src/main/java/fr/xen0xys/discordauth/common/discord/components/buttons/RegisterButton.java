@@ -1,5 +1,6 @@
 package fr.xen0xys.discordauth.common.discord.components.buttons;
 
+import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.discord.components.modals.RegisterModal;
 import fr.xen0xys.discordjava.DJApp;
 import fr.xen0xys.discordjava.components.buttons.AbstractStaticButton;
@@ -13,7 +14,7 @@ import java.util.List;
 public class RegisterButton extends AbstractStaticButton {
 
     public RegisterButton() {
-        super("discordauth-register", ButtonType.Success, "Register");
+        super("discordauth-register", ButtonType.Success, LangField.DISCORD_REGISTER_BUTTON.asText());
     }
 
     @Override

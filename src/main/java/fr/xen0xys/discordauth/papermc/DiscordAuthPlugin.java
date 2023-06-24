@@ -38,8 +38,8 @@ public class DiscordAuthPlugin extends JavaPlugin {
         logger.info("Registering channels...");
         this.registerBungeeCordChannels();
         logger.info("Creating logging filter...");
-        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
-        logger.addFilter(new ConsoleFilter());
+        org.apache.logging.log4j.core.Logger filteredLogger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        filteredLogger.addFilter(new ConsoleFilter());
         logger.info("DiscordAuth is loaded !");
     }
 
