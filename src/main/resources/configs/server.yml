@@ -18,9 +18,9 @@ spawnpoint:
   # Spawn point location settings
   infos:
     world_name: world
-    x: 0
-    y: 80
-    z: 0
+    x: 0.0
+    y: 80.0
+    z: 0.0
     facing:
-      pitch: 0
-      yaw: 0
+      pitch: 0.0
+      yaw: 0.0
