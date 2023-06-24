@@ -4,14 +4,14 @@
   <groupId>fr.xen0xys</groupId>
   <artifactId>DiscordAuth</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
-  <version>3.0.0</version>
+  <version>4.0.0</version>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <outputDirectory>Server/plugins</outputDirectory>
+          <outputDirectory>Servers/PaperMC/plugins</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
@@ -23,6 +23,28 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <relocations>
+                <relocation>
+                  <pattern>net.wesjd.anvilgui</pattern>
+                  <shadedPattern>fr.xen0xys.discordauth.anvilgui</shadedPattern>
+                </relocation>
+              </relocations>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludeDefaults>false</excludeDefaults>
+                  <includes>
+                    <include>fr.xen0xys.discordauth.anvilgui</include>
+                  </includes>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
           </execution>
         </executions>
         <configuration>
@@ -37,29 +59,94 @@
           </relocations>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.0.2</version>
+        <executions>
+          <execution>
+            <id>copy-resource-one</id>
+            <phase>install</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>Servers/Waterfall/plugins</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>Servers/PaperMC/plugins</directory>
+                  <includes>
+                    <include>${project.artifactId}-${project.version}.jar</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <repositories>
+    <repository>
+      <id>Discord Java Lib</id>
+      <url>https://github.com/Xen0Xys/Discord-Java-Lib</url>
+    </repository>
     <repository>
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
     <repository>
-      <id>customlibs</id>
-      <name>CustomLibs</name>
-      <url>${basedir}/Libs</url>
+      <id>github</id>
+      <name>discord-java-lib</name>
+      <url>https://maven.pkg.github.com/Xen0Xys/Discord-Java-Lib</url>
+    </repository>
+    <repository>
+      <id>codemc-snapshots</id>
+      <url>https://repo.codemc.io/repository/maven-snapshots/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>1.19.1-R0.1-SNAPSHOT</version>
+      <version>1.20-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.waterfallmc</groupId>
+      <artifactId>waterfall-api</artifactId>
+      <version>1.20-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.9.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-params</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>6.2.5.Final</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <properties>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.source>17</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

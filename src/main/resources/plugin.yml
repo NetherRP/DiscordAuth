@@ -1,8 +1,8 @@
 author: Xen0Xys
 name: DiscordAuth
-version: 3.0.0
-api-version: 1.19
-main: fr.xen0xys.discordauth.DiscordAuth
+version: "4.0.0"
+api-version: "1.20"
+main: fr.xen0xys.discordauth.papermc.DiscordAuthPlugin
 database: true
 
 commands:
@@ -11,12 +11,13 @@ commands:
     aliases: [da]
     usage: /discordauth <reload>
   account:
-    permission: discordauth.account
-    usage: /account manage|delete
+    permission: discordauth.account.command
+    usage: /account <create|delete|manage>
   login:
     aliases: [l]
     permission: discordauth.login
   logout:
+    aliases: [disconnect]
     permission: discordauth.logout
   forcelogin:
     permission: discordauth.forcelogin
@@ -24,20 +25,56 @@ commands:
 
 permissions:
   discordauth.*:
-    description: Gives access to all DiscordAuth commands
+    description: Grants access to all DiscordAuth commands
     children:
       discordauth.discordauth: true
-      discordauth.account: true
+      discordauth.account.*: true
       discordauth.login: true
       discordauth.logout: true
       discordauth.forcelogin: true
   discordauth.discordauth:
     default: op
-  discordauth.account:
-    default: true
   discordauth.login:
     default: true
   discordauth.logout:
     default: true
   discordauth.forcelogin:
+    default: op
+  # Account
+  discordauth.account.*:
+    children:
+      discordauth.account.command: true
+      discordauth.account.create: true
+      discordauth.account.delete.*: true
+      discordauth.account.manage.*: true
+  discordauth.account.command:
+    description: Allows using /account command
+    default: true
+  # Account creation
+  discordauth.account.create:
+    description: Allows creating a user account
+    default: op
+  # Account deletion
+  discordauth.account.delete.*:
+    description: Allows deleting a user account
+    children:
+      discordauth.account.delete.self: true
+      discordauth.account.delete.other: true
+  discordauth.account.delete.self:
+    description: Allows deleting own user account
+    default: true
+  discordauth.account.delete.other:
+    description: Allows deleting another user account
+    default: op
+  # Account management
+  discordauth.account.manage.*:
+    description: Allows modifying a user account
+    children:
+      discordauth.account.manage.self: true
+      discordauth.account.manage.other: true
+  discordauth.account.manage.self:
+    description: Allows modifying own user account
+    default: true
+  discordauth.account.manage.other:
+    description: Allows modifying another user account
     default: op
