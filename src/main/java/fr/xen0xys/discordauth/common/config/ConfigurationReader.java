@@ -39,10 +39,29 @@ public class ConfigurationReader {
         }
     }
 
+    public void save(){
+        try {
+            this.configuration.save(this.configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Deprecated
     public YamlConfiguration getConfiguration(){
         return this.configuration;
     }
     public String getDataFolder() {
         return dataFolder;
+    }
+
+    public <T> T getValue(Class<T> type, String path, T defaultValue) throws ClassCastException{
+        Object value = this.configuration.get(path);
+        if(Objects.isNull(value)){
+            this.configuration.set(path, defaultValue);
+            value = defaultValue;
+            this.save();
+        }
+        return type.cast(value);
     }
 }

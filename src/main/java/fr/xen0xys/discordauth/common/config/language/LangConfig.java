@@ -11,7 +11,7 @@ public class LangConfig extends ConfigurationReader {
     public LangConfig(@NotNull File dataFolder, String language) {
         super(dataFolder, "lang/%s.yml".formatted(language));
         Arrays.stream(LangField.values()).forEach(field -> {
-            String value = this.getConfiguration().getString(field.getKey());
+            String value = this.getValue(String.class, field.getKey(), field.asText());
             field.setValue(value);
         });
     }

@@ -10,11 +10,15 @@ public class CommonConfig extends ConfigurationReader{
         super(dataFolder, "config.yml");
     }
 
+    public boolean isCore(){
+        return this.getValue(Boolean.class, "core", false);
+    }
+
     public String getSecret(){
-        return this.getConfiguration().getString("secret");
+        return this.getValue(String.class, "secret", "unsafe_key");
     }
 
     public String getLanguage(){
-        return this.getConfiguration().getString("language");
+        return this.getValue(String.class, "language", "en_EN");
     }
 }
