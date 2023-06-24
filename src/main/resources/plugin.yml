@@ -12,7 +12,7 @@ commands:
     usage: /discordauth <reload>
   account:
     permission: discordauth.account.command
-    usage: /account create|manage|delete
+    usage: /account <create|delete|manage>
   login:
     aliases: [l]
     permission: discordauth.login
