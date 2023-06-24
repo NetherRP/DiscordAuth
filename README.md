@@ -1,4 +1,4 @@
-# DiscordAuth v4.0.0-rc3
+# DiscordAuth v4.0.0-rc4
 ## What is DiscordAuth?
 DiscordAuth is a Minecraft plugin that allow account creation over Discord and server protection against unauthorized users.
 ## Notice
