@@ -23,7 +23,8 @@ public class Bot {
             }else
                 new DisplayRegisterCommand().register(app.getCommandsManager(), true);
             new RegisterButton().register(app.getComponentsManager());
-            this.setupActivity(app.getJDA(), coreConfig);
+            if(coreConfig.isActivityEnable())
+                this.setupActivity(app.getJDA(), coreConfig);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
