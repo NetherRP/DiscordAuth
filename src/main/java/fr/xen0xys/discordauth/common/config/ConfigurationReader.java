@@ -62,6 +62,14 @@ public class ConfigurationReader {
             value = defaultValue;
             this.save();
         }
+        if (type == Integer.class)
+            return type.cast(Integer.parseInt(value.toString()));
+        else if (type == Double.class)
+            return type.cast(Double.parseDouble(value.toString()));
+        else if (type == Float.class)
+            return type.cast(Float.parseFloat(value.toString()));
+        else if (type == Long.class)
+            return type.cast(Long.parseLong(value.toString()));
         return type.cast(value);
     }
 }
