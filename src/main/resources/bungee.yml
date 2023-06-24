@@ -1,6 +1,6 @@
 author: Xen0Xys
 name: DiscordAuth
-version: "4.0.0-rc4"
+version: "4.0.0"
 api-version: "1.20"
 main: fr.xen0xys.discordauth.waterfall.DiscordAuthProxy
 database: true
