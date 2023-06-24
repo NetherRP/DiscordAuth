@@ -3,6 +3,7 @@ package fr.xen0xys.discordauth.common.config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -12,32 +13,33 @@ public class ServerConfig extends ConfigurationReader{
         super(dataFolder, "configs/server.yml");
     }
 
+    public boolean isFirstTimeTp() {
+        return this.getValue(Boolean.class, "spawnpoint.first_time_tp", false);
+    }
+    public boolean isTpOnLogin() {
+        return this.getValue(Boolean.class, "spawnpoint.tp_on_login", false);
+    }
+
     public boolean isRespawnEnable() {
-        return this.getConfiguration().getBoolean("spawnpoint.respawn.enable");
+        return this.getValue(Boolean.class, "spawnpoint.respawn.enable", false);
     }
-
     public boolean isRespawnEvenWithBed() {
-        return this.getConfiguration().getBoolean("spawnpoint.respawn.even_with_bed");
+        return this.getValue(Boolean.class, "spawnpoint.respawn.even_with_bed", false);
     }
-
+    @Nullable
     public Location getSpawnPoint(){
-        String worldName = this.getConfiguration().getString("spawnpoint.infos.world_name");
+        String worldName = this.getValue(String.class, "spawnpoint.infos.world_name", "world");
         if(worldName != null){
-            double x = this.getConfiguration().getDouble("spawnpoint.infos.x");
-            double y = this.getConfiguration().getDouble("spawnpoint.infos.y");
-            double z = this.getConfiguration().getDouble("spawnpoint.infos.z");
-            float pitch = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.pitch");
-            float yaw = (float) this.getConfiguration().getDouble("spawnpoint.infos.facing.yaw");
+            double x = this.getValue(Double.class, "spawnpoint.infos.x", 0.0);
+            double y = this.getValue(Double.class, "spawnpoint.infos.y", 0.0);
+            double z = this.getValue(Double.class, "spawnpoint.infos.z", 0.0);
+            float pitch = this.getValue(Float.class, "spawnpoint.infos.facing.pitch", 0.0f);
+            float yaw = this.getValue(Float.class, "spawnpoint.infos.facing.yaw", 0.0f);
             return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
         }
         return null;
     }
 
-    public boolean isTpOnLogin() {
-        return this.getConfiguration().getBoolean("spawnpoint.tp_on_login");
-    }
 
-    public boolean isFirstTimeTp() {
-        return this.getConfiguration().getBoolean("spawnpoint.first_time_tp");
-    }
+
 }
