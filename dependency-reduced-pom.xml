@@ -4,7 +4,7 @@
   <groupId>fr.xen0xys</groupId>
   <artifactId>DiscordAuth</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
-  <version>4.0.0-beta</version>
+  <version>4.0.0-rc1</version>
   <build>
     <plugins>
       <plugin>
