@@ -112,6 +112,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>true</minimizeJar>
                             <relocations>
                                 <relocation>
                                     <pattern>net.wesjd.anvilgui</pattern>
@@ -129,6 +130,20 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <excludeDefaults>false</excludeDefaults>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>**/*.md</exclude>
+                                        <exclude>**/*.markdown</exclude>
+                                        <exclude>**/*.header</exclude>
+                                        <exclude>**/*.xml</exclude>
+                                        <exclude>**/pom.properties</exclude>
+                                        <exclude>**/io.netty.versions.properties</exclude>
+                                        <exclude>**/*.args</exclude>
+                                        <exclude>**/*.so</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
