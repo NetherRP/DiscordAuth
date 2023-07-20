@@ -13,7 +13,10 @@ import java.util.logging.Logger;
 
 public class Bot {
 
+    private static CoreConfig coreConfig;
+
     public Bot(CoreConfig coreConfig, Logger logger){
+        Bot.coreConfig = coreConfig;
         try {
             DJApp app = new DJApp(coreConfig.getBotToken(), logger);
             if(coreConfig.getGuildId() != 0){
@@ -40,5 +43,9 @@ public class Bot {
             default -> Activity.playing(text);
         };
         bot.getPresence().setActivity(activity);
+    }
+
+    public static CoreConfig getCoreConfig() {
+        return coreConfig;
     }
 }

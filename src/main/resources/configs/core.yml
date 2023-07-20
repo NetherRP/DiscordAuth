@@ -18,6 +18,8 @@ discord:
   token: token
   # If set, create the commands on guild and not globally
   guild_id: 0
+  # Change discord username to match minecraft one
+  change_username: true
   # Add logo to private messages response
   logo:
     enable: false
@@ -27,6 +29,6 @@ discord:
     enable: true
     # Can be PLAYING, STREAMING, LISTENING or WATCHING
     type: PLAYING
-    text: DiscordAuth v4.0.0
+    text: DiscordAuth v4.1.0
     # Only for streaming
     url: null

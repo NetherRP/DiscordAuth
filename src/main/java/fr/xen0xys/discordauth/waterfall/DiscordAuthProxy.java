@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DiscordAuthProxy extends Plugin {

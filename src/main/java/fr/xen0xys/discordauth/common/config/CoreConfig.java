@@ -46,6 +46,10 @@ public class CoreConfig extends ConfigurationReader{
         return this.getValue(Long.class, "discord.guild_id", 0L);
     }
 
+    public boolean isUsernameChangingEnable(){
+        return this.getValue(Boolean.class, "discord.change_username", true);
+    }
+
     public boolean isActivityEnable(){
         return this.getValue(Boolean.class, "discord.activity.enable", true);
     }

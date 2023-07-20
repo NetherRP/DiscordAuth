@@ -9,14 +9,14 @@
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <outputDirectory>Servers/PaperMC/plugins</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -43,6 +43,20 @@
                     <exclude>META-INF/*.RSA</exclude>
                   </excludes>
                 </filter>
+                <filter>
+                  <excludeDefaults>false</excludeDefaults>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>**/*.md</exclude>
+                    <exclude>**/*.markdown</exclude>
+                    <exclude>**/*.header</exclude>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>**/pom.properties</exclude>
+                    <exclude>**/io.netty.versions.properties</exclude>
+                    <exclude>**/*.args</exclude>
+                    <exclude>**/*.so</exclude>
+                  </excludes>
+                </filter>
               </filters>
             </configuration>
           </execution>
@@ -61,7 +75,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <id>copy-resource-one</id>
@@ -140,7 +154,7 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>6.2.5.Final</version>
+      <version>6.2.6.Final</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
