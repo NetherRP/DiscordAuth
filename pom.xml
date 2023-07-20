@@ -6,7 +6,7 @@
 
     <groupId>fr.xen0xys</groupId>
     <artifactId>DiscordAuth</artifactId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <properties>
