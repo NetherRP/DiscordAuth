@@ -2,14 +2,20 @@ package fr.xen0xys.discordauth.common.discord.components.modals;
 
 import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.database.models.Account;
+import fr.xen0xys.discordauth.common.discord.Bot;
 import fr.xen0xys.discordauth.common.encryption.Encryption;
 import fr.xen0xys.discordauth.waterfall.DiscordAuthProxy;
 import fr.xen0xys.discordjava.DJApp;
 import fr.xen0xys.discordjava.components.modal.AbstractModal;
 import fr.xen0xys.discordjava.components.modal.ModalField;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class RegisterModal extends AbstractModal {
 
@@ -43,9 +49,28 @@ public class RegisterModal extends AbstractModal {
         }
         String hashedPassword = new Encryption().hash(password);
         boolean state = DiscordAuthProxy.getDatabaseHandler().addAccount(new Account(userId, null, username, hashedPassword, null, -1));
-        if(state)
+        if(state){
             modalInteractionEvent.deferReply(true).addContent(LangField.DISCORD_ACCOUNT_CREATED.asText()).queue();
+            if(Bot.getCoreConfig().isUsernameChangingEnable())
+                this.changeUsername(djApp, username, userId);
+        }
         else
             modalInteractionEvent.deferReply(true).addContent(LangField.DISCORD_ACCOUNT_ALREADY_EXISTS.asText()).queue();
+    }
+
+    private void changeUsername(DJApp app, String username, long userId){
+        User user = app.getJDA().retrieveUserById(userId).complete();
+        if(Objects.isNull(user))
+            return;
+        app.getJDA().getGuilds().forEach(guild -> {
+            Member member = guild.retrieveMemberById(userId).complete();
+            if(Objects.isNull(member))
+                return;
+            try{
+                guild.modifyNickname(member, username).queue();
+            }catch (HierarchyException e){
+                app.getLogger().warning("Cannot change nickname of @" + user.getName() + " on " + guild.getName() + " because of hierarchy");
+            }
+        });
     }
 }

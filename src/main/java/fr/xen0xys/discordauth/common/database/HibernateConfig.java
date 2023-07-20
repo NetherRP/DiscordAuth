@@ -24,7 +24,6 @@ public class HibernateConfig {
                 configuration.setProperty(AvailableSettings.DRIVER, "org.sqlite.JDBC");
                 configuration.setProperty(AvailableSettings.URL, "jdbc:sqlite:" + database +".db");
                 configuration.setProperty(AvailableSettings.DIALECT, SQLiteDialect.class.getName());
-
             }
             case MYSQL -> {
                 configuration.setProperty(AvailableSettings.DRIVER, "com.mysql.cj.jdbc.Driver");

@@ -1,5 +1,6 @@
 package fr.xen0xys.discordauth.common.discord.components.buttons;
 
+import fr.xen0xys.discordauth.common.config.CoreConfig;
 import fr.xen0xys.discordauth.common.config.language.LangField;
 import fr.xen0xys.discordauth.common.discord.components.modals.RegisterModal;
 import fr.xen0xys.discordjava.DJApp;
